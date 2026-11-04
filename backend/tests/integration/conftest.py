@@ -3,6 +3,8 @@
 import asyncio
 from collections.abc import AsyncIterator
 from pathlib import Path
+from typing import Any
+from uuid import UUID
 
 import asyncpg
 import httpx
@@ -12,15 +14,24 @@ from alembic.config import Config
 from sqlalchemy import text
 from sqlalchemy.engine import make_url
 
+from tests.solutions import solve
 from unsa_audit.core.config import Settings, get_settings
+from unsa_audit.learning.application.generators import generate_spec
+from unsa_audit.learning.infrastructure.sqlalchemy_repository import SqlAlchemyLearningRepository
+from unsa_audit.learning.infrastructure.sqlalchemy_university_facts import (
+    SqlAlchemyUniversityFacts,
+)
 from unsa_audit.main import create_app
-from unsa_audit.seed.loader import ensure_superadmin
+from unsa_audit.seed.loader import ensure_superadmin, load_university, sync_content
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
 SUPERADMIN_EMAIL = "superadmin@test.example"
 SUPERADMIN_PASSWORD = "superadmin-test-pass"
 
-_TABLES = "users, data_owners, processing_activities, systems, people, positions, org_units"
+_TABLES = (
+    "exercise_attempts, module_progress, enrollments, modules, routes, "
+    "users, data_owners, processing_activities, systems, people, positions, org_units"
+)
 
 
 def _test_database_url() -> str:
@@ -92,6 +103,28 @@ async def register_and_login(
     login = await client.post("/auth/login", json={"email": email, "password": password})
     assert login.status_code == 200, login.text
     return {"Authorization": f"Bearer {login.json()['access_token']}"}
+
+
+@pytest.fixture
+async def seeded(app):
+    """App con la BD ficticia de la UNSA y el contenido de las rutas cargados."""
+    await load_university(app.state.session_factory)
+    await sync_content(app.state.session_factory, app.state.settings)
+    return app
+
+
+async def solve_module(app, module_id: str) -> dict[str, Any]:
+    """Respuesta perfecta para el ejercicio de un modulo (lee la spec privada de la BD)."""
+    repo = SqlAlchemyLearningRepository(app.state.session_factory)
+    module = await repo.get_module(UUID(module_id))
+    assert module is not None and module.exercise is not None
+    ex = module.exercise
+    if ex.generator:
+        facts = await SqlAlchemyUniversityFacts(app.state.session_factory).snapshot()
+        spec = generate_spec(ex.generator, ex.params, facts)
+    else:
+        spec = ex.spec
+    return solve(ex.kind, spec)
 
 
 async def superadmin_headers(client: httpx.AsyncClient, app) -> dict[str, str]:

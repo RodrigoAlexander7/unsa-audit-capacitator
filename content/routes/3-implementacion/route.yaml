@@ -1,0 +1,8 @@
+code: implementacion
+order: 3
+title: Implementación
+description: >
+  Elabora, sobre plantillas, la información documentada de un sistema de gestión de privacidad y
+  seguridad para una oficina de la UNSA: alcance, riesgos, declaración de aplicabilidad y tratamiento.
+hours: 24
+prerequisite: interpretacion

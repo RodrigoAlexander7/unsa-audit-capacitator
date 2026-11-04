@@ -1,0 +1,8 @@
+code: auditor
+order: 4
+title: Auditor interno
+description: >
+  Aplica la guía ISO 19011 a la UNSA: planifica, ejecuta y reporta una auditoría interna sobre
+  lo que ya conoces, con evidencias, hallazgos y seguimiento.
+hours: 32
+prerequisite: implementacion

@@ -1,0 +1,16 @@
+{
+	"kind": "ordering",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Ordena las normas de MAYOR a MENOR jerarquía.",
+		"items": [
+			{ "id": "procedimientos", "label": "Procedimientos y formatos de una oficina" },
+			{ "id": "estatuto", "label": "Estatuto de la UNSA" },
+			{ "id": "constitucion", "label": "Constitución Política del Estado" },
+			{ "id": "reglamentos", "label": "Reglamentos y directivas internas" },
+			{ "id": "rof", "label": "Reglamento de Organización y Funciones (ROF)" },
+			{ "id": "ley", "label": "Ley Universitaria" }
+		],
+		"correct_order": ["constitucion", "ley", "estatuto", "rof", "reglamentos", "procedimientos"]
+	}
+}

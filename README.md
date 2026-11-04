@@ -21,8 +21,10 @@ cd backend && uv sync && uv run alembic upgrade head
 ```
 
 ```bash
-cd backend && uv run python -m unsa_audit.seed   # BD ficticia de la UNSA + cuenta superadmin
+cd backend && uv run python -m unsa_audit.seed   # BD ficticia de la UNSA + contenido de rutas + cuenta superadmin
 ```
+
+> El contenido de las rutas vive en [content/](content/README.md). Tras editarlo, vuelve a ejecutar el seed.
 
 ```bash
 cd backend && uv run unsa-audit          # API en http://localhost:8000/health

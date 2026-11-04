@@ -8,6 +8,9 @@ from unsa_audit.core.database import create_engine, create_session_factory
 from unsa_audit.identity.application.use_cases import EnsureSuperadmin
 from unsa_audit.identity.infrastructure.security import Argon2PasswordHasher
 from unsa_audit.identity.infrastructure.sqlalchemy_user_repository import SqlAlchemyUserRepository
+from unsa_audit.learning.application.use_cases import SyncContent
+from unsa_audit.learning.infrastructure.content_loader import FileContentSource
+from unsa_audit.learning.infrastructure.sqlalchemy_repository import SqlAlchemyLearningRepository
 from unsa_audit.seed.university_data import UniversityDataset, build_university_dataset
 from unsa_audit.university.infrastructure.models import (
     DataOwnerModel,
@@ -88,6 +91,16 @@ async def load_university(
     return ds
 
 
+async def sync_content(
+    session_factory: async_sessionmaker[AsyncSession], settings: Settings
+) -> tuple[int, int]:
+    """Sincroniza `content/routes` a la BD (rutas y modulos). Idempotente."""
+    use_case = SyncContent(
+        SqlAlchemyLearningRepository(session_factory), FileContentSource(settings.content_dir)
+    )
+    return await use_case.execute()
+
+
 async def ensure_superadmin(
     session_factory: async_sessionmaker[AsyncSession], settings: Settings
 ) -> None:
@@ -107,6 +120,7 @@ async def seed_all(settings: Settings) -> None:
     try:
         session_factory = create_session_factory(engine)
         await load_university(session_factory)
+        await sync_content(session_factory, settings)
         await ensure_superadmin(session_factory, settings)
     finally:
         await engine.dispose()

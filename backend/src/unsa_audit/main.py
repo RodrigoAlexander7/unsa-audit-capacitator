@@ -16,6 +16,19 @@ from unsa_audit.identity.application.use_cases import GetCurrentUser, Login, Reg
 from unsa_audit.identity.infrastructure.security import Argon2PasswordHasher, JwtTokenService
 from unsa_audit.identity.infrastructure.sqlalchemy_user_repository import SqlAlchemyUserRepository
 from unsa_audit.identity.interface.router import router as identity_router
+from unsa_audit.learning.application.use_cases import (
+    CompleteReadingModule,
+    EnrollInRoute,
+    GetModule,
+    GetRoute,
+    ListRoutes,
+    SubmitAttempt,
+)
+from unsa_audit.learning.infrastructure.sqlalchemy_repository import SqlAlchemyLearningRepository
+from unsa_audit.learning.infrastructure.sqlalchemy_university_facts import (
+    SqlAlchemyUniversityFacts,
+)
+from unsa_audit.learning.interface.router import router as learning_router
 from unsa_audit.university.application.use_cases import GetOrgTree, GetOrgUnitDetail, ListSystems
 from unsa_audit.university.infrastructure.sqlalchemy_repository import (
     SqlAlchemyUniversityReadRepository,
@@ -35,6 +48,8 @@ def create_app(
     hasher = Argon2PasswordHasher()
     tokens = JwtTokenService(settings.jwt_secret, settings.jwt_expire_minutes)
     university = SqlAlchemyUniversityReadRepository(session_factory)
+    learning = SqlAlchemyLearningRepository(session_factory)
+    university_facts = SqlAlchemyUniversityFacts(session_factory)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -59,10 +74,17 @@ def create_app(
     app.state.get_org_tree = GetOrgTree(university)
     app.state.get_org_unit_detail = GetOrgUnitDetail(university)
     app.state.list_systems = ListSystems(university)
+    app.state.list_routes = ListRoutes(learning)
+    app.state.get_route = GetRoute(learning)
+    app.state.enroll_in_route = EnrollInRoute(learning)
+    app.state.get_module = GetModule(learning, university_facts)
+    app.state.submit_attempt = SubmitAttempt(learning, university_facts)
+    app.state.complete_reading = CompleteReadingModule(learning)
 
     app.include_router(health_router)
     app.include_router(identity_router)
     app.include_router(university_router)
+    app.include_router(learning_router)
     return app
 
 

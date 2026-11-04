@@ -1,0 +1,81 @@
+from uuid import UUID
+
+from unsa_audit.learning.application.ports import (
+    PositionFact,
+    SystemFact,
+    UnitFact,
+    UniversitySnapshot,
+)
+from unsa_audit.learning.domain.route import (
+    Enrollment,
+    ExerciseAttempt,
+    Module,
+    ModuleProgress,
+    Route,
+)
+from unsa_audit.seed.university_data import UniversityDataset, build_university_dataset
+
+
+def snapshot_from_dataset(ds: UniversityDataset | None = None) -> UniversitySnapshot:
+    ds = ds or build_university_dataset()
+    units = {u.id: u for u in ds.org_units}
+    positions = {p.id: p for p in ds.positions}
+    return UniversitySnapshot(
+        units=[UnitFact(u.code, u.name, u.kind.value) for u in ds.org_units],
+        positions=[
+            PositionFact(p.title, units[p.org_unit_id].kind.value) for p in positions.values()
+        ],
+        systems=[SystemFact(s.name, units[s.owner_org_unit_id].name) for s in ds.systems],
+    )
+
+
+class FakeFacts:
+    def __init__(self, snapshot: UniversitySnapshot | None = None) -> None:
+        self._snapshot = snapshot or snapshot_from_dataset()
+
+    async def snapshot(self) -> UniversitySnapshot:
+        return self._snapshot
+
+
+class InMemoryLearningRepository:
+    def __init__(self, routes: list[Route] | None = None, modules: list[Module] | None = None):
+        self.routes = {r.code: r for r in routes or []}
+        self.modules = {m.id: m for m in modules or []}
+        self.enrollments: dict[tuple[UUID, str], Enrollment] = {}
+        self.progress: dict[tuple[UUID, UUID], ModuleProgress] = {}
+        self.attempts: list[ExerciseAttempt] = []
+
+    async def replace_content(self, routes: list[Route], modules: list[Module]) -> None:
+        self.routes = {r.code: r for r in routes}
+        self.modules = {m.id: m for m in modules}
+
+    async def list_routes(self) -> list[Route]:
+        return sorted(self.routes.values(), key=lambda r: r.order)
+
+    async def get_route(self, code: str) -> Route | None:
+        return self.routes.get(code)
+
+    async def list_modules(self, route_code: str | None = None) -> list[Module]:
+        mods = [m for m in self.modules.values() if route_code in (None, m.route_code)]
+        return sorted(mods, key=lambda m: (m.route_code, m.order))
+
+    async def get_module(self, module_id: UUID) -> Module | None:
+        return self.modules.get(module_id)
+
+    async def get_enrollment(self, user_id: UUID, route_code: str) -> Enrollment | None:
+        return self.enrollments.get((user_id, route_code))
+
+    async def list_enrollments(self, user_id: UUID) -> list[Enrollment]:
+        return [e for (uid, _), e in self.enrollments.items() if uid == user_id]
+
+    async def save_enrollment(self, enrollment: Enrollment) -> None:
+        self.enrollments[(enrollment.user_id, enrollment.route_code)] = enrollment
+
+    async def list_progress(self, user_id: UUID) -> dict[UUID, ModuleProgress]:
+        return {mid: p for (uid, mid), p in self.progress.items() if uid == user_id}
+
+    async def save_progress(self, progress: ModuleProgress) -> None:
+        self.progress[(progress.user_id, progress.module_id)] = progress
+
+    async def add_attempt(self, attempt: ExerciseAttempt) -> None:
+        self.attempts.append(attempt)

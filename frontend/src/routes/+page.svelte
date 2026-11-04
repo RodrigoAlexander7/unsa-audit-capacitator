@@ -15,7 +15,7 @@
 {#if data.user}
 	<section class="card" aria-labelledby="hola">
 		<h2 id="hola">Hola, {data.user.full_name}</h2>
-		<p>Empieza conociendo tu universidad:</p>
+		<p><a href="/routes">Continúa con tus rutas de capacitación</a> o explora tu universidad:</p>
 		<ul>
 			<li><a href="/university">Organigrama y cargos</a></li>
 			<li><a href="/systems">Sistemas y dueños de datos</a></li>
