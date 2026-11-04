@@ -23,6 +23,9 @@
 				<a href="/documents">Documentos</a>
 				<a href="/university">Universidad</a>
 				<a href="/systems">Sistemas</a>
+				{#if data.user.role === 'superadmin'}
+					<a href="/admin" data-testid="admin-link">Panel</a>
+				{/if}
 			{/if}
 		</nav>
 		<div class="session">

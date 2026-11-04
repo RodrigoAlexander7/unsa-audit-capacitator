@@ -241,6 +241,56 @@ export type PimsCompleteness = {
 	items: PimsItem[];
 };
 
+export type RouteStats = {
+	code: string;
+	order: number;
+	title: string;
+	hours: number;
+	modules_total: number;
+	enrolled: number;
+	in_progress: number;
+	completed: number;
+	completion_rate: number;
+	avg_progress: number;
+	avg_hours_credited: number;
+	attempts: number;
+	pass_rate: number;
+	stalled: number;
+};
+export type ModuleStats = {
+	id: string;
+	order: number;
+	title: string;
+	minutes: number;
+	is_final: boolean;
+	attempts: number;
+	learners_attempted: number;
+	learners_completed: number;
+	avg_score: number | null;
+	pass_rate: number | null;
+	hardest: boolean;
+};
+export type RouteDetailStats = { route: RouteStats; modules: ModuleStats[] };
+export type GroupAverage = { key: string; label: string; average: number; samples: number };
+export type AssessmentProfileStats = {
+	profile: AssessmentProfile;
+	finished: number;
+	avg_score: number;
+	pass_rate: number;
+	competencies: GroupAverage[];
+	requirements: GroupAverage[];
+};
+export type AdvisorQuery = {
+	id: string;
+	question: string;
+	status: 'ok' | 'error';
+	answer: string | null;
+	error: string | null;
+	duration_ms: number;
+	snapshot_hash: string;
+	created_at: string;
+};
+
 export type AssessmentProfile = 'controller' | 'processor';
 export const PROFILE_LABEL: Record<AssessmentProfile, string> = {
 	controller: 'Responsable del tratamiento (controller)',

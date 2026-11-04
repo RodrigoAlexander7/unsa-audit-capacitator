@@ -1,0 +1,61 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — contrato Fase 6 (analytics y asesor IA)
+  version: 0.7.0
+paths:
+  /admin/stats/routes:
+    get:
+      summary: Estadísticas por ruta (solo superadmin)
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Estadísticas de las 4 rutas }
+        "401": { description: No autenticado }
+        "403": { description: Sin permiso }
+  /admin/stats/routes/{code}:
+    get:
+      summary: Detalle de una ruta con estadísticas por módulo
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Ruta y módulos }
+        "401": { description: No autenticado }
+        "403": { description: Sin permiso }
+        "404": { description: Ruta inexistente }
+  /admin/stats/assessments:
+    get:
+      summary: Estadísticas de las evaluaciones por perfil, competencia y requisito
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Estadísticas de evaluación }
+        "401": { description: No autenticado }
+        "403": { description: Sin permiso }
+  /admin/advisor/snapshot:
+    get:
+      summary: Snapshot agregado y anonimizado para la IA
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Snapshot JSON con su hash }
+        "401": { description: No autenticado }
+        "403": { description: Sin permiso }
+  /admin/advisor/ask:
+    post:
+      summary: Preguntar al asesor IA (agy)
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Respuesta del asesor }
+        "401": { description: No autenticado }
+        "403": { description: Sin permiso }
+        "422": { description: Pregunta inválida }
+        "502": { description: El asesor no está disponible o excedió el tiempo }
+  /admin/advisor/history:
+    get:
+      summary: Últimas consultas al asesor
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Historial }
+        "401": { description: No autenticado }
+        "403": { description: Sin permiso }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer }

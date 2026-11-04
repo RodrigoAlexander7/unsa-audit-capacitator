@@ -31,7 +31,10 @@ Conjunto documental del PIMS (F4, dentro de `documents`): 11 requisitos (`pims_r
 
 Rutas 2–4 y evaluación (F5): `learning` añade módulos `planned` (previstos, no accesibles), el ejercicio `soa_form` y el generador `pims_audit_findings`. `assessment` es un módulo nuevo (perfiles `controller`/`processor`): banco de preguntas en `content/assessment/*.json`, intento fijo (preguntas ordenadas por intento), corrección única y resultado por competencia y por requisito del PIMS guardado en `assessments.result`.
 
+Analytics y asesor IA (F6): módulo `analytics` con lecturas **agregadas en SQL** sobre `learning`, `assessment` e `identity` (nunca se cargan filas de personas), un `BuildSnapshot` anonimizado y determinista (hash sin la fecha) y el caso de uso `AskAdvisor`, que arma el prompt (sistema + snapshot + pregunta), llama al puerto `AnalyticsAdvisorPort` y registra cada consulta en `advisor_queries`. El adaptador `AgyCliAdvisor` ejecuta `agy --print …` sin shell, en un directorio temporal vacío y con entorno mínimo. Todo el módulo es solo superadmin.
+
 Dependencias entre módulos (siempre por puertos, con adaptadores en la capa `infrastructure` del módulo que consume):
 - `learning` → `university`: `UniversityFacts` (organigrama, cargos, sistemas).
 - `learning` → `documents`: `LearningFacts` compone el snapshot con `GetPimsCompleteness` (estado real del PIMS).
 - `assessment` → `documents`: `RequirementCatalog` (`PimsRequirementCatalog` sobre `ListPimsRequirements`) para etiquetar cláusulas.
+- `analytics` → `documents`: `PimsSummaryAdapter` (estado del PIMS y solicitudes abiertas).

@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     agy_command: str = "agy"
     agy_args: str = "--output-format json --mode plan --sandbox --effort low"
     agy_timeout_seconds: int = 120
+    agy_max_chars: int = 8000
+    advisor_prompt_path: Path = (
+        Path(__file__).resolve().parents[4] / "docs" / "ai" / "system_prompt.md"
+    )
 
     cors_origins: list[str] = ["http://localhost:5173"]
 

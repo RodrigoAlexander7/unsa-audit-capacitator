@@ -1,7 +1,14 @@
 # ADR-003 — IA mediante puerto y subprocess de `agy`
 
-- **Estado:** aceptada (flags finales por confirmar en el spike de la Fase 6)
+- **Estado:** aceptada; flags confirmados por el spike de la Fase 6 (2026-11-11)
 - **Fecha:** 2026-11-11
+
+## Resultado del spike (Fase 6)
+- `agy --print "<prompt>" --output-format json --mode plan --sandbox --effort low --print-timeout 120s`, sin stdin y en un directorio vacío, imprime un JSON `{"conversation_id", "status": "SUCCESS", "response": "...", "duration_seconds", "num_turns", "usage"}`. Sin API key.
+- El prompt va como **un único argumento** posicional tras `--print`; no hace falta stdin.
+- Latencia observada: ~2,5 s para un prompt trivial y ~9 s con el snapshot completo.
+- Adaptador: `analytics/infrastructure/agy_advisor.py` (`AgyCliAdvisor`): entorno por lista blanca, directorio temporal vacío, lectura de stdout acotada (256 KiB), respuesta truncable, timeout con `kill`; `status ≠ SUCCESS`, JSON inválido o código de salida ≠ 0 → `AdvisorUnavailable`.
+- Verificación manual con `agy` real: la pregunta «¿Cómo están los alumnos de sensibilización?» devolvió un diagnóstico fiel a los datos (incluso con 0 matriculados: indicó que los datos no alcanzaban). Las pruebas automáticas usan un script falso que imita este contrato.
 
 ## Contexto
 El superadmin consulta a una IA sobre estadísticas de las rutas. Para el POC se usa `agy` (Antigravity CLI) por terminal, **sin API key**.
