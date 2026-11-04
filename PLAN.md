@@ -1,6 +1,6 @@
 # Plan — Plataforma Capacitadora de Auditores Internos UNSA (POC)
 
-> Estado: **plan v2; Fases 0–6 implementadas** (ver `specs/*/tasks.md`). Documento vivo: se ajusta al cerrar cada fase.
+> Estado: **plan v2; Fases 0–7 implementadas (sistema listo para probar con `./dev.sh`)** (ver `specs/*/tasks.md`). Documento vivo: se ajusta al cerrar cada fase.
 > Toda la información de la UNSA es **ficticia** y solo con fines de prueba de concepto (POC).
 > Cambios v2: metodología **Spec-Driven Development (SDD)**, integración real con `agy`, y **conjunto de información documentada del PIMS (ISO 27701)** integrado en documentos, rutas y evaluación.
 

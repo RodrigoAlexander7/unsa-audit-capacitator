@@ -21,6 +21,7 @@ from unsa_audit.identity.infrastructure.sqlalchemy_user_repository import SqlAlc
 from unsa_audit.learning.application.use_cases import SyncContent
 from unsa_audit.learning.infrastructure.content_loader import FileContentSource
 from unsa_audit.learning.infrastructure.sqlalchemy_repository import SqlAlchemyLearningRepository
+from unsa_audit.seed.demo import DemoResult, seed_demo
 from unsa_audit.seed.university_data import UniversityDataset, build_university_dataset
 from unsa_audit.university.infrastructure.models import (
     DataOwnerModel,
@@ -144,6 +145,14 @@ async def ensure_superadmin(
         settings.superadmin_password,
     )
     await use_case.execute()
+
+
+async def seed_demo_cohort(settings: Settings, reset: bool = False) -> DemoResult:
+    engine = create_engine(settings.database_url)
+    try:
+        return await seed_demo(create_session_factory(engine), settings, reset=reset)
+    finally:
+        await engine.dispose()
 
 
 async def seed_all(settings: Settings, reset_documents: bool = False) -> None:

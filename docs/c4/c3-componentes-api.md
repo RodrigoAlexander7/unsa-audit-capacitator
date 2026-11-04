@@ -33,6 +33,8 @@ Rutas 2–4 y evaluación (F5): `learning` añade módulos `planned` (previstos,
 
 Analytics y asesor IA (F6): módulo `analytics` con lecturas **agregadas en SQL** sobre `learning`, `assessment` e `identity` (nunca se cargan filas de personas), un `BuildSnapshot` anonimizado y determinista (hash sin la fecha) y el caso de uso `AskAdvisor`, que arma el prompt (sistema + snapshot + pregunta), llama al puerto `AnalyticsAdvisorPort` y registra cada consulta en `advisor_queries`. El adaptador `AgyCliAdvisor` ejecuta `agy --print …` sin shell, en un directorio temporal vacío y con entorno mínimo. Todo el módulo es solo superadmin.
 
+Datos demo (F7): el módulo `seed` (composición, no es parte del dominio) añade `seed/demo.py`, que crea un cohorte de 12 participantes ficticios (`@demo.unsa.example`) **a través de los casos de uso reales** (registro, matrícula, intentos, evaluaciones) con un reloj inyectado y un solucionador de ejercicios (`seed/solutions.py`, también usado por los tests). Así las estadísticas del panel son coherentes con las reglas del sistema. Opt-in (`--demo`), idempotente; `--reset-demo` elimina solo cuentas `@demo`/`@e2e`.
+
 Dependencias entre módulos (siempre por puertos, con adaptadores en la capa `infrastructure` del módulo que consume):
 - `learning` → `university`: `UniversityFacts` (organigrama, cargos, sistemas).
 - `learning` → `documents`: `LearningFacts` compone el snapshot con `GetPimsCompleteness` (estado real del PIMS).
