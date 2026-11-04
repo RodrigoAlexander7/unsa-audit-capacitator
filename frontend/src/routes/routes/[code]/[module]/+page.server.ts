@@ -1,6 +1,6 @@
 import { API_URL } from '$app/env/private';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { marked } from 'marked';
+import { renderMarkdown } from '../../../../lib/markdown';
 import {
 	apiGet,
 	apiPost,
@@ -36,8 +36,7 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
 		(m) => current && m.order > current.order && m.status !== 'locked'
 	);
 
-	// El contenido de las lecciones proviene del repositorio (confiable).
-	const lessonHtml = marked.parse(data.lesson_md, { async: false }) as string;
+	const lessonHtml = renderMarkdown(data.lesson_md);
 	return {
 		module: data,
 		lessonHtml,

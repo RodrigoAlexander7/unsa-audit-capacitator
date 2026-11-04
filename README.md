@@ -24,7 +24,7 @@ cd backend && uv sync && uv run alembic upgrade head
 cd backend && uv run python -m unsa_audit.seed   # BD ficticia de la UNSA + contenido de rutas + cuenta superadmin
 ```
 
-> El contenido de las rutas vive en [content/](content/README.md). Tras editarlo, vuelve a ejecutar el seed.
+> El contenido de las rutas y de los documentos institucionales vive en [content/](content/README.md). Tras editar las rutas, vuelve a ejecutar el seed. Los documentos **no se pisan** si ya existen (se conserva lo creado desde la app); para restaurarlos: `uv run python -m unsa_audit.seed --reset-documents`.
 
 ```bash
 cd backend && uv run unsa-audit          # API en http://localhost:8000/health

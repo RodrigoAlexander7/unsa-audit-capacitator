@@ -1,6 +1,6 @@
 # Plan — Plataforma Capacitadora de Auditores Internos UNSA (POC)
 
-> Estado: **plan v2; Fases 0–2 implementadas** (ver `specs/*/tasks.md`). Documento vivo: se ajusta al cerrar cada fase.
+> Estado: **plan v2; Fases 0–3 implementadas** (ver `specs/*/tasks.md`). Documento vivo: se ajusta al cerrar cada fase.
 > Toda la información de la UNSA es **ficticia** y solo con fines de prueba de concepto (POC).
 > Cambios v2: metodología **Spec-Driven Development (SDD)**, integración real con `agy`, y **conjunto de información documentada del PIMS (ISO 27701)** integrado en documentos, rutas y evaluación.
 
@@ -224,6 +224,8 @@ Información documentada que la UNSA ficticia debe tener y que sirve de **eje co
 | 9 | Evidencia de competencia | 7.2 | R3 · R4 audita |
 | 10 | Evidencia de resultados de monitoreo y medición | 9.1 | R4 audita |
 | 11 | Evidencia de no conformidades y acciones correctivas | 10.2 | R4 audita |
+
+**Fuente de adaptación:** las plantillas ISO 27001 aportadas en `raw/files/` (material de terceros, fuera del repo) sirven de referencia estructural para estos documentos y para los ejercicios de las Rutas 3 y 4 (`risk_rating`, `treatment_choice`, `soa_form`, `competence_matrix`, `nonconformity_form`, `audit_checklist`). Mapeo y criterios en [docs/adaptacion-plantillas-27001-a-27701.md](docs/adaptacion-plantillas-27001-a-27701.md).
 
 **Cómo se integra:**
 - **Documentos:** cada plantilla es un `document` (kind `PIMS_*`) con versiones y change requests, igual que el ROF/MOF. Frontmatter: `code`, `clause_ref`, `owner_position`, `status`, `review_date`.
