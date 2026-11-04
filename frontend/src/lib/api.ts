@@ -100,6 +100,8 @@ export type DocumentSummary = {
 	title: string;
 	owner_unit_code: string | null;
 	owner_unit_name: string | null;
+	lifecycle: 'in_force' | 'draft';
+	review_date: string | null;
 	current_version: number;
 	updated_at: string;
 	open_change_requests: number;
@@ -175,7 +177,66 @@ export const DOCUMENT_KIND_LABEL: Record<string, string> = {
 	MOF: 'MOF',
 	ESTATUTO: 'Estatuto',
 	CUADRO_ASIGNACION: 'Cuadro de asignación',
-	REGLAMENTO: 'Reglamento'
+	REGLAMENTO: 'Reglamento',
+	PIMS_SCOPE: 'PIMS · Alcance',
+	PIMS_PRIVACY_POLICY: 'PIMS · Política',
+	PIMS_RISK_PROCESS: 'PIMS · Proceso de riesgos',
+	PIMS_SOA: 'PIMS · Aplicabilidad',
+	PIMS_TREATMENT_PLAN: 'PIMS · Plan de tratamiento',
+	PIMS_SECURITY_PROGRAM: 'PIMS · Programa de seguridad',
+	PIMS_RISK_RESULTS: 'PIMS · Resultados de riesgos',
+	PIMS_TREATMENT_RESULTS: 'PIMS · Resultados del tratamiento',
+	PIMS_COMPETENCE: 'PIMS · Competencia',
+	PIMS_MONITORING: 'PIMS · Monitoreo',
+	PIMS_NONCONFORMITIES: 'PIMS · No conformidades'
+};
+
+export const LIFECYCLE_LABEL: Record<string, string> = {
+	in_force: 'Vigente',
+	draft: 'Borrador'
+};
+
+export type RequirementState = 'in_force' | 'draft' | 'expired' | 'unowned' | 'missing';
+export const REQUIREMENT_STATE_LABEL: Record<RequirementState, string> = {
+	in_force: 'Vigente',
+	draft: 'Borrador',
+	expired: 'Vencido',
+	unowned: 'Sin responsable',
+	missing: 'No existe'
+};
+
+export type PimsRequirement = {
+	code: string;
+	order: number;
+	clause_ref: string;
+	title: string;
+	document_kind: string;
+	summary: string;
+	expected_evidence: string;
+	responsible_unit_code: string | null;
+	responsible_unit_name: string | null;
+};
+export type PimsDocument = {
+	code: string;
+	title: string;
+	current_version: number;
+	lifecycle: 'in_force' | 'draft';
+	review_date: string | null;
+	owner_unit_code: string | null;
+	owner_unit_name: string | null;
+};
+export type PimsItem = PimsRequirement & {
+	state: RequirementState;
+	issues: RequirementState[];
+	document: PimsDocument | null;
+};
+export type PimsCompleteness = {
+	as_of: string;
+	total: number;
+	in_force: number;
+	percent_in_force: number;
+	counts: Record<RequirementState, number>;
+	items: PimsItem[];
 };
 
 type FetchFn = typeof fetch;

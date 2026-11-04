@@ -48,7 +48,8 @@ async def test_lista_de_documentos(client: httpx.AsyncClient, seeded) -> None:
     response = await _get(client, headers, "/documents")
     assert response.status_code == 200
     docs = {d["code"]: d for d in response.json()}
-    assert sorted(docs) == CODES
+    assert sorted(c for c in docs if not c.startswith("pims-")) == CODES
+    assert sum(c.startswith("pims-") for c in docs) == 10
     rof = docs["rof"]
     assert (rof["kind"], rof["current_version"], rof["open_change_requests"]) == ("ROF", 3, 0)
     assert rof["owner_unit_code"] == "SGEN" and rof["owner_unit_name"] == "Secretaría General"
@@ -311,15 +312,16 @@ async def test_seed_idempotente_no_pisa_lo_de_la_app_y_reset_restaura(
     admin = await superadmin_headers(client, seeded)
     await _resolve(client, admin, (await _propose(client, learner)).json()["id"])
 
-    assert await sync_documents(sf, settings) == (0, 5)
+    assert await sync_documents(sf, settings) == (0, 15)
     async with seeded.state.engine.connect() as conn:
         counts = (
             await conn.scalar(text("SELECT count(*) FROM documents")),
             await conn.scalar(text("SELECT count(*) FROM document_versions")),
         )
-    assert counts == (5, 3 + 2 + 2 + 1 + 1 + 1)  # incluye la v4 del ROF creada desde la app
+    # 5 generales (9 versiones) + la v4 del ROF creada desde la app + 10 documentos PIMS
+    assert counts == (15, 9 + 1 + 10)
     assert (await _get(client, learner, "/documents/rof")).json()["current_version"] == 4
 
-    assert await sync_documents(sf, settings, reset=True) == (5, 0)
+    assert await sync_documents(sf, settings, reset=True) == (15, 0)
     assert (await _get(client, learner, "/documents/rof")).json()["current_version"] == 3
     assert (await _get(client, learner, "/change-requests")).json() == []

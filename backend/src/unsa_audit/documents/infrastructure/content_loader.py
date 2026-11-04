@@ -13,7 +13,14 @@ import yaml
 
 from unsa_audit.documents.application.ports import SeedDocument
 from unsa_audit.documents.domain.diff import content_hash, normalize_content
-from unsa_audit.documents.domain.documents import Document, DocumentKind, DocumentVersion
+from unsa_audit.documents.domain.documents import (
+    PIMS_KINDS,
+    Document,
+    DocumentKind,
+    DocumentLifecycle,
+    DocumentVersion,
+)
+from unsa_audit.documents.domain.pims import PimsRequirement
 
 _NS = uuid5(NAMESPACE_URL, "https://unsa-audit-poc.example/documents")
 _VERSION_FILE = re.compile(r"^v(?P<number>\d+)\.md$")
@@ -77,6 +84,21 @@ def _load_document(directory: Path) -> SeedDocument:
                 created_at=datetime.combine(day, time(9, 0), tzinfo=UTC),
             )
         )
+    try:
+        lifecycle = DocumentLifecycle(meta.get("lifecycle", "in_force"))
+    except ValueError as exc:
+        raise DocumentContentError(f"{directory}/document.yaml: lifecycle invalido") from exc
+    raw_review = meta.get("review_date")
+    try:
+        review_date = (
+            None
+            if raw_review is None
+            else raw_review
+            if isinstance(raw_review, date)
+            else date.fromisoformat(str(raw_review))
+        )
+    except ValueError as exc:
+        raise DocumentContentError(f"{directory}/document.yaml: review_date invalida") from exc
     document = Document(
         id=doc_id,
         code=code,
@@ -84,6 +106,8 @@ def _load_document(directory: Path) -> SeedDocument:
         title=title,
         owner_unit_code=meta.get("owner_unit"),
         current_version_id=versions[-1].id,
+        lifecycle=lifecycle,
+        review_date=review_date,
     )
     return SeedDocument(document, versions)
 
@@ -102,4 +126,49 @@ class FileDocumentSource:
         codes = [d.document.code for d in documents]
         if len(set(codes)) != len(codes):
             raise DocumentContentError("codigos de documento repetidos")
+        pims_kinds = [d.document.kind for d in documents if d.document.kind in PIMS_KINDS]
+        if len(set(pims_kinds)) != len(pims_kinds):
+            raise DocumentContentError("hay mas de un documento para un mismo tipo PIMS")
         return documents
+
+
+def requirement_id(code: str) -> UUID:
+    return uuid5(_NS, f"pims-requirement:{code}")
+
+
+class FilePimsRequirementSource:
+    """Lee `content/pims/requirements.yaml`: lista ordenada de los requisitos del PIMS."""
+
+    def __init__(self, content_dir: Path) -> None:
+        self._path = content_dir / "pims" / "requirements.yaml"
+
+    def load(self) -> list[PimsRequirement]:
+        if not self._path.exists():
+            return []
+        raw = yaml.safe_load(self._path.read_text(encoding="utf-8")) or {}
+        items = raw.get("requirements")
+        if not isinstance(items, list):
+            raise DocumentContentError(f"{self._path}: falta la lista `requirements`")
+        requirements: list[PimsRequirement] = []
+        for order, item in enumerate(items, start=1):
+            try:
+                requirements.append(
+                    PimsRequirement(
+                        id=requirement_id(item["code"]),
+                        code=item["code"],
+                        clause_ref=str(item["clause_ref"]),
+                        title=item["title"],
+                        document_kind=DocumentKind(item["document_kind"]),
+                        summary=" ".join(str(item["summary"]).split()),
+                        expected_evidence=" ".join(str(item["expected_evidence"]).split()),
+                        responsible_unit_code=item.get("responsible_unit"),
+                        sort_order=order,
+                    )
+                )
+            except (KeyError, ValueError) as exc:
+                raise DocumentContentError(f"{self._path}: requisito #{order}: {exc}") from exc
+        codes = [r.code for r in requirements]
+        kinds = [r.document_kind for r in requirements]
+        if len(set(codes)) != len(codes) or len(set(kinds)) != len(kinds):
+            raise DocumentContentError(f"{self._path}: codigos o tipos de documento repetidos")
+        return requirements

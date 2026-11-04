@@ -27,4 +27,6 @@ Implementado: `health` y `core` (F0); `identity` (registro, login JWT, `/me`, co
 
 `documents` (F3): documentos institucionales con versiones inmutables (hash SHA-256 del contenido normalizado), diff por líneas y solicitudes de cambio (proponer → aprobar/rechazar). La aprobación es atómica y usa *compare-and-set* sobre la versión vigente, de modo que dos aprobaciones simultáneas no crean dos versiones. Solo el superadmin resuelve (la dependencia de rol viene de `identity`).
 
+Conjunto documental del PIMS (F4, dentro de `documents`): 11 requisitos (`pims_requirements`, cláusula como dato) ligados a 11 tipos de documento `PIMS_*`. Los documentos tienen ciclo de vida (`in_force`/`draft`) y fecha de revisión; el caso de uso `GetPimsCompleteness` aplica la función pura `evaluate_state` (precedencia missing > draft > expired > unowned > in_force) con un reloj inyectable y expone `/pims/requirements` y `/pims/completeness`.
+
 Dependencia entre módulos: `learning` lee hechos de `university` solo a través de un puerto (`UniversityFacts`) cuyo adaptador vive en `learning/infrastructure`.

@@ -201,10 +201,10 @@ async def test_sync_no_pisa_lo_existente_y_reset_restaura(repo) -> None:
     assert (await GetDocument(repo).execute("rof")).current.number == 4
 
     created, skipped = await SyncDocuments(repo, FileDocumentSource(CONTENT)).execute()
-    assert (created, skipped) == (0, 5)
+    assert (created, skipped) == (0, 15)
     assert (await GetDocument(repo).execute("rof")).current.number == 4
 
     created, skipped = await SyncDocuments(repo, FileDocumentSource(CONTENT)).execute(reset=True)
-    assert (created, skipped) == (5, 0)
+    assert (created, skipped) == (15, 0)
     assert (await GetDocument(repo).execute("rof")).current.number == 3
     assert await repo.list_change_requests() == []

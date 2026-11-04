@@ -1,7 +1,7 @@
 import uuid
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from unsa_audit.core.database import Base
@@ -15,6 +15,8 @@ class DocumentModel(Base):
     kind: Mapped[str] = mapped_column(String(30))
     title: Mapped[str] = mapped_column(String(200))
     owner_unit_code: Mapped[str | None] = mapped_column(String(30))
+    lifecycle: Mapped[str] = mapped_column(String(20), server_default="in_force")
+    review_date: Mapped[date | None] = mapped_column(Date)
     # FK circular con document_versions: se crea despues (use_alter).
     current_version_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("document_versions.id", use_alter=True, name="fk_documents_current_version")
@@ -73,3 +75,17 @@ class ChangeRequestModel(Base):
     )
     resulting_version_number: Mapped[int | None] = mapped_column(Integer)
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class PimsRequirementModel(Base):
+    __tablename__ = "pims_requirements"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    code: Mapped[str] = mapped_column(String(60), unique=True)
+    clause_ref: Mapped[str] = mapped_column(String(30))
+    title: Mapped[str] = mapped_column(String(200))
+    document_kind: Mapped[str] = mapped_column(String(30), unique=True)
+    summary: Mapped[str] = mapped_column(Text)
+    expected_evidence: Mapped[str] = mapped_column(Text)
+    responsible_unit_code: Mapped[str | None] = mapped_column(String(30))
+    sort_order: Mapped[int] = mapped_column(Integer, unique=True)

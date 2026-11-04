@@ -5,9 +5,16 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from unsa_audit.core.config import Settings
 from unsa_audit.core.database import create_engine, create_session_factory
+from unsa_audit.documents.application.pims_use_cases import SyncPimsRequirements
 from unsa_audit.documents.application.use_cases import SyncDocuments
-from unsa_audit.documents.infrastructure.content_loader import FileDocumentSource
-from unsa_audit.documents.infrastructure.sqlalchemy_repository import SqlAlchemyDocumentRepository
+from unsa_audit.documents.infrastructure.content_loader import (
+    FileDocumentSource,
+    FilePimsRequirementSource,
+)
+from unsa_audit.documents.infrastructure.sqlalchemy_repository import (
+    SqlAlchemyDocumentRepository,
+    SqlAlchemyPimsRequirementRepository,
+)
 from unsa_audit.identity.application.use_cases import EnsureSuperadmin
 from unsa_audit.identity.infrastructure.security import Argon2PasswordHasher
 from unsa_audit.identity.infrastructure.sqlalchemy_user_repository import SqlAlchemyUserRepository
@@ -114,6 +121,17 @@ async def sync_documents(
     return await use_case.execute(reset=reset)
 
 
+async def sync_pims_requirements(
+    session_factory: async_sessionmaker[AsyncSession], settings: Settings
+) -> int:
+    """Dato de referencia: reemplaza el conjunto de requisitos documentales del PIMS."""
+    use_case = SyncPimsRequirements(
+        SqlAlchemyPimsRequirementRepository(session_factory),
+        FilePimsRequirementSource(settings.content_dir),
+    )
+    return await use_case.execute()
+
+
 async def ensure_superadmin(
     session_factory: async_sessionmaker[AsyncSession], settings: Settings
 ) -> None:
@@ -134,6 +152,7 @@ async def seed_all(settings: Settings, reset_documents: bool = False) -> None:
         session_factory = create_session_factory(engine)
         await load_university(session_factory)
         await sync_content(session_factory, settings)
+        await sync_pims_requirements(session_factory, settings)
         await sync_documents(session_factory, settings, reset=reset_documents)
         await ensure_superadmin(session_factory, settings)
     finally:

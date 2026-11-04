@@ -3,7 +3,7 @@
 > Nota de trabajo para las Fases 4 (set documental PIMS), 5 (Ruta 3 y Ruta 4) y 6 (analytics).
 
 ## Qué son y cómo se usarán
-`raw/files/` contiene 12 plantillas de un toolkit comercial de ISO/IEC 27001 (edición 2013: cláusulas 4–10 y Anexo A con numeración `A.x.y.z`), 10 `.docx` y 2 `.xlsx`. Son **material de terceros** (la plantilla acredita a su autor):
+`raw/files/` contiene 16 plantillas de un toolkit comercial de ISO/IEC 27001 (edición 2013: cláusulas 4–10 y Anexo A con numeración `A.x.y.z`), 14 `.docx` y 2 `.xlsx` (las 4 últimas —alcance, política, declaración de aplicabilidad y plan de tratamiento— se añadieron el 2026-11-11 y cubren los documentos que antes no tenían plantilla). Son **material de terceros** (la plantilla acredita a su autor):
 
 - **No se copian textos ni se versiona `raw/`** (está en `.gitignore`). Se usan como *referencia estructural*: qué secciones tiene cada documento, qué registros exige y qué mecánica práctica enseñan.
 - Todo el contenido que entra al repo se **redacta de nuevo**, en español, adaptado a ISO/IEC 27701 (privacidad: datos personales, roles *controller/processor*, derechos de los titulares) y a la UNSA ficticia.
@@ -13,12 +13,13 @@
 
 | Plantilla de origen | Documento PIMS (§5 del PLAN) | Adaptación a 27701 / UNSA | Ruta / ejercicio |
 |---|---|---|---|
-| *(sin plantilla)* | 1. Alcance del PIMS (4.3) | Fronteras: unidades, sistemas y actividades de tratamiento de la UNSA ficticia; roles controller/processor | R3: redactar el alcance eligiendo unidades y sistemas de la BD |
-| *(sin plantilla)* | 2. Política de privacidad (5.2) | Principios, derechos de titulares, responsables | R2: identificar elementos obligatorios; R3: completar |
+| **Documento sobre el alcance del SGSI** | 1. Alcance del PIMS (4.3) | Estructura tomada como guía (procesos y servicios, unidades, ubicaciones, redes/infraestructura, exclusiones, criterios de eficacia). Se reescribe con las unidades, sistemas y actividades de tratamiento de la UNSA ficticia y los roles controller/processor | R3: redactar el alcance eligiendo unidades y sistemas de la BD |
+| **Política de seguridad de la información** | 2. Política de privacidad (5.2) | Guía de secciones (objetivos y medición, requisitos legales, controles, responsabilidades, comunicación, apoyo de la dirección). Se reorienta a privacidad: principios, derechos de los titulares, bases de tratamiento, brechas | R2: identificar elementos obligatorios; R3: completar |
 | **Metodología de evaluación y tratamiento de riesgos** | 3. Proceso de evaluación de riesgos de privacidad (6.1.2) | Activos → amenazas → vulnerabilidades → consecuencia (0–2) + probabilidad (0–2) = riesgo; ≥ 3 no aceptable. Añadir **impacto sobre los titulares** y categorías sensibles | R3: `risk_rating` |
 | **Cuadro de evaluación de riesgos** (xlsx, hojas Categorías/Amenazas/Vulnerabilidades) | 7. Resultados de la evaluación (8.2) | Activos = sistemas y actividades de tratamiento del seed; catálogos propios de amenazas y vulnerabilidades | R3: tabla de riesgos generada desde la BD |
-| **Cuadro de tratamiento de riesgos** (xlsx, hojas Opciones/Controles) | 8. Resultados del tratamiento (8.3) y 5. Plan de tratamiento (6.1.3 f) | 4 opciones (controles, transferir, evitar, aceptar) + riesgo residual; controles de privacidad para controller y processor (redactados por nosotros) | R3: `treatment_choice` |
-| *(derivado de la metodología + cuadro de tratamiento)* | 4. Declaración de aplicabilidad (6.1.3 e) | Aplica / no aplica + justificación + documento de respaldo | R3 (módulo demo): `soa_form` |
+| **Plan de tratamiento del riesgo** (actividades, recursos, responsable, plazos, capacitación, método de evaluación, estado) | 5. Plan de tratamiento (6.1.3 f) | Misma tabla; cada actividad referencia un riesgo no aceptable y un control de la SoA | R3: completar el plan de una oficina |
+| **Cuadro de tratamiento de riesgos** (xlsx, hojas Opciones/Controles) | 8. Resultados del tratamiento (8.3) | 4 opciones (controles, transferir, evitar, aceptar) + riesgo residual; controles de privacidad para controller y processor (redactados por nosotros) | R3: `treatment_choice` |
+| **Declaración de aplicabilidad** (la plantilla lista todo el Anexo A: id, control, aplica sí/no, justificación, objetivo, método de implementación, estado; más aceptación de riesgos residuales) | 4. Declaración de aplicabilidad (6.1.3 e) | Mismas columnas, pero sobre una **lista reducida de temas de control de privacidad** redactada por nosotros (≈ 12–15 filas, separando lo que aplica al controller y al processor) en vez de reproducir el anexo; se conserva la sección de aceptación de riesgos residuales | R3 (módulo demo): `soa_form` |
 | **Informe sobre evaluación y tratamiento** | 7 y 8 (informe consolidado) | Resumen del proceso: objetivo, alcance, periodo, participantes, metodología, documentos | R3: completar informe |
 | *(sin plantilla directa)* | 6. Programa de seguridad documentado, con gestión de incidentes (6.1.3 c) | Incluye plan de respuesta a **brechas de datos personales** | R3 |
 | **Plan de capacitación y concienciación** | 9. Evidencia de competencia (7.2) | Matriz cargo → competencia → capacitación → evidencia; enlaza con las 4 rutas de esta plataforma | R3: `competence_matrix`; analytics F6 |

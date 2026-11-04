@@ -4,19 +4,27 @@ from uuid import UUID
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from unsa_audit.documents.application.ports import ApplyOutcome, DocumentSummary, SeedDocument
+from unsa_audit.documents.application.ports import (
+    ApplyOutcome,
+    DocumentSummary,
+    PimsRequirementView,
+    SeedDocument,
+)
 from unsa_audit.documents.domain.documents import (
     ChangeImpact,
     ChangeRequest,
     ChangeStatus,
     Document,
     DocumentKind,
+    DocumentLifecycle,
     DocumentVersion,
 )
+from unsa_audit.documents.domain.pims import PimsRequirement
 from unsa_audit.documents.infrastructure.models import (
     ChangeRequestModel,
     DocumentModel,
     DocumentVersionModel,
+    PimsRequirementModel,
 )
 from unsa_audit.university.infrastructure.models import OrgUnitModel
 
@@ -31,7 +39,14 @@ class _NotOpen(Exception):
 
 def _document(m: DocumentModel) -> Document:
     return Document(
-        m.id, m.code, DocumentKind(m.kind), m.title, m.owner_unit_code, m.current_version_id
+        m.id,
+        m.code,
+        DocumentKind(m.kind),
+        m.title,
+        m.owner_unit_code,
+        m.current_version_id,
+        DocumentLifecycle(m.lifecycle),
+        m.review_date,
     )
 
 
@@ -282,6 +297,8 @@ class SqlAlchemyDocumentRepository:
                     kind=d.kind.value,
                     title=d.title,
                     owner_unit_code=d.owner_unit_code,
+                    lifecycle=d.lifecycle.value,
+                    review_date=d.review_date,
                 )
             )
             await session.flush()
@@ -296,3 +313,51 @@ class SqlAlchemyDocumentRepository:
         async with self._sf() as session, session.begin():
             await session.execute(delete(ChangeRequestModel))
             await session.execute(delete(DocumentModel))
+
+
+class SqlAlchemyPimsRequirementRepository:
+    def __init__(self, session_factory: async_sessionmaker[AsyncSession]) -> None:
+        self._sf = session_factory
+
+    async def replace_all(self, requirements: list[PimsRequirement]) -> None:
+        async with self._sf() as session, session.begin():
+            # sort_order y document_kind son unicos: se vacia antes de reinsertar.
+            await session.execute(delete(PimsRequirementModel))
+            session.add_all(
+                PimsRequirementModel(
+                    id=r.id,
+                    code=r.code,
+                    clause_ref=r.clause_ref,
+                    title=r.title,
+                    document_kind=r.document_kind.value,
+                    summary=r.summary,
+                    expected_evidence=r.expected_evidence,
+                    responsible_unit_code=r.responsible_unit_code,
+                    sort_order=r.sort_order,
+                )
+                for r in requirements
+            )
+
+    async def list_all(self) -> list[PimsRequirementView]:
+        async with self._sf() as session:
+            units = {u.code: u.name for u in await session.scalars(select(OrgUnitModel))}
+            rows = await session.scalars(
+                select(PimsRequirementModel).order_by(PimsRequirementModel.sort_order)
+            )
+            return [
+                PimsRequirementView(
+                    PimsRequirement(
+                        id=m.id,
+                        code=m.code,
+                        clause_ref=m.clause_ref,
+                        title=m.title,
+                        document_kind=DocumentKind(m.document_kind),
+                        summary=m.summary,
+                        expected_evidence=m.expected_evidence,
+                        responsible_unit_code=m.responsible_unit_code,
+                        sort_order=m.sort_order,
+                    ),
+                    units.get(m.responsible_unit_code or ""),
+                )
+                for m in rows
+            ]

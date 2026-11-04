@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from unsa_audit.documents.domain.diff import compute_diff
-from unsa_audit.documents.domain.documents import DocumentKind
+from unsa_audit.documents.domain.documents import PIMS_KINDS, DocumentKind
 from unsa_audit.documents.infrastructure.content_loader import (
     DocumentContentError,
     FileDocumentSource,
@@ -23,16 +23,18 @@ def seeds():
 
 @pytest.mark.ac("AC-004-13")
 def test_cinco_documentos_con_el_historial_esperado(seeds) -> None:
-    assert {c: len(s.versions) for c, s in seeds.items()} == {
+    general = {c: s for c, s in seeds.items() if not c.startswith("pims-")}
+    assert {c: len(s.versions) for c, s in general.items()} == {
         "rof": 3, "mof": 2, "reglamento-evaluacion": 2, "estatuto": 1, "cuadro-asignacion": 1,
     }  # fmt: skip
-    assert {s.document.kind for s in seeds.values()} == set(DocumentKind)
+    assert {s.document.kind for s in general.values()} == set(DocumentKind) - set(PIMS_KINDS)
 
 
 @pytest.mark.ac("AC-004-13")
 def test_las_unidades_responsables_existen_en_el_seed_de_la_universidad(seeds) -> None:
     codes = {u.code for u in build_university_dataset().org_units}
-    owners = {s.document.owner_unit_code for s in seeds.values()}
+    # El plan de tratamiento PIMS no tiene responsable a proposito (hallazgo sembrado).
+    owners = {s.document.owner_unit_code for s in seeds.values()} - {None}
     assert owners <= codes, owners - codes
 
 
