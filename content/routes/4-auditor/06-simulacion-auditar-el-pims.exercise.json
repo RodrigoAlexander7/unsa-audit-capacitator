@@ -1,0 +1,6 @@
+{
+	"kind": "matching",
+	"pass_score": 70,
+	"generator": "pims_audit_findings",
+	"params": {}
+}

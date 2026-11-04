@@ -3,7 +3,7 @@
 from collections.abc import Callable
 from typing import Any
 
-from unsa_audit.learning.application.ports import UniversitySnapshot
+from unsa_audit.learning.application.ports import PimsFact, UniversitySnapshot
 from unsa_audit.learning.domain.exercises import InvalidExerciseSpec, Spec
 
 KIND_ORDER = ["rectorado", "vicerrectorado", "facultad", "escuela", "oficina"]
@@ -90,7 +90,54 @@ def system_owners(params: dict[str, Any], facts: UniversitySnapshot) -> Spec:
     }
 
 
+FINDING_BY_STATE = {
+    "in_force": "conforme",
+    "unowned": "observacion",
+    "draft": "no_conformidad",
+    "expired": "no_conformidad",
+    "missing": "no_conformidad",
+}
+FINDING_LABEL = {
+    "conforme": "Conforme",
+    "observacion": "Observación",
+    "no_conformidad": "No conformidad",
+}
+
+
+def _evidence_text(fact: PimsFact) -> str:
+    title = fact.document_title or ""
+    if fact.state == "missing":
+        return "No existe ningún documento."
+    if fact.state == "draft":
+        return f"Existe «{title}», pero está en borrador."
+    if fact.state == "expired":
+        when = fact.review_date.isoformat() if fact.review_date else "?"
+        return f"Existe «{title}», vigente, pero su revisión venció el {when}."
+    if fact.state == "unowned":
+        return f"Existe «{title}», vigente, pero no tiene unidad responsable."
+    owner = fact.owner_unit_name or "—"
+    return f"Existe «{title}» (v{fact.version}), vigente y con responsable: {owner}."
+
+
+def pims_audit_findings(params: dict[str, Any], facts: UniversitySnapshot) -> Spec:
+    """Evidencia real de cada requisito del PIMS -> tipo de hallazgo (clasificacion)."""
+    if not facts.pims:
+        raise InvalidExerciseSpec("no hay requisitos PIMS para generar `pims_audit_findings`")
+    left = [
+        {"id": f.code, "label": f"{f.clause_ref} {f.title}. {_evidence_text(f)}"}
+        for f in facts.pims
+    ]
+    return {
+        "prompt": "Auditas el conjunto documental del PIMS de la UNSA. Clasifica el hallazgo "
+        "que corresponde a la evidencia de cada requisito.",
+        "left": left,
+        "right": [{"id": key, "label": label} for key, label in FINDING_LABEL.items()],
+        "pairs": {f.code: FINDING_BY_STATE[f.state] for f in facts.pims},
+    }
+
+
 GENERATORS: dict[str, Callable[[dict[str, Any], UniversitySnapshot], Spec]] = {
+    "pims_audit_findings": pims_audit_findings,
     "org_levels": org_levels,
     "responsibility_cases": responsibility_cases,
     "system_owners": system_owners,

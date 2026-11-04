@@ -1,0 +1,40 @@
+{
+	"kind": "matching",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Relaciona cada pregunta de un auditor con el requisito (documento) del PIMS que la responde.",
+		"left": [
+			{ "id": "q1", "label": "¿Dónde se indica qué unidades y sistemas cubre el PIMS y qué queda fuera?" },
+			{ "id": "q2", "label": "¿Qué principios y derechos garantiza la universidad a las personas?" },
+			{ "id": "q3", "label": "¿Cómo se valoran la consecuencia y la probabilidad de un riesgo?" },
+			{ "id": "q4", "label": "¿Qué controles se aplican y por qué no se aplican otros?" },
+			{ "id": "q5", "label": "¿Quién hará qué, con qué recursos y para cuándo, para reducir los riesgos más altos?" },
+			{ "id": "q6", "label": "¿Qué hace la universidad cuando ocurre una brecha de datos personales?" },
+			{ "id": "q7", "label": "¿Cómo se demuestra que las personas con funciones en el PIMS están capacitadas?" },
+			{ "id": "q8", "label": "¿Qué se hizo cuando se detectó un incumplimiento, y se comprobó que funcionó?" }
+		],
+		"right": [
+			{ "id": "pims-alcance", "label": "4.3 Alcance del PIMS" },
+			{ "id": "pims-politica-privacidad", "label": "5.2 Política de privacidad" },
+			{ "id": "pims-proceso-riesgos", "label": "6.1.2 Proceso de evaluación de riesgos de privacidad" },
+			{ "id": "pims-soa", "label": "6.1.3 e Declaración de aplicabilidad (SoA)" },
+			{ "id": "pims-plan-tratamiento", "label": "6.1.3 f Plan de tratamiento de riesgos de privacidad" },
+			{ "id": "pims-programa-seguridad", "label": "6.1.3 c Programa de seguridad y gestión de incidentes" },
+			{ "id": "pims-resultados-riesgos", "label": "8.2 Resultados de la evaluación de riesgos" },
+			{ "id": "pims-resultados-tratamiento", "label": "8.3 Resultados del tratamiento de riesgos" },
+			{ "id": "pims-competencia", "label": "7.2 Evidencia de competencia" },
+			{ "id": "pims-monitoreo", "label": "9.1 Evidencia de monitoreo y medición" },
+			{ "id": "pims-no-conformidades", "label": "10.2 No conformidades y acciones correctivas" }
+		],
+		"pairs": {
+			"q1": "pims-alcance",
+			"q2": "pims-politica-privacidad",
+			"q3": "pims-proceso-riesgos",
+			"q4": "pims-soa",
+			"q5": "pims-plan-tratamiento",
+			"q6": "pims-programa-seguridad",
+			"q7": "pims-competencia",
+			"q8": "pims-no-conformidades"
+		}
+	}
+}

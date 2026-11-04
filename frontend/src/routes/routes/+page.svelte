@@ -26,7 +26,10 @@
 				</header>
 				<h2>{route.title}</h2>
 				<p class="muted">{route.description}</p>
-				<p class="meta">{route.hours} h · {route.modules_total} módulos</p>
+				<p class="meta">
+					{route.hours} h previstas · {route.modules_total} módulo(s) disponible(s)
+					{#if route.modules_planned > 0}· {route.modules_planned} en preparación{/if}
+				</p>
 
 				{#if route.modules_total > 0}
 					<progress value={route.modules_completed} max={route.modules_total}></progress>

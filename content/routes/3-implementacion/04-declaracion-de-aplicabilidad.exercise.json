@@ -1,0 +1,74 @@
+{
+	"kind": "soa_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Completa la declaración de aplicabilidad de la oficina descrita: para cada control, indica si aplica y por qué.",
+		"scenario": "La Oficina de Registros Académicos decide para qué y cómo se usan los datos de matrícula y de notas (datos de identificación y académicos, sin datos de salud). Usa un proveedor de nube que guarda los respaldos por su cuenta y comunica datos a entes de control. No presta servicios de tratamiento a otras entidades.",
+		"reasons": [
+			{ "id": "r-responsable", "label": "La oficina actúa como responsable del tratamiento" },
+			{ "id": "r-encargado-externo", "label": "Un proveedor externo trata datos por cuenta de la oficina" },
+			{ "id": "r-no-encargada", "label": "La oficina no actúa como encargada de otra entidad" },
+			{ "id": "r-sin-sensibles", "label": "La oficina no trata datos sensibles" },
+			{ "id": "r-brecha", "label": "Cualquier tratamiento puede sufrir una brecha o un incidente" },
+			{ "id": "r-terceros", "label": "La oficina comunica datos a terceros" }
+		],
+		"controls": [
+			{
+				"id": "c1",
+				"label": "Identificar y documentar la finalidad de cada tratamiento",
+				"applies": true,
+				"reason": "r-responsable",
+				"explanation": "Quien decide para qué se usan los datos debe dejar la finalidad documentada."
+			},
+			{
+				"id": "c2",
+				"label": "Obtener consentimiento explícito para datos de salud",
+				"applies": false,
+				"reason": "r-sin-sensibles",
+				"explanation": "No trata datos de salud: el control no aplica."
+			},
+			{
+				"id": "c3",
+				"label": "Contratos con encargados del tratamiento",
+				"applies": true,
+				"reason": "r-encargado-externo",
+				"explanation": "El proveedor de nube trata datos por cuenta de la oficina: se necesita un contrato de encargo."
+			},
+			{
+				"id": "c4",
+				"label": "Tratar los datos solo bajo instrucciones documentadas de un responsable",
+				"applies": false,
+				"reason": "r-no-encargada",
+				"explanation": "Es una obligación del encargado; la oficina actúa como responsable."
+			},
+			{
+				"id": "c5",
+				"label": "Atender los derechos de los titulares",
+				"applies": true,
+				"reason": "r-responsable",
+				"explanation": "Como responsable, la oficina responde a las solicitudes de las personas."
+			},
+			{
+				"id": "c6",
+				"label": "Gestionar las brechas de datos personales",
+				"applies": true,
+				"reason": "r-brecha",
+				"explanation": "Toda oficina que trata datos personales puede sufrir una brecha."
+			},
+			{
+				"id": "c7",
+				"label": "Asistir a un responsable ante solicitudes de titulares",
+				"applies": false,
+				"reason": "r-no-encargada",
+				"explanation": "Ese apoyo es propio del encargado; la oficina no lo es."
+			},
+			{
+				"id": "c8",
+				"label": "Registrar las transferencias y comunicaciones a terceros",
+				"applies": true,
+				"reason": "r-terceros",
+				"explanation": "Comunica datos al proveedor y a entes de control: debe registrarlo."
+			}
+		]
+	}
+}

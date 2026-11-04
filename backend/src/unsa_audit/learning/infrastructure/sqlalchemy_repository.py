@@ -45,6 +45,7 @@ def _module(m: ModuleModel) -> Module:
         minutes=m.minutes,
         mandatory=m.mandatory,
         is_final=m.is_final,
+        planned=m.planned,
         lesson_md=m.lesson_md,
         exercise=exercise,
     )
@@ -94,6 +95,7 @@ class SqlAlchemyLearningRepository:
                 row.minutes = module.minutes
                 row.mandatory = module.mandatory
                 row.is_final = module.is_final
+                row.planned = module.planned
                 row.lesson_md = module.lesson_md
                 row.exercise_kind = ex.kind.value if ex else None
                 row.exercise_spec = ex.spec if ex else {}

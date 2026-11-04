@@ -15,6 +15,12 @@ def solve(kind: ExerciseKind, spec: dict[str, Any]) -> dict[str, Any]:
         return {"choice": spec["correct"]}
     if kind is ExerciseKind.QUIZ:
         return {"answers": {q["id"]: q["correct"] for q in spec["questions"]}}
+    if kind is ExerciseKind.SOA_FORM:
+        return {
+            "decisions": {
+                c["id"]: {"applies": c["applies"], "reason": c["reason"]} for c in spec["controls"]
+            }
+        }
     return {
         "choices": {
             step["id"]: max(step["options"], key=lambda o: o["points"])["id"]
@@ -31,4 +37,5 @@ def wrong(kind: ExerciseKind) -> dict[str, Any]:
         ExerciseKind.SINGLE_CHOICE: {"choice": "no-existe"},
         ExerciseKind.QUIZ: {"answers": {}},
         ExerciseKind.BRANCHING: {"choices": {}},
+        ExerciseKind.SOA_FORM: {"decisions": {}},
     }[kind]

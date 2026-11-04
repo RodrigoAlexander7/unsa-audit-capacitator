@@ -8,6 +8,7 @@ from unsa_audit.learning.application.errors import (
     HasExercise,
     ModuleLocked,
     ModuleNotFound,
+    ModulePlanned,
     NoExercise,
     NotEnrolled,
     PrerequisiteNotMet,
@@ -64,6 +65,7 @@ class RouteSummary:
     modules_total: int
     modules_completed: int
     minutes_credited: int
+    modules_planned: int = 0
 
     @property
     def hours_credited(self) -> float:
@@ -135,8 +137,9 @@ class ListRoutes:
                 RouteSummary(
                     route=route,
                     status=route_status(route, enrollments.get(route.code), prerequisite),
-                    modules_total=len(route_modules),
+                    modules_total=sum(not m.planned for m in route_modules),
                     modules_completed=sum(m.id in completed for m in route_modules),
+                    modules_planned=sum(m.planned for m in route_modules),
                     minutes_credited=credited_minutes(route_modules, completed),
                 )
             )
@@ -163,8 +166,9 @@ class GetRoute:
         summary = RouteSummary(
             route=route,
             status=route_status(route, enrollment, prerequisite),
-            modules_total=len(route_modules),
+            modules_total=sum(not m.planned for m in route_modules),
             modules_completed=sum(m.id in completed for m in route_modules),
+            modules_planned=sum(m.planned for m in route_modules),
             minutes_credited=credited_minutes(route_modules, completed),
         )
         modules = [
@@ -216,6 +220,8 @@ class _ModuleContext:
         module = await self._repo.get_module(module_id)
         if module is None:
             raise ModuleNotFound
+        if module.planned:
+            raise ModulePlanned
         enrollment = await self._repo.get_enrollment(user_id, module.route_code)
         if enrollment is None:
             raise NotEnrolled

@@ -1,8 +1,10 @@
-import type { Answer, Exercise } from './types';
+import type { Answer, Exercise, SoaDecision } from './types';
 
 /** Respuesta inicial de cada tipo de ejercicio (el orden mostrado es el orden barajado del API). */
 export function initialAnswer(exercise: Exercise): Answer {
 	switch (exercise.kind) {
+		case 'soa_form':
+			return { decisions: {} };
 		case 'ordering':
 			return { order: exercise.spec.items.map((item) => item.id) };
 		case 'matching':
@@ -32,6 +34,16 @@ export function completion(exercise: Exercise, answer: Answer): { done: number; 
 	const count = (record: Record<string, string>) =>
 		Object.values(record).filter((value) => value !== '').length;
 	switch (exercise.kind) {
+		case 'soa_form': {
+			const decisions = (answer as { decisions: Record<string, SoaDecision> }).decisions;
+			return {
+				done: exercise.spec.controls.filter((control) => {
+					const decision = decisions[control.id];
+					return decision && decision.applies !== null && decision.reason !== '';
+				}).length,
+				total: exercise.spec.controls.length
+			};
+		}
 		case 'ordering':
 			return { done: exercise.spec.items.length, total: exercise.spec.items.length };
 		case 'matching':

@@ -130,6 +130,20 @@ def validate_spec(kind: ExerciseKind, spec: Spec) -> None:
             _need(all(isinstance(p, int) and 0 <= p <= 10 for p in points),
                   f"paso {step['id']}: `points` debe ser entero 0..10")  # fmt: skip
             _need(max(points) > 0, f"paso {step['id']}: ninguna opcion suma puntos")
+    elif kind is ExerciseKind.SOA_FORM:
+        _need(bool(spec.get("scenario")), "falta `scenario`")
+        reasons = _labelled_ids(spec.get("reasons"), "reasons")
+        controls: Any = spec.get("controls")
+        _need(isinstance(controls, list) and len(controls) > 0, "`controls` vacio")
+        ids = _labelled_ids(controls, "controls")
+        for control in list(controls):
+            _need(
+                isinstance(control.get("applies"), bool),
+                f"{control['id']}: `applies` debe ser bool",
+            )
+            _need(control.get("reason") in reasons, f"{control['id']}: `reason` no es una opcion")
+            _need(bool(control.get("explanation")), f"{control['id']}: falta `explanation`")
+        _need(len(ids) == len(set(ids)), "controles repetidos")
 
 
 # ----------------------------------------------------------------------------- version publica
@@ -152,6 +166,13 @@ def to_public(kind: ExerciseKind, spec: Spec, seed: str) -> Spec:
             "prompt": prompt,
             "left": _shuffled(_strip(spec["left"]), seed),
             "right": _strip(spec["right"]),
+        }
+    if kind is ExerciseKind.SOA_FORM:
+        return {
+            "prompt": prompt,
+            "scenario": spec["scenario"],
+            "reasons": _strip(spec["reasons"]),
+            "controls": _strip(spec["controls"]),
         }
     if kind is ExerciseKind.SINGLE_CHOICE:
         return {"prompt": prompt, "options": _strip(spec["options"])}
@@ -236,7 +257,31 @@ def _grade_branching(spec: Spec, answer: Any) -> GradeResult:
     return GradeResult(_pct(earned, best), tuple(items))
 
 
+def _grade_soa_form(spec: Spec, answer: Any) -> GradeResult:
+    decisions = answer.get("decisions") if isinstance(answer, dict) else None
+    if not isinstance(decisions, dict):
+        raise InvalidAnswer("`decisions` debe ser un objeto")
+    for decision in decisions.values():
+        if (
+            not isinstance(decision, dict)
+            or not isinstance(decision.get("applies"), bool)
+            or not isinstance(decision.get("reason"), str)
+        ):
+            raise InvalidAnswer("cada decision necesita `applies` (bool) y `reason` (texto)")
+
+    items: list[ItemFeedback] = []
+    points = 0
+    for control in spec["controls"]:
+        decision = decisions.get(control["id"], {})
+        applies_ok = decision.get("applies") is control["applies"]
+        reason_ok = decision.get("reason") == control["reason"]
+        points += int(applies_ok) + int(reason_ok)
+        items.append(ItemFeedback(control["id"], applies_ok and reason_ok, control["explanation"]))
+    return GradeResult(_pct(points, 2 * len(items)), tuple(items))
+
+
 _GRADERS = {
+    ExerciseKind.SOA_FORM: _grade_soa_form,
     ExerciseKind.ORDERING: _grade_ordering,
     ExerciseKind.MATCHING: _grade_matching,
     ExerciseKind.SINGLE_CHOICE: _grade_single_choice,

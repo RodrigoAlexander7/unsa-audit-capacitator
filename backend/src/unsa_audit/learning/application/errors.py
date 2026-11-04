@@ -24,6 +24,10 @@ class ModuleLocked(LearningError):
     """El modulo aun no esta disponible (p. ej. evaluacion final)."""
 
 
+class ModulePlanned(LearningError):
+    """El modulo esta previsto pero aun no se ha desarrollado."""
+
+
 class NoExercise(LearningError):
     """El modulo no tiene ejercicio (solo lectura)."""
 

@@ -302,11 +302,11 @@ async def test_el_sync_es_idempotente_y_elimina_modulos_retirados(seeded, tmp_pa
     before = await repo.list_modules()
     await SyncContent(repo, FileContentSource(content)).execute()
     again = await repo.list_modules()
-    assert [m.id for m in before] == [m.id for m in again] and len(before) == 7
+    assert [m.id for m in before] == [m.id for m in again] and len(before) == 34  # 7+8+9+10
 
     trimmed = tmp_path / "content"
     shutil.copytree(content, trimmed)
     for leftover in (trimmed / "routes" / "1-sensibilizacion").glob("06-*"):
         leftover.unlink()
     await SyncContent(repo, FileContentSource(trimmed)).execute()
-    assert len(await repo.list_modules()) == 6
+    assert len(await repo.list_modules()) == 33

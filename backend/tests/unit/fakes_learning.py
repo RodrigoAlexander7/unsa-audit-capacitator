@@ -1,6 +1,14 @@
+from datetime import date
+from pathlib import Path
 from uuid import UUID
 
+from unsa_audit.documents.domain.pims import evaluate_state
+from unsa_audit.documents.infrastructure.content_loader import (
+    FileDocumentSource,
+    FilePimsRequirementSource,
+)
 from unsa_audit.learning.application.ports import (
+    PimsFact,
     PositionFact,
     SystemFact,
     UnitFact,
@@ -15,6 +23,38 @@ from unsa_audit.learning.domain.route import (
 )
 from unsa_audit.seed.university_data import UniversityDataset, build_university_dataset
 
+CONTENT = Path(__file__).resolve().parents[3] / "content"
+
+
+def pims_facts(today: date = date(2026, 11, 11)) -> list[PimsFact]:
+    """Estado del conjunto PIMS sembrado (requisitos + documentos reales) a una fecha."""
+    requirements = FilePimsRequirementSource(CONTENT).load()
+    seeds = {s.document.kind: s.document for s in FileDocumentSource(CONTENT).load()}
+    names = {u.code: u.name for u in build_university_dataset().org_units}
+    facts: list[PimsFact] = []
+    for r in requirements:
+        doc = seeds.get(r.document_kind)
+        evaluation = evaluate_state(
+            exists=doc is not None,
+            lifecycle=doc.lifecycle if doc else None,
+            review_date=doc.review_date if doc else None,
+            owner_unit_code=doc.owner_unit_code if doc else None,
+            today=today,
+        )
+        facts.append(
+            PimsFact(
+                r.code,
+                r.clause_ref,
+                r.title,
+                evaluation.state.value,
+                doc.title if doc else None,
+                1 if doc else None,
+                doc.review_date if doc else None,
+                names.get(doc.owner_unit_code or "") if doc else None,
+            )
+        )
+    return facts
+
 
 def snapshot_from_dataset(ds: UniversityDataset | None = None) -> UniversitySnapshot:
     ds = ds or build_university_dataset()
@@ -26,6 +66,7 @@ def snapshot_from_dataset(ds: UniversityDataset | None = None) -> UniversitySnap
             PositionFact(p.title, units[p.org_unit_id].kind.value) for p in positions.values()
         ],
         systems=[SystemFact(s.name, units[s.owner_org_unit_id].name) for s in ds.systems],
+        pims=pims_facts(),
     )
 
 

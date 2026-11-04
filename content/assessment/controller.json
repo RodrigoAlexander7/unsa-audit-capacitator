@@ -1,0 +1,184 @@
+{
+	"profile": "controller",
+	"title": "Evaluación para responsables del tratamiento (controller)",
+	"pass_score": 70,
+	"competencies": {
+		"finalidad": "Finalidad y base de tratamiento",
+		"derechos": "Derechos de los titulares",
+		"encargados": "Contratos con encargados",
+		"brechas": "Gestión de brechas",
+		"transferencias": "Transferencias a terceros",
+		"seguridad": "Medidas de seguridad",
+		"rendicion": "Rendición de cuentas y registros"
+	},
+	"questions": [
+		{
+			"id": "c01",
+			"competency": "finalidad",
+			"requirement": "pims-politica-privacidad",
+			"prompt": "Una oficina quiere usar los datos de matrícula para enviar publicidad de una empresa aliada. ¿Qué principio se ve afectado?",
+			"options": [
+				{ "id": "a", "label": "Calidad de los datos" },
+				{ "id": "b", "label": "Limitación de la finalidad" },
+				{ "id": "c", "label": "Conservación limitada" },
+				{ "id": "d", "label": "Minimización" }
+			],
+			"correct": "b",
+			"explanation": "Los datos se recogieron para la matrícula; usarlos para publicidad es un fin distinto e incompatible."
+		},
+		{
+			"id": "c02",
+			"competency": "finalidad",
+			"requirement": "pims-soa",
+			"prompt": "¿Qué base resulta adecuada para tratar datos de salud de estudiantes en Bienestar Universitario?",
+			"options": [
+				{ "id": "a", "label": "Que la oficina lo considere útil" },
+				{ "id": "b", "label": "Que el estudiante no se oponga" },
+				{ "id": "c", "label": "El consentimiento explícito de la persona" },
+				{ "id": "d", "label": "La costumbre de la oficina" }
+			],
+			"correct": "c",
+			"explanation": "Los datos de salud son sensibles y exigen consentimiento explícito u otra base legal expresa."
+		},
+		{
+			"id": "c03",
+			"competency": "derechos",
+			"requirement": "pims-politica-privacidad",
+			"prompt": "Un estudiante pide una copia de los datos que la universidad conserva sobre él. ¿Qué corresponde?",
+			"options": [
+				{ "id": "a", "label": "Atender el acceso por el canal institucional, en el plazo aplicable" },
+				{ "id": "b", "label": "Exigirle un pago previo" },
+				{ "id": "c", "label": "Derivarlo a otra oficina sin responder" },
+				{ "id": "d", "label": "Ignorar la solicitud si no es urgente" }
+			],
+			"correct": "a",
+			"explanation": "El acceso es un derecho de los titulares y debe atenderse por el canal y en el plazo definidos."
+		},
+		{
+			"id": "c04",
+			"competency": "derechos",
+			"requirement": "pims-monitoreo",
+			"prompt": "¿Qué indicador permitiría saber si las solicitudes de los titulares se atienden a tiempo?",
+			"options": [
+				{ "id": "a", "label": "Número de estudiantes matriculados" },
+				{ "id": "b", "label": "Horas de servidor encendido" },
+				{ "id": "c", "label": "Cantidad de correos enviados" },
+				{ "id": "d", "label": "Porcentaje de solicitudes atendidas dentro del plazo" }
+			],
+			"correct": "d",
+			"explanation": "Mide directamente el desempeño frente a un plazo, que es lo que el PIMS debe monitorear."
+		},
+		{
+			"id": "c05",
+			"competency": "encargados",
+			"requirement": "pims-soa",
+			"prompt": "La universidad contrata un proveedor de nube que guardará respaldos con datos personales. ¿Qué se necesita?",
+			"options": [
+				{ "id": "a", "label": "Solo el recibo de pago" },
+				{ "id": "b", "label": "Un contrato de encargo con instrucciones y medidas de seguridad" },
+				{ "id": "c", "label": "Nada: el proveedor asume toda la responsabilidad" },
+				{ "id": "d", "label": "Una autorización verbal" }
+			],
+			"correct": "b",
+			"explanation": "El tratamiento por encargo debe formalizarse por contrato con instrucciones, confidencialidad y seguridad."
+		},
+		{
+			"id": "c06",
+			"competency": "encargados",
+			"requirement": "pims-alcance",
+			"prompt": "El proveedor (encargado) hace un uso indebido de los datos. ¿Quién responde ante los titulares?",
+			"options": [
+				{ "id": "a", "label": "Solo el proveedor" },
+				{ "id": "b", "label": "Nadie, porque fue un tercero" },
+				{ "id": "c", "label": "El estudiante afectado" },
+				{ "id": "d", "label": "La universidad, que sigue siendo responsable" }
+			],
+			"correct": "d",
+			"explanation": "Contratar a un encargado no traslada la responsabilidad de quien decide el tratamiento."
+		},
+		{
+			"id": "c07",
+			"competency": "brechas",
+			"requirement": "pims-programa-seguridad",
+			"prompt": "Se pierde un USB con listas de notas. ¿Qué debes hacer primero?",
+			"options": [
+				{ "id": "a", "label": "Esperar a ver si aparece" },
+				{ "id": "b", "label": "Reportarlo de inmediato por el canal institucional" },
+				{ "id": "c", "label": "Avisar solo a tus compañeros" },
+				{ "id": "d", "label": "Borrar los registros del incidente" }
+			],
+			"correct": "b",
+			"explanation": "El reporte inmediato permite contener el daño y evaluar si hay riesgo para los titulares."
+		},
+		{
+			"id": "c08",
+			"competency": "brechas",
+			"requirement": "pims-programa-seguridad",
+			"prompt": "Tras una brecha, ¿qué evalúa el Oficial de Protección de Datos Personales?",
+			"options": [
+				{ "id": "a", "label": "Si hay riesgo para los titulares y si corresponde notificar" },
+				{ "id": "b", "label": "Qué empleado debe ser sancionado primero" },
+				{ "id": "c", "label": "Cuánto costó el equipo perdido" },
+				{ "id": "d", "label": "Si conviene ocultarla para evitar mala imagen" }
+			],
+			"correct": "a",
+			"explanation": "La evaluación del impacto sobre las personas determina las notificaciones necesarias."
+		},
+		{
+			"id": "c09",
+			"competency": "transferencias",
+			"requirement": "pims-soa",
+			"prompt": "La universidad quiere entregar la lista de estudiantes a una empresa por un convenio. ¿Qué debe verificar?",
+			"options": [
+				{ "id": "a", "label": "Que la empresa sea grande" },
+				{ "id": "b", "label": "Que el convenio sea económico" },
+				{ "id": "c", "label": "Que exista base válida, se limite a lo necesario y quede registrada la comunicación" },
+				{ "id": "d", "label": "Que se envíe por mensajería personal" }
+			],
+			"correct": "c",
+			"explanation": "Toda comunicación a terceros necesita una base, minimización y registro."
+		},
+		{
+			"id": "c10",
+			"competency": "seguridad",
+			"requirement": "pims-plan-tratamiento",
+			"prompt": "¿Qué medida reduce el riesgo de acceso indebido a notas por el uso de cuentas compartidas?",
+			"options": [
+				{ "id": "a", "label": "Cuentas personales con el mínimo privilegio necesario" },
+				{ "id": "b", "label": "Cambiar la contraseña compartida cada año" },
+				{ "id": "c", "label": "Prohibir el uso del sistema" },
+				{ "id": "d", "label": "Anotar la contraseña en un cuaderno común" }
+			],
+			"correct": "a",
+			"explanation": "La identificación individual y el mínimo privilegio permiten responsabilizar y limitar accesos."
+		},
+		{
+			"id": "c11",
+			"competency": "rendicion",
+			"requirement": "pims-alcance",
+			"prompt": "¿Para qué sirve el registro de actividades de tratamiento?",
+			"options": [
+				{ "id": "a", "label": "Para decorar el informe anual" },
+				{ "id": "b", "label": "Para guardar contraseñas" },
+				{ "id": "c", "label": "Solo para cumplir con auditores externos" },
+				{ "id": "d", "label": "Para saber qué datos se tratan, para qué, con qué base y por cuánto tiempo, y poder demostrarlo" }
+			],
+			"correct": "d",
+			"explanation": "Es la base de la rendición de cuentas: sin él no se puede demostrar el cumplimiento."
+		},
+		{
+			"id": "c12",
+			"competency": "rendicion",
+			"requirement": "pims-proceso-riesgos",
+			"prompt": "Un riesgo sobre una base de datos de salud sin cifrar tiene nivel 4 en la metodología de la UNSA. ¿Qué exige la metodología?",
+			"options": [
+				{ "id": "a", "label": "Aceptarlo porque la base es pequeña" },
+				{ "id": "b", "label": "Tratarlo, porque es un riesgo no aceptable" },
+				{ "id": "c", "label": "Esperar a la próxima auditoría" },
+				{ "id": "d", "label": "Reducir su valoración para que parezca aceptable" }
+			],
+			"correct": "b",
+			"explanation": "Los niveles 3 y 4 no son aceptables y deben tratarse."
+		}
+	]
+}

@@ -29,4 +29,9 @@ Implementado: `health` y `core` (F0); `identity` (registro, login JWT, `/me`, co
 
 Conjunto documental del PIMS (F4, dentro de `documents`): 11 requisitos (`pims_requirements`, cláusula como dato) ligados a 11 tipos de documento `PIMS_*`. Los documentos tienen ciclo de vida (`in_force`/`draft`) y fecha de revisión; el caso de uso `GetPimsCompleteness` aplica la función pura `evaluate_state` (precedencia missing > draft > expired > unowned > in_force) con un reloj inyectable y expone `/pims/requirements` y `/pims/completeness`.
 
-Dependencia entre módulos: `learning` lee hechos de `university` solo a través de un puerto (`UniversityFacts`) cuyo adaptador vive en `learning/infrastructure`.
+Rutas 2–4 y evaluación (F5): `learning` añade módulos `planned` (previstos, no accesibles), el ejercicio `soa_form` y el generador `pims_audit_findings`. `assessment` es un módulo nuevo (perfiles `controller`/`processor`): banco de preguntas en `content/assessment/*.json`, intento fijo (preguntas ordenadas por intento), corrección única y resultado por competencia y por requisito del PIMS guardado en `assessments.result`.
+
+Dependencias entre módulos (siempre por puertos, con adaptadores en la capa `infrastructure` del módulo que consume):
+- `learning` → `university`: `UniversityFacts` (organigrama, cargos, sistemas).
+- `learning` → `documents`: `LearningFacts` compone el snapshot con `GetPimsCompleteness` (estado real del PIMS).
+- `assessment` → `documents`: `RequirementCatalog` (`PimsRequirementCatalog` sobre `ListPimsRequirements`) para etiquetar cláusulas.

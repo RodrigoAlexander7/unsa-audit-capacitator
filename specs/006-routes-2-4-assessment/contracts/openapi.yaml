@@ -1,0 +1,44 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — contrato Fase 5 (evaluación controller/processor)
+  version: 0.6.0
+paths:
+  /assessments:
+    get:
+      summary: Mis evaluaciones (más recientes primero)
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Intentos del usuario }
+        "401": { description: No autenticado }
+    post:
+      summary: Iniciar una evaluación para un perfil (controller | processor)
+      security: [{ bearer: [] }]
+      responses:
+        "201": { description: Intento creado con sus preguntas públicas }
+        "401": { description: No autenticado }
+        "422": { description: Perfil inválido }
+  /assessments/{assessment_id}:
+    get:
+      summary: Un intento (preguntas si está en curso, resultado si finalizó)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: assessment_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Intento }
+        "401": { description: No autenticado }
+        "404": { description: No existe o no es del usuario }
+  /assessments/{assessment_id}/submit:
+    post:
+      summary: Enviar las respuestas (una sola vez)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: assessment_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Resultado por competencia y por requisito }
+        "401": { description: No autenticado }
+        "404": { description: No existe o no es del usuario }
+        "409": { description: Ya enviada }
+        "422": { description: Respuestas con forma inválida }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer }

@@ -14,9 +14,16 @@
 <h1>{route.title} <StatusBadge status={route.status} /></h1>
 <p class="lead">{route.description}</p>
 <p class="meta">
-	{route.hours} h · {route.hours_credited} h acreditadas · {route.modules_completed}/{route.modules_total}
-	módulos
+	{route.hours} h previstas · {route.hours_credited} h acreditadas · {route.modules_completed}/{route.modules_total}
+	módulos disponibles{#if route.modules_planned > 0}
+		· {route.modules_planned} en preparación{/if}
 </p>
+{#if route.modules_planned > 0}
+	<p class="notice" data-testid="poc-notice">
+		Este POC desarrolla un módulo práctico de esta ruta; los demás figuran como «Próximamente». Las
+		horas acreditadas corresponden solo a los módulos desarrollados.
+	</p>
+{/if}
 
 {#if form?.error}<p class="error" role="alert">{form.error}</p>{/if}
 
@@ -29,16 +36,20 @@
 	</form>
 {/if}
 
-{#if route.modules_total === 0 && enrolled}
+{#if route.modules_total === 0 && route.modules_planned === 0 && enrolled}
 	<p class="card">Esta ruta todavía no tiene módulos publicados. Estará disponible próximamente.</p>
 {/if}
 
 {#if modules.length}
 	<ol class="modules">
 		{#each modules as module (module.id)}
-			<li class={module.status} data-testid={`module-${module.order}`}>
+			<li
+				class={module.planned ? 'planned' : module.status}
+				data-testid={`module-${module.order}`}
+				data-planned={module.planned}
+			>
 				<div class="main">
-					{#if module.status !== 'locked'}
+					{#if module.status !== 'locked' && !module.planned}
 						<a href={`/routes/${route.code}/${module.id}`}>{module.order}. {module.title}</a>
 					{:else}
 						<span>{module.order}. {module.title}</span>
@@ -48,7 +59,7 @@
 						{#if module.best_score !== null}· mejor puntaje {module.best_score} %{/if}
 					</span>
 				</div>
-				<span class="state">{MODULE_LABEL[module.status]}</span>
+				<span class="state">{module.planned ? 'Próximamente' : MODULE_LABEL[module.status]}</span>
 			</li>
 		{/each}
 	</ol>
@@ -110,6 +121,21 @@
 
 	li.locked {
 		opacity: 0.6;
+	}
+
+	li.planned {
+		opacity: 0.55;
+		border-style: dashed;
+		background: var(--bg);
+	}
+
+	.notice {
+		background: #fff4d6;
+		border: 1px solid #f0d58a;
+		color: #6b4e00;
+		border-radius: 8px;
+		padding: 8px 12px;
+		font-size: 0.9rem;
 	}
 
 	li.completed {

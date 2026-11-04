@@ -1,0 +1,184 @@
+{
+	"profile": "processor",
+	"title": "Evaluación para encargados del tratamiento (processor)",
+	"pass_score": 70,
+	"competencies": {
+		"instrucciones": "Tratamiento bajo instrucciones",
+		"subencargados": "Subencargados",
+		"asistencia": "Asistencia al responsable",
+		"brechas": "Gestión de brechas",
+		"seguridad": "Medidas de seguridad",
+		"supresion": "Devolución y supresión de datos",
+		"confidencialidad": "Confidencialidad y rendición de cuentas"
+	},
+	"questions": [
+		{
+			"id": "p01",
+			"competency": "instrucciones",
+			"requirement": "pims-soa",
+			"prompt": "Un encargado recibe la lista de matriculados para imprimir carnés. ¿Puede usarla para ofrecer su propio servicio a los estudiantes?",
+			"options": [
+				{ "id": "a", "label": "Sí, porque ya tiene los datos" },
+				{ "id": "b", "label": "Sí, si lo hace con buena intención" },
+				{ "id": "c", "label": "No, solo puede tratarlos según las instrucciones documentadas del responsable" },
+				{ "id": "d", "label": "Sí, si los anonimiza después" }
+			],
+			"correct": "c",
+			"explanation": "El encargado trata datos únicamente por cuenta y según instrucciones del responsable."
+		},
+		{
+			"id": "p02",
+			"competency": "instrucciones",
+			"requirement": "pims-politica-privacidad",
+			"prompt": "El encargado cree que una instrucción del responsable infringe la normativa. ¿Qué debe hacer?",
+			"options": [
+				{ "id": "a", "label": "Cumplirla sin comentar" },
+				{ "id": "b", "label": "Ignorarla y actuar a su criterio" },
+				{ "id": "c", "label": "Cancelar el servicio sin avisar" },
+				{ "id": "d", "label": "Informar al responsable de que la instrucción puede ser contraria a la norma" }
+			],
+			"correct": "d",
+			"explanation": "Debe advertir al responsable para que corrija la instrucción."
+		},
+		{
+			"id": "p03",
+			"competency": "subencargados",
+			"requirement": "pims-alcance",
+			"prompt": "El encargado quiere contratar a otra empresa para parte del servicio. ¿Qué necesita?",
+			"options": [
+				{ "id": "a", "label": "Autorización del responsable y trasladarle las mismas obligaciones por contrato" },
+				{ "id": "b", "label": "Nada: es una decisión interna" },
+				{ "id": "c", "label": "Solo avisar después de contratarla" },
+				{ "id": "d", "label": "Que la otra empresa sea de menor tamaño" }
+			],
+			"correct": "a",
+			"explanation": "El uso de subencargados requiere autorización y las mismas obligaciones de protección."
+		},
+		{
+			"id": "p04",
+			"competency": "subencargados",
+			"requirement": "pims-soa",
+			"prompt": "Si el subencargado incumple, ¿quién responde frente al responsable?",
+			"options": [
+				{ "id": "a", "label": "Nadie" },
+				{ "id": "b", "label": "El encargado inicial" },
+				{ "id": "c", "label": "El estudiante" },
+				{ "id": "d", "label": "Solo el subencargado" }
+			],
+			"correct": "b",
+			"explanation": "El encargado inicial sigue respondiendo ante el responsable por los subencargados que utiliza."
+		},
+		{
+			"id": "p05",
+			"competency": "asistencia",
+			"requirement": "pims-politica-privacidad",
+			"prompt": "Un titular pide acceso a sus datos al responsable. ¿Cómo debe colaborar el encargado?",
+			"options": [
+				{ "id": "a", "label": "Respondiendo directamente al titular sin avisar" },
+				{ "id": "b", "label": "Ignorando el pedido" },
+				{ "id": "c", "label": "Cobrando por la información" },
+				{ "id": "d", "label": "Facilitando al responsable los datos y las herramientas necesarias en el plazo acordado" }
+			],
+			"correct": "d",
+			"explanation": "Debe asistir al responsable para que pueda atender los derechos de los titulares."
+		},
+		{
+			"id": "p06",
+			"competency": "asistencia",
+			"requirement": "pims-proceso-riesgos",
+			"prompt": "El responsable realiza una evaluación de impacto sobre un tratamiento que usted ejecuta. ¿Qué debe aportar?",
+			"options": [
+				{ "id": "a", "label": "Información sobre el tratamiento y las medidas de seguridad aplicadas" },
+				{ "id": "b", "label": "Nada, no le corresponde" },
+				{ "id": "c", "label": "Solo su factura" },
+				{ "id": "d", "label": "Una opinión personal" }
+			],
+			"correct": "a",
+			"explanation": "Para valorar el riesgo, el responsable necesita conocer cómo se trata y se protege la información."
+		},
+		{
+			"id": "p07",
+			"competency": "brechas",
+			"requirement": "pims-programa-seguridad",
+			"prompt": "El encargado detecta un acceso no autorizado a los datos que trata. ¿Qué hace?",
+			"options": [
+				{ "id": "a", "label": "Lo corrige en silencio" },
+				{ "id": "b", "label": "Espera al cierre de mes" },
+				{ "id": "c", "label": "Avisa al responsable sin demora y colabora en la contención" },
+				{ "id": "d", "label": "Avisa solo a sus clientes comerciales" }
+			],
+			"correct": "c",
+			"explanation": "El responsable debe enterarse pronto para evaluar y notificar si corresponde."
+		},
+		{
+			"id": "p08",
+			"competency": "brechas",
+			"requirement": "pims-programa-seguridad",
+			"prompt": "¿Debe el encargado notificar por su cuenta a los titulares afectados?",
+			"options": [
+				{ "id": "a", "label": "Sí, siempre y antes que al responsable" },
+				{ "id": "b", "label": "Por regla general no: informa al responsable, que decide y notifica" },
+				{ "id": "c", "label": "Sí, publicándolo en redes sociales" },
+				{ "id": "d", "label": "No debe informar a nadie" }
+			],
+			"correct": "b",
+			"explanation": "La decisión y la notificación corresponden al responsable; el encargado le informa y colabora."
+		},
+		{
+			"id": "p09",
+			"competency": "seguridad",
+			"requirement": "pims-plan-tratamiento",
+			"prompt": "¿Qué medida mínima se espera del encargado que guarda respaldos con datos personales?",
+			"options": [
+				{ "id": "a", "label": "Cifrado y control de acceso" },
+				{ "id": "b", "label": "Guardarlos en un disco sin protección" },
+				{ "id": "c", "label": "Enviarlos por correo personal" },
+				{ "id": "d", "label": "Compartirlos con todo el personal" }
+			],
+			"correct": "a",
+			"explanation": "El cifrado y el control de acceso son medidas básicas proporcionales al riesgo."
+		},
+		{
+			"id": "p10",
+			"competency": "supresion",
+			"requirement": "pims-resultados-tratamiento",
+			"prompt": "Termina el contrato con la universidad. ¿Qué ocurre con los datos?",
+			"options": [
+				{ "id": "a", "label": "El encargado los conserva por si acaso" },
+				{ "id": "b", "label": "Los vende a otros clientes" },
+				{ "id": "c", "label": "Se devuelven o se suprimen según lo pactado, y se acredita" },
+				{ "id": "d", "label": "Se dejan en un servidor sin dueño" }
+			],
+			"correct": "c",
+			"explanation": "Al finalizar el servicio los datos se devuelven o eliminan y el responsable debe poder comprobarlo."
+		},
+		{
+			"id": "p11",
+			"competency": "confidencialidad",
+			"requirement": "pims-competencia",
+			"prompt": "¿Qué debe garantizar el encargado sobre su personal con acceso a los datos?",
+			"options": [
+				{ "id": "a", "label": "Que sean estudiantes de la universidad" },
+				{ "id": "b", "label": "Que tengan compromiso de confidencialidad y estén capacitados" },
+				{ "id": "c", "label": "Que trabajen solo de noche" },
+				{ "id": "d", "label": "Nada en particular" }
+			],
+			"correct": "b",
+			"explanation": "La confidencialidad y la competencia del personal son parte de las obligaciones del encargado."
+		},
+		{
+			"id": "p12",
+			"competency": "confidencialidad",
+			"requirement": "pims-monitoreo",
+			"prompt": "¿Cómo puede el encargado demostrar al responsable que cumple lo pactado?",
+			"options": [
+				{ "id": "a", "label": "Pidiendo confianza" },
+				{ "id": "b", "label": "Negando el acceso a cualquier revisión" },
+				{ "id": "c", "label": "Entregando solo un informe anual sin evidencia" },
+				{ "id": "d", "label": "Con registros de sus actividades y permitiendo auditorías o inspecciones" }
+			],
+			"correct": "d",
+			"explanation": "La rendición de cuentas exige registros y apertura a la verificación del responsable."
+		}
+	]
+}

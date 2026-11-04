@@ -17,7 +17,7 @@ def module_status(
 ) -> ModuleStatus:
     if module.id in completed_ids:
         return ModuleStatus.COMPLETED
-    if not enrolled:
+    if module.planned or not enrolled:
         return ModuleStatus.LOCKED
     if module.is_final:
         pending = [
@@ -29,8 +29,9 @@ def module_status(
 
 
 def route_completed(route_modules: list[Module], completed_ids: Collection) -> bool:
-    """Una ruta sin modulos nunca se completa."""
-    return bool(route_modules) and all(m.id in completed_ids for m in route_modules if m.mandatory)
+    """Una ruta sin modulos publicados nunca se completa (los `planned` no cuentan)."""
+    published = [m for m in route_modules if not m.planned]
+    return bool(published) and all(m.id in completed_ids for m in published if m.mandatory)
 
 
 def credited_minutes(route_modules: list[Module], completed_ids: Collection) -> int:

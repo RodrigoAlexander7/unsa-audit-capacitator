@@ -51,6 +51,7 @@ export type RouteSummary = {
 	status: RouteStatus;
 	modules_total: number;
 	modules_completed: number;
+	modules_planned: number;
 	minutes_credited: number;
 	hours_credited: number;
 };
@@ -64,6 +65,7 @@ export type ModuleSummary = {
 	mandatory: boolean;
 	is_final: boolean;
 	has_exercise: boolean;
+	planned: boolean;
 	status: ModuleStatus;
 	best_score: number | null;
 };
@@ -237,6 +239,52 @@ export type PimsCompleteness = {
 	percent_in_force: number;
 	counts: Record<RequirementState, number>;
 	items: PimsItem[];
+};
+
+export type AssessmentProfile = 'controller' | 'processor';
+export const PROFILE_LABEL: Record<AssessmentProfile, string> = {
+	controller: 'Responsable del tratamiento (controller)',
+	processor: 'Encargado del tratamiento (processor)'
+};
+export type AssessmentGroup = {
+	key: string;
+	label: string;
+	correct: number;
+	total: number;
+	percent: number;
+};
+export type AssessmentItem = {
+	question_id: string;
+	prompt: string;
+	correct: boolean;
+	chosen_label: string | null;
+	correct_label: string;
+	explanation: string;
+	competency: string;
+	requirement_code: string;
+};
+export type AssessmentResult = {
+	score: number;
+	passed: boolean;
+	pass_score: number;
+	competencies: AssessmentGroup[];
+	requirements: AssessmentGroup[];
+	items: AssessmentItem[];
+};
+export type AssessmentSummary = {
+	id: string;
+	profile: AssessmentProfile;
+	status: 'in_progress' | 'finished';
+	score: number | null;
+	passed: boolean | null;
+	started_at: string;
+	finished_at: string | null;
+};
+export type AssessmentAttempt = AssessmentSummary & {
+	title: string;
+	pass_score: number;
+	questions: { id: string; prompt: string; options: { id: string; label: string }[] }[];
+	result: AssessmentResult | null;
 };
 
 type FetchFn = typeof fetch;
