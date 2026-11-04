@@ -12,12 +12,16 @@ Capacitación en 4 rutas (Sensibilización 12 h → Interpretación 16 h → Imp
 ## Puesta en marcha
 
 ```bash
-cp .env.example .env            # ajustar SUPERADMIN_EMAIL y JWT_SECRET
+cp .env.example .env            # ajustar SUPERADMIN_EMAIL, SUPERADMIN_PASSWORD y JWT_SECRET
 docker compose up -d db         # PostgreSQL 16 en el puerto 5433
 ```
 
 ```bash
 cd backend && uv sync && uv run alembic upgrade head
+```
+
+```bash
+cd backend && uv run python -m unsa_audit.seed   # BD ficticia de la UNSA + cuenta superadmin
 ```
 
 ```bash
@@ -38,4 +42,8 @@ cd backend && uv run ruff check . && uv run pyright && uv run pytest
 cd frontend && npm run check && npm test && npm run build
 ```
 
-Los tests de integración (`-m integration`) requieren Postgres arriba.
+Los tests de integración (`-m integration`) requieren Postgres arriba; usan una base `<POSTGRES_DB>_test` que crean y migran solos.
+
+## Cuentas
+- **Superadmin:** el email de `SUPERADMIN_EMAIL` con la contraseña `SUPERADMIN_PASSWORD`, creada por el seed. El registro público rechaza ese email.
+- **Participantes:** se registran desde `/register` (rol `learner`).

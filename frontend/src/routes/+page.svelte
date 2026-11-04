@@ -12,7 +12,23 @@
 	universidad y auditarla con criterio.
 </p>
 
-<section class="card" aria-labelledby="estado-titulo">
+{#if data.user}
+	<section class="card" aria-labelledby="hola">
+		<h2 id="hola">Hola, {data.user.full_name}</h2>
+		<p>Empieza conociendo tu universidad:</p>
+		<ul>
+			<li><a href="/university">Organigrama y cargos</a></li>
+			<li><a href="/systems">Sistemas y dueños de datos</a></li>
+		</ul>
+	</section>
+{:else}
+	<section class="card" aria-labelledby="acceso">
+		<h2 id="acceso">Acceso</h2>
+		<p><a href="/login">Inicia sesión</a> o <a href="/register">crea tu cuenta</a> para continuar.</p>
+	</section>
+{/if}
+
+<section class="card estado" aria-labelledby="estado-titulo">
 	<h2 id="estado-titulo">Estado del sistema</h2>
 	<ul>
 		<li>
@@ -31,6 +47,10 @@
 	.lead {
 		color: var(--muted);
 		max-width: 60ch;
+	}
+
+	.card + .card {
+		margin-top: 16px;
 	}
 
 	ul {
