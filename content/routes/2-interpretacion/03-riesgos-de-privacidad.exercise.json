@@ -1,0 +1,81 @@
+{
+	"kind": "risk_table",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Evalúa los riesgos de privacidad de estos cuatro activos de la UNSA aplicando la escala institucional (C + P) y la regla de datos sensibles.",
+		"scenario": "Un equipo implementador revisa la metodología de riesgos de la UNSA antes del ciclo oficial de auditoría. Recuerda: consecuencia 0–2, probabilidad 0–2, datos sensibles obligan C=2 y todo riesgo >= 3 es no aceptable.",
+		"threshold": 3,
+		"rows": [
+			{
+				"id": "r-bienestar",
+				"asset": "Sistema de Bienestar y Salud (OBU)",
+				"asset_owner": "Jefe de Bienestar Universitario",
+				"data_categories": ["identificación", "datos de salud", "datos socioeconómicos"],
+				"existing_controls": "Registro con clave compartida y base de datos sin cifrar.",
+				"threat": "Divulgación o acceso indebido a historias clínicas y becas",
+				"vulnerability": "Base sin cifrar y falta de segregación estricta de acceso",
+				"risk_owner": "Jefe de Bienestar Universitario",
+				"threat_options": [
+					{ "id": "thr-salud", "label": "Divulgación o acceso indebido a información médica y socioeconómica" },
+					{ "id": "thr-luz", "label": "Falla menor en luminarias externas del pabellón" }
+				],
+				"risk_owner_options": [
+					{ "id": "jefe-obu", "label": "Jefe de Bienestar Universitario" },
+					{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+				],
+				"expected_threat": "thr-salud",
+				"expected_risk_owner": "jefe-obu",
+				"sensitive_data": true,
+				"expected_consequence": 2,
+				"expected_probability": 2,
+				"tolerance": 0,
+				"explanation": "Trata datos de salud (C=2 obligatoria) y carece de cifrado/control robusto (P=2) → nivel 4, no aceptable; el riesgo corresponde al Jefe de la OBU."
+			},
+			{
+				"id": "r-planillas",
+				"asset": "Sistema de Planillas y RR. HH. (ORH)",
+				"asset_owner": "Jefe de la Oficina de Recursos Humanos",
+				"data_categories": ["identificación", "datos laborales", "datos bancarios", "datos de salud"],
+				"existing_controls": "Cifrado de sesión activo, pero permisos amplios dentro del módulo de pagos.",
+				"threat": "Fuga o extracción masiva de cuentas bancarias y descansos médicos",
+				"vulnerability": "Acceso amplio al módulo de pagos sin principio de mínimo privilegio",
+				"risk_owner": "Jefe de la Oficina de Recursos Humanos",
+				"sensitive_data": true,
+				"expected_consequence": 2,
+				"expected_probability": 1,
+				"tolerance": 0,
+				"explanation": "Incluye datos sensibles de salud del personal (C=2) con controles parciales de transporte pero privilegios amplios (P=1) → nivel 3 (no aceptable)."
+			},
+			{
+				"id": "r-aula",
+				"asset": "Aula Virtual (OTI)",
+				"asset_owner": "Jefe de la Oficina de Tecnologías de la Información",
+				"data_categories": ["identificación", "actividad de aprendizaje", "calificaciones"],
+				"existing_controls": "Autenticación únicamente con usuario y contraseña, sin segundo factor (MFA).",
+				"threat": "Suplantación de identidad de docentes en línea",
+				"vulnerability": "Ausencia de autenticación multifactor (MFA)",
+				"risk_owner": "Jefe de la Oficina de Tecnologías de la Información",
+				"sensitive_data": false,
+				"expected_consequence": 1,
+				"expected_probability": 2,
+				"tolerance": 0,
+				"explanation": "Sin datos de salud (C=1 moderada), pero contraseñas simples expuestas a robo en Internet hacen la suplantación probable (P=2) → nivel 3, requiere MFA."
+			},
+			{
+				"id": "r-bib",
+				"asset": "Biblioteca Digital (BIBL)",
+				"asset_owner": "Director de la Biblioteca Central",
+				"data_categories": ["identificación", "historial de préstamos"],
+				"existing_controls": "Cifrado de comunicaciones y acceso autenticado por estación del mostrador.",
+				"threat": "Visualización ocasional de préstamos recientes en mostrador",
+				"vulnerability": "Registro de préstamos históricos visible al personal operativo",
+				"risk_owner": "Director de la Biblioteca Central",
+				"sensitive_data": false,
+				"expected_consequence": 0,
+				"expected_probability": 1,
+				"tolerance": 0,
+				"explanation": "El daño por exposición puntual del préstamo bibliográfico es bajo (C=0) con controles razonables (P=1) → nivel 1, aceptable (< 3)."
+			}
+		]
+	}
+}

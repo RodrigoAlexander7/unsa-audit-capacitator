@@ -1,6 +1,6 @@
 # Guía de demo (≈ 10 minutos)
 
-Todos los datos son ficticios. Arranque: `./dev.sh` (Postgres + migraciones + seed con cohorte demo + API + web) y abre <http://localhost:5173>.
+Todos los datos son ficticios. Arranque: `make dev` (Postgres + migraciones + seed con cohorte demo + API + web) y abre <http://localhost:5173>.
 
 ## Cuentas
 
@@ -28,7 +28,7 @@ Todos los datos son ficticios. Arranque: `./dev.sh` (Postgres + migraciones + se
 
 ## Recorrido sugerido
 
-1. **Participante (2 min)** — entra como `ana.quispe@demo.unsa.example`. En *Mis rutas* ve 3 rutas aprobadas y las horas acreditadas. Abre *R2 → Del requisito al documento* y *R3 → Declaración de aplicabilidad* (ejercicios prácticos con retroalimentación por ítem).
+1. **Participante (2 min)** — entra como `ana.quispe@demo.unsa.example`. En *Mis rutas* ve 3 rutas aprobadas y las horas acreditadas. Abre *R2 → Contexto y alcance* (o cualquier módulo de los 8 de R2 con ejemplo resuelto y práctica interactiva) y *R3 → Declaración de aplicabilidad*.
 2. **Ejercicio práctico (2 min)** — como `miguel.zuniga`, abre un módulo de R1 pendiente (p. ej. *Riesgos cotidianos*), responde mal a propósito y lee la retroalimentación; el módulo final queda bloqueado hasta aprobar los demás.
 3. **Documentos versionados (2 min)** — *Documentos → ROF → Diferencias* (v1 → v3). *Proponer cambio* y, con el superadmin, aprobarlo o rechazarlo (si la base cambió → conflicto 409).
 4. **PIMS (1 min)** — *Documentos → Conjunto documental del PIMS (ISO/IEC 27701)*: 11 requisitos con estados vigente / borrador / vencido / sin responsable / faltante.

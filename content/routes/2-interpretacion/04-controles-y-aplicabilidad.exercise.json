@@ -1,0 +1,60 @@
+{
+	"kind": "soa_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Determina qué controles aplican a la Oficina de Bienestar Universitario (OBU) y selecciona la justificación válida en auditoría.",
+		"scenario": "La Oficina de Bienestar Universitario (OBU) decide finalidades y medios sobre atenciones médicas estudiantiles (datos de salud) y becas (datos socioeconómicos) en el Sistema de Bienestar y Salud. Deriva análisis clínicos a un laboratorio médico externo bajo contrato. La OBU NO presta servicios de procesamiento de datos para terceros clientes.",
+		"reasons": [
+			{ "id": "r-sensibles", "label": "Trata datos de salud y socioeconómicos (categorías sensibles)" },
+			{ "id": "r-alto-riesgo", "label": "Los tratamientos sensibles y perfiles vulnerables exigen prevenir impacto severo" },
+			{ "id": "r-encargado-ext", "label": "Un proveedor médico externo procesa datos por cuenta de la OBU" },
+			{ "id": "r-no-encargada", "label": "La OBU actúa solo como responsable y no como encargada de terceros" },
+			{ "id": "r-brecha", "label": "Todo tratamiento puede sufrir incidentes o fugas que afecten a titulares" },
+			{ "id": "r-costo", "label": "El control resulta costoso o complejo para implementar ahora" }
+		],
+		"controls": [
+			{
+				"id": "c1",
+				"label": "Obtener y registrar consentimiento explícito o base legal reforzada para datos de salud",
+				"applies": true,
+				"reason": "r-sensibles",
+				"explanation": "OBU trata historias de salud estudiantil: el consentimiento o base expresa resulta obligatorio."
+			},
+			{
+				"id": "c2",
+				"label": "Ejecutar evaluación de impacto en privacidad para tratamientos de alto riesgo",
+				"applies": true,
+				"reason": "r-alto-riesgo",
+				"explanation": "El volumen y sensibilidad de datos médicos y socioeconómicos exige evaluar riesgos sobre titulares."
+			},
+			{
+				"id": "c3",
+				"label": "Formalizar contrato con cláusulas de privacidad con el laboratorio clínico externo",
+				"applies": true,
+				"reason": "r-encargado-ext",
+				"explanation": "Al derivar análisis clínicos, el laboratorio es un encargado que debe operar bajo contrato."
+			},
+			{
+				"id": "c4",
+				"label": "Tratar datos exclusivamente conforme a instrucciones documentadas de un cliente externo",
+				"applies": false,
+				"reason": "r-no-encargada",
+				"explanation": "Obligación propia del encargado; la OBU decide sus propios fines y no presta servicios a clientes."
+			},
+			{
+				"id": "c5",
+				"label": "Establecer detección, contención y notificación oportuna de brechas de privacidad",
+				"applies": true,
+				"reason": "r-brecha",
+				"explanation": "Una fuga de datos de salud tendría impacto severo; nunca puede excluirse por costo."
+			},
+			{
+				"id": "c6",
+				"label": "Asistir técnicamente a un responsable externo para responder reclamos de los clientes de aquel",
+				"applies": false,
+				"reason": "r-no-encargada",
+				"explanation": "Control específico del rol de encargado; la OBU responde directamente como responsable ante sus estudiantes."
+			}
+		]
+	}
+}
