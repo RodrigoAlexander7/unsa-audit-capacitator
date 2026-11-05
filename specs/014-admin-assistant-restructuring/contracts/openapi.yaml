@@ -1,0 +1,294 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — Asistente administrador y reestructuración (014)
+  version: 0.1.0
+paths:
+  /assistant/admin/cohort:
+    get:
+      summary: Obtener tabla de alias seudónimos y métricas de avance para el superadmin
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Resumen del cohorte con mapeo local de alias
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohortSummaryResponse'
+        '401':
+          description: No autenticado
+        '403':
+          description: Permiso insuficiente (solo superadmin)
+  /assistant/admin/ask:
+    post:
+      summary: Consultar al asistente administrador sobre el cohorte (envía solo alias P-xx a `agy`)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminAskRequest'
+      responses:
+        '200':
+          description: Respuesta registrada junto con la tabla de alias para resolución local
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminAskResponse'
+        '401':
+          description: No autenticado
+        '403':
+          description: Solo superadmin
+        '422':
+          description: Pregunta vacía o excede 800 caracteres
+        '502':
+          description: Modelo IA no disponible
+  /assistant/admin/history:
+    get:
+      summary: Listar historial del asistente en modo administrador
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Mensajes administrativos más recientes primero
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssistantMessageResponse'
+        '403':
+          description: Solo superadmin
+    delete:
+      summary: Limpiar historial administrativo propio
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Conteo de mensajes eliminados
+  /assistant/admin/proposals/generate:
+    post:
+      summary: Generar borradores estructurados de reestructuración curricular con IA
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateProposalsRequest'
+      responses:
+        '201':
+          description: Borradores persistidos en estado draft
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateProposalsResponse'
+        '403':
+          description: Solo superadmin
+        '502':
+          description: Modelo IA no disponible o salida JSON inválida
+  /assistant/admin/proposals:
+    get:
+      summary: Listar borradores y propuestas revisadas de reestructuración
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Propuestas ordenadas por fecha descendente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CurriculumProposalResponse'
+        '403':
+          description: Solo superadmin
+  /assistant/admin/proposals/{proposal_id}:
+    patch:
+      summary: Aceptar, descartar o reabrir como borrador una propuesta de reestructuración
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: proposal_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewProposalRequest'
+      responses:
+        '200':
+          description: Propuesta actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurriculumProposalResponse'
+        '403':
+          description: Solo superadmin
+        '404':
+          description: Propuesta no encontrada
+        '422':
+          description: Estado o nota inválida
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CohortAliasItem:
+      type: object
+      required: [alias, full_name, email, stalled, overall_progress_pct]
+      properties:
+        alias:
+          type: string
+        full_name:
+          type: string
+        email:
+          type: string
+        stalled:
+          type: boolean
+        overall_progress_pct:
+          type: integer
+    CohortSummaryResponse:
+      type: object
+      required: [aliases, total_learners, stalled_count]
+      properties:
+        total_learners:
+          type: integer
+        stalled_count:
+          type: integer
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/CohortAliasItem'
+    AdminAskRequest:
+      type: object
+      required: [question]
+      properties:
+        question:
+          type: string
+          minLength: 1
+          maxLength: 800
+    AssistantMessageResponse:
+      type: object
+      required: [id, question, status, answer, error, context_hash, duration_ms, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        question:
+          type: string
+        status:
+          type: string
+        answer:
+          type: string
+          nullable: true
+        error:
+          type: string
+          nullable: true
+        context_hash:
+          type: string
+        duration_ms:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+    AdminAskResponse:
+      type: object
+      required: [message, aliases]
+      properties:
+        message:
+          $ref: '#/components/schemas/AssistantMessageResponse'
+        aliases:
+          type: array
+          items:
+            $ref: '#/components/schemas/CohortAliasItem'
+    GenerateProposalsRequest:
+      type: object
+      properties:
+        focus:
+          type: string
+          maxLength: 400
+          nullable: true
+        route_code:
+          type: string
+          maxLength: 40
+          nullable: true
+    CurriculumProposalResponse:
+      type: object
+      required:
+        - id
+        - title
+        - target_route_code
+        - target_module_slug
+        - change_type
+        - proposed_change
+        - rationale
+        - evidence_metrics
+        - status
+        - review_note
+        - created_at
+        - reviewed_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        target_route_code:
+          type: string
+          nullable: true
+        target_module_slug:
+          type: string
+          nullable: true
+        change_type:
+          type: string
+        proposed_change:
+          type: string
+        rationale:
+          type: string
+        evidence_metrics:
+          type: object
+        status:
+          type: string
+          enum: [draft, accepted, discarded]
+        review_note:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        reviewed_at:
+          type: string
+          format: date-time
+          nullable: true
+    GenerateProposalsResponse:
+      type: object
+      required: [summary, proposals]
+      properties:
+        summary:
+          type: string
+        proposals:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurriculumProposalResponse'
+    ReviewProposalRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [draft, accepted, discarded]
+        review_note:
+          type: string
+          maxLength: 600
+          nullable: true

@@ -34,6 +34,12 @@ class Settings(BaseSettings):
     student_assistant_prompt_path: Path = (
         Path(__file__).resolve().parents[4] / "docs" / "ai" / "student_system_prompt.md"
     )
+    admin_assistant_prompt_path: Path = (
+        Path(__file__).resolve().parents[4] / "docs" / "ai" / "admin_advisor_prompt.md"
+    )
+    admin_restructuring_prompt_path: Path = (
+        Path(__file__).resolve().parents[4] / "docs" / "ai" / "admin_restructuring_prompt.md"
+    )
 
     cors_origins: list[str] = ["http://localhost:5173"]
 
