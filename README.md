@@ -12,8 +12,10 @@ Capacitación en 4 rutas (Sensibilización 12 h → Interpretación 16 h → Imp
 ## Probar rápido
 
 ```bash
-./dev.sh     # Postgres + migraciones + seed con cohorte demo + API (:8000) + web (:5173)
+make dev     # Postgres + migraciones + seed con cohorte demo + API (:8000) + web (:5173)
 ```
+
+`make help` lista todos los objetivos (`make reset-demo`, `make test`, `make test-e2e`, `make verify`, `make stop`…).
 
 Abre <http://localhost:5173>. Participantes demo: `ana.quispe@demo.unsa.example` / `Demo-1234`; superadmin: las credenciales de `.env`. Guion de demo de 10 minutos: [docs/demo.md](docs/demo.md). El asesor IA necesita el CLI `agy` instalado y con sesión (sin API key).
 
