@@ -41,6 +41,10 @@ a {
 	padding: 0 16px;
 }
 
+.container:has(.practice-grid) {
+	max-width: 1280px;
+}
+
 .card {
 	background: var(--surface);
 	border: 1px solid var(--border);

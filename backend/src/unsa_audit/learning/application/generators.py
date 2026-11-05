@@ -136,8 +136,98 @@ def pims_audit_findings(params: dict[str, Any], facts: UniversitySnapshot) -> Sp
     }
 
 
+def _audit_question_for(fact: PimsFact) -> str:
+    if fact.summary:
+        return (
+            f"¿La UNSA dispone y mantiene evidencia para «{fact.title}» ({fact.summary.strip()})?"
+        )
+    return f"¿Existe evidencia vigente y responsable asignado para «{fact.title}»?"
+
+
+def _audit_evidence_for(fact: PimsFact) -> str:
+    if fact.expected_evidence:
+        return fact.expected_evidence.strip()
+    return f"Documento vigente y aprobado correspondiente a «{fact.title}»."
+
+
+def audit_checklist_from_pims(params: dict[str, Any], facts: UniversitySnapshot) -> Spec:
+    """Lista de verificacion de auditoria generada desde pims_requirements y estado real."""
+    if not facts.pims:
+        raise InvalidExerciseSpec("no hay requisitos PIMS para generar `audit_checklist_from_pims`")
+    limit = int(params.get("limit", len(facts.pims)))
+    selected = facts.pims[:limit]
+    all_facts = facts.pims
+    verdicts = [{"id": key, "label": label} for key, label in FINDING_LABEL.items()]
+    items: list[dict[str, Any]] = []
+
+    for idx, fact in enumerate(selected):
+        others = [o for o in all_facts if o.code != fact.code]
+        if len(others) >= 2:
+            d1, d2 = others[idx % len(others)], others[(idx + 1) % len(others)]
+            q_distractors = [
+                {"id": f"q-dist-{d1.code}", "label": _audit_question_for(d1)},
+                {"id": f"q-dist-{d2.code}", "label": _audit_question_for(d2)},
+            ]
+            e_distractors = [
+                {"id": f"e-dist-{d1.code}", "label": _audit_evidence_for(d1)},
+                {"id": f"e-dist-{d2.code}", "label": _audit_evidence_for(d2)},
+            ]
+        else:
+            q_distractors = [
+                {
+                    "id": "q-dist-gen-1",
+                    "label": "¿El personal recuerda verbalmente dónde se archiva la documentación?",
+                },
+                {
+                    "id": "q-dist-gen-2",
+                    "label": "¿Se contrató un proveedor externo sin revisar requisitos legales?",
+                },
+            ]
+            e_distractors = [
+                {
+                    "id": "e-dist-gen-1",
+                    "label": "Declaración verbal informal sin registro documental.",
+                },
+                {
+                    "id": "e-dist-gen-2",
+                    "label": "Lista de asistencia sin evaluación ni documento de respaldo.",
+                },
+            ]
+
+        q_ok = f"q-ok-{fact.code}"
+        e_ok = f"e-ok-{fact.code}"
+        verdict = FINDING_BY_STATE[fact.state]
+        items.append(
+            {
+                "id": fact.code,
+                "clause_ref": fact.clause_ref,
+                "requirement_title": fact.title,
+                "observed_context": _evidence_text(fact),
+                "questions": [{"id": q_ok, "label": _audit_question_for(fact)}, *q_distractors],
+                "evidences": [{"id": e_ok, "label": _audit_evidence_for(fact)}, *e_distractors],
+                "expected_question": q_ok,
+                "expected_evidence": e_ok,
+                "expected_verdict": verdict,
+                "explanation": (
+                    f"Requisito {fact.clause_ref} ({fact.title}): "
+                    f"estado observado '{fact.state}' → {FINDING_LABEL[verdict]}."
+                ),
+            }
+        )
+
+    return {
+        "prompt": "Construye la lista de verificación de auditoría interna del PIMS: elige la "
+        "pregunta pertinente, la evidencia objetiva a solicitar y el veredicto coherente.",
+        "scenario": "Auditoría interna al conjunto documental del PIMS de la UNSA. Evalúa cada "
+        "cláusula según el estado real observado en el repositorio institucional.",
+        "verdicts": verdicts,
+        "items": items,
+    }
+
+
 GENERATORS: dict[str, Callable[[dict[str, Any], UniversitySnapshot], Spec]] = {
     "pims_audit_findings": pims_audit_findings,
+    "audit_checklist_from_pims": audit_checklist_from_pims,
     "org_levels": org_levels,
     "responsibility_cases": responsibility_cases,
     "system_owners": system_owners,
