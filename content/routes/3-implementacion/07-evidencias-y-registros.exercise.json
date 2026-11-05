@@ -1,0 +1,87 @@
+{
+	"kind": "nonconformity_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Gestiona estos dos desvíos de registros detectados durante la implementación, diferenciando corrección, causa raíz, acción correctiva y verificación.",
+		"scenario": "El DPO revisa las evidencias vivas de implementación antes de convocar la auditoría interna. Detecta dos brechas operativas fechadas el 2026-05-15 que requieren tratamiento completo hasta 2026-06-15.",
+		"documents": [
+			{ "id": "pims-programa-seguridad", "label": "pims-programa-seguridad — Programa de seguridad e incidentes" },
+			{ "id": "pims-soa", "label": "pims-soa — Declaración de aplicabilidad (SoA)" },
+			{ "id": "pims-alcance", "label": "pims-alcance — Alcance del PIMS" }
+		],
+		"positions": [
+			{ "id": "ciso", "label": "Responsable de Seguridad de la Información" },
+			{ "id": "jefe-obu", "label": "Jefe de Bienestar Universitario" },
+			{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+		],
+		"cases": [
+			{
+				"id": "nc-respaldos",
+				"title": "NC-IMP-01 · Sin registros de pruebas trimestrales de restauración en OTI",
+				"detection_context": "El Programa de Seguridad exige pruebas trimestrales de restauración de copias, pero al revisar el último semestre en OTI no existen actas de prueba.",
+				"detection_date": "2026-05-15",
+				"max_implementation_date": "2026-06-15",
+				"min_verification_lag_days": 30,
+				"correction_options": [
+					{ "id": "corr-prueba", "label": "Ejecutar esta semana una prueba de restauración en ambiente aislado y levantar el acta faltante" },
+					{ "id": "corr-eliminar", "label": "Suprimir del Programa de Seguridad la obligación de probar respaldos" },
+					{ "id": "corr-reunir", "label": "Mandar un correo informal preguntando si alguien recuerda la última copia" }
+				],
+				"root_cause_options": [
+					{ "id": "root-cadencia", "label": "No existe calendario automatizado ni punto de control en mesa de servicio TI que dispare la prueba trimestral" },
+					{ "id": "root-sintoma", "label": "Faltan las actas impresas en la carpeta del trimestre" }
+				],
+				"action_options": [
+					{ "id": "act-cadencia", "label": "Programar tickets trimestrales automáticos de prueba y checklist obligatoria en el procedimiento de respaldos" },
+					{ "id": "act-repetir", "label": "Volver a correr únicamente la prueba puntual de hoy sin cambiar el proceso" }
+				],
+				"verification_options": [
+					{ "id": "ver-dos-ciclos", "label": "Verificar después de al menos un ciclo trimestral las actas firmadas con tiempos de recuperación y hashes válidos" },
+					{ "id": "ver-mismo-dia", "label": "Cerrar el mismo día con la promesa verbal del operador" }
+				],
+				"expected_correction": "corr-prueba",
+				"expected_root_cause": "root-cadencia",
+				"expected_requires_action": true,
+				"expected_action": "act-cadencia",
+				"expected_responsible": "ciso",
+				"expected_verification": "ver-dos-ciclos",
+				"expected_doc_change": true,
+				"expected_document": "pims-programa-seguridad",
+				"explanation": "La prueba de esta semana contiene el vacío actual (corrección); automatizar tickets trimestrales elimina la causa raíz bajo el CISO y exige actualizar pims-programa-seguridad."
+			},
+			{
+				"id": "nc-consentimiento",
+				"title": "NC-IMP-02 · Formulario web de OBU recogía datos de salud sin consentimiento explícito",
+				"detection_context": "Un formulario nuevo de becas de OBU solicitaba diagnósticos médicos en texto libre sin casilla de consentimiento ni aviso de privacidad.",
+				"detection_date": "2026-05-15",
+				"max_implementation_date": "2026-06-15",
+				"min_verification_lag_days": 15,
+				"correction_options": [
+					{ "id": "corr-pausa", "label": "Despublicar el campo médico, actualizar el formulario con casilla explícita/aviso y regularizar a los recientes" },
+					{ "id": "corr-ignorar", "label": "Dejar el formulario abierto hasta el fin del semestre académico" }
+				],
+				"root_cause_options": [
+					{ "id": "root-pbd", "label": "El flujo de publicación web permite lanzar formularios sin revisión previa obligatoria de privacidad desde el diseño" },
+					{ "id": "root-sintoma", "label": "Al desarrollador se le olvidó añadir el enlace" }
+				],
+				"action_options": [
+					{ "id": "act-pbd", "label": "Instaurar puerta de aprobación previa del DPO con lista de privacidad desde el diseño antes de habilitar cualquier formulario" },
+					{ "id": "act-solo-este", "label": "Arreglar solamente el texto HTML de ese formulario de becas" }
+				],
+				"verification_options": [
+					{ "id": "ver-muestra", "label": "Auditar el registro de cambios web tras >= 15 días confirmando que ningún formulario salió sin visto bueno DPO" },
+					{ "id": "ver-captura", "label": "Tomar captura de pantalla hoy mismo antes de desplegar reglas de cambio" }
+				],
+				"expected_correction": "corr-pausa",
+				"expected_root_cause": "root-pbd",
+				"expected_requires_action": true,
+				"expected_action": "act-pbd",
+				"expected_responsible": "jefe-obu",
+				"expected_verification": "ver-muestra",
+				"expected_doc_change": true,
+				"expected_document": "pims-soa",
+				"explanation": "Retirar y corregir el formulario es contención; implantar control previo de privacidad desde el diseño ataca la causa y actualiza su estado en la SoA."
+			}
+		]
+	}
+}

@@ -181,7 +181,9 @@ async def test_detalle_de_ruta_con_modulos_y_dificiles(client: httpx.AsyncClient
 
     r2_stats = (await client.get("/admin/stats/routes/interpretacion", headers=admin)).json()
     assert len(r2_stats["modules"]) == 8
-    planned = (await client.get("/admin/stats/routes/implementacion", headers=admin)).json()
+    r3_stats = (await client.get("/admin/stats/routes/implementacion", headers=admin)).json()
+    assert len(r3_stats["modules"]) == 9
+    planned = (await client.get("/admin/stats/routes/auditor", headers=admin)).json()
     assert len(planned["modules"]) == 1, "los modulos planned no aparecen"
 
 

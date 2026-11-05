@@ -1,0 +1,129 @@
+{
+	"kind": "quiz",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Evaluación integradora de la Ruta 3 — Implementación del PIMS en la UNSA ficticia.",
+		"questions": [
+			{
+				"id": "q1",
+				"prompt": "Al diagnosticar la situación del PIMS de la UNSA, encuentras un documento inexistente (`pims-monitoreo`), un borrador (`pims-soa`) y un documento vencido (`pims-proceso-riesgos`). Según la precedencia de brecha, ¿cuál representa ausencia total del requisito?",
+				"options": [
+					{ "id": "a", "label": "El documento vencido, porque tiene fecha pasada." },
+					{ "id": "b", "label": "El inexistente (`missing`), porque no existe ningún registro o regla implantada." },
+					{ "id": "c", "label": "El documento vigente sin cambios ese mes." },
+					{ "id": "d", "label": "Ninguno si existe el ROF de la universidad." }
+				],
+				"correct": "b",
+				"explanation": "La severidad sigue el orden missing > draft > expired > unowned > in_force."
+			},
+			{
+				"id": "q2",
+				"prompt": "En el Registro de Actividades de Tratamiento (RAT) de Planillas (`ORH`) se identifican descansos médicos del personal. ¿Qué consecuencia técnica exige automáticamente la regla de datos sensibles?",
+				"options": [
+					{ "id": "a", "label": "Publicar las estadísticas médicas nominales en el portal de transparencia." },
+					{ "id": "b", "label": "Aplicar salvaguardas reforzadas (cifrado, mínimo privilegio y base legal expresa) y valorar C=2 en riesgos." },
+					{ "id": "c", "label": "Guardar las planillas indefinidamente sin plazo de retención." },
+					{ "id": "d", "label": "Trasladar planillas al Director de la Biblioteca Central." }
+				],
+				"correct": "b",
+				"explanation": "Los datos de salud exigen acceso restringido, cifrado y consecuencia máxima en evaluación de riesgos."
+			},
+			{
+				"id": "q3",
+				"prompt": "En la evaluación de riesgos del Sistema de Bienestar y Salud (`OBU`), ¿quién es el propietario natural del riesgo por autoridad funcional sobre ese servicio?",
+				"options": [
+					{ "id": "a", "label": "El Jefe de Bienestar Universitario." },
+					{ "id": "b", "label": "El Director de la Biblioteca Central." },
+					{ "id": "c", "label": "El Jefe del Órgano de Control Institucional (OCI)." },
+					{ "id": "d", "label": "Un proveedor externo de mensajería." }
+				],
+				"correct": "a",
+				"explanation": "El dueño funcional de OBU decide sobre el servicio y responde como propietario del riesgo junto con el soporte técnico de OTI."
+			},
+			{
+				"id": "q4",
+				"prompt": "La Oficina de Registros Académicos (`ORA`) no presta servicios de tratamiento a empresas externas y solo gestiona matrícula y notas de sus propios estudiantes. En su SoA, ¿por qué descarta controles exclusivos de «encargado externo»?",
+				"options": [
+					{ "id": "a", "label": "Porque son demasiado caros." },
+					{ "id": "b", "label": "Porque ORA actúa solo como responsable (controller) en ese ámbito y no como encargada de terceros." },
+					{ "id": "c", "label": "Porque ninguna oficina necesita gestionar brechas." },
+					{ "id": "d", "label": "Porque OTI mantiene servidores propios." }
+				],
+				"correct": "b",
+				"explanation": "Solo la ausencia del rol o del tipo de dato justifica marcar «No aplica» en la Declaración de Aplicabilidad."
+			},
+			{
+				"id": "q5",
+				"prompt": "En el Procedimiento de Gestión de Incidentes, alguien detecta una exposición de calificaciones a las 09:00. ¿Qué separación de funciones garantiza un flujo conforme?",
+				"options": [
+					{ "id": "a", "label": "El CISO dirige contención técnica (< 24 h); el DPO evalúa riesgo hacia titulares y notificaciones." },
+					{ "id": "b", "label": "Se borran las bitácoras para restaurar rápido sin dejar rastro." },
+					{ "id": "c", "label": "Se espera al final del año académico para avisar en memoria anual." },
+					{ "id": "d", "label": "El Rector configura personalmente las reglas del firewall." }
+				],
+				"correct": "a",
+				"explanation": "Separar respuesta técnica (CISO) y evaluación legal/hacia titulares (DPO) evita cuellos de botella y omisiones."
+			},
+			{
+				"id": "q6",
+				"prompt": "Al redactar el Plan de Tratamiento para cifrar la base de salud (riesgo inicial C=2, P=2 → 4), el implementador elige «aplicar controles» pero selecciona un control marcado «No aplica» en la SoA. ¿Qué falla?",
+				"options": [
+					{ "id": "a", "label": "Nada, el plan y la SoA son documentos totalmente independientes." },
+					{ "id": "b", "label": "Se rompe la trazabilidad plan ↔ SoA: todo control del plan debe figurar como aplicable en la SoA." },
+					{ "id": "c", "label": "El plazo debería ser de diez años." },
+					{ "id": "d", "label": "Falta eliminar el contrato de encargo con la nube." }
+				],
+				"correct": "b",
+				"explanation": "La SoA y el Plan de Tratamiento están estrictamente enlazados: usar un control excluido genera contradicción auditable."
+			},
+			{
+				"id": "q7",
+				"prompt": "Tras cifrar la base médica de OBU y segmentar cuentas (riesgo inicial C=2, P=2 → 4), ¿qué valoración residual refleja correctamente la reducción real?",
+				"options": [
+					{ "id": "a", "label": "C=0, P=2 → 2, porque cifrar elimina la sensibilidad médica." },
+					{ "id": "b", "label": "C=2, P=0 → 2 (aceptable), porque el dato sigue siendo sensible pero el cifrado reduce la probabilidad." },
+					{ "id": "c", "label": "C=2, P=2 → 4, porque los controles técnicos nunca bajan el riesgo." },
+					{ "id": "d", "label": "C=2, P=3 → 5, al añadir complejidad operativa." }
+				],
+				"correct": "b",
+				"explanation": "La consecuencia sobre el titular por sensibilidad médica no baja (C=2), mientras los controles efectivos abaten P hasta volver aceptable el riesgo (< 3)."
+			},
+			{
+				"id": "q8",
+				"prompt": "Se descubre hoy (2026-05-15) que no se hicieron pruebas trimestrales de respaldo y se ejecuta una prueba inmediata mañana. ¿Por qué NO basta eso para cerrar la ficha de no conformidad?",
+				"options": [
+					{ "id": "a", "label": "Porque ejecutar una prueba hoy es solo la corrección; falta eliminar la causa raíz (automatizar recordatorios) y verificar eficacia tras un ciclo posterior." },
+					{ "id": "b", "label": "Porque el Rector debe hacer manualmente los respaldos cada noche." },
+					{ "id": "c", "label": "Porque la prueba debía hacerse antes de detectar la falla." },
+					{ "id": "d", "label": "Porque no hace falta documentar el cambio en el Programa de Seguridad." }
+				],
+				"correct": "a",
+				"explanation": "Una acción correctiva cambia el proceso para que no recurra y exige demostrar eficacia después de implementarla."
+			},
+			{
+				"id": "q9",
+				"prompt": "¿Cuál de las siguientes métricas cumple el requisito de monitoreo y medición (`pims-monitoreo`)?",
+				"options": [
+					{ "id": "a", "label": "«El equipo siente que la privacidad va mejor que el año pasado»." },
+					{ "id": "b", "label": "«Porcentaje de solicitudes ARCO resueltas dentro del plazo institucional según registro del DPO, medido mensualmente»." },
+					{ "id": "c", "label": "«Número de reuniones informales de café»." },
+					{ "id": "d", "label": "«Promedio de edad del parque informático»." }
+				],
+				"correct": "b",
+				"explanation": "Un indicador PIMS requiere fórmula definida, fuente verificable, periodicidad y enlace con objetivos."
+			},
+			{
+				"id": "q10",
+				"prompt": "Al programar la Revisión por la Dirección anual, ¿en qué momento debe celebrarse respecto a las métricas y auditorías internas?",
+				"options": [
+					{ "id": "a", "label": "Antes de recoger indicadores o auditar, para ahorrar trabajo posterior." },
+					{ "id": "b", "label": "Después de consolidar indicadores, estado de no conformidades y cierre de la auditoría interna, dejando decisiones en acta." },
+					{ "id": "c", "label": "Únicamente cada cinco años junto con elecciones universitarias." },
+					{ "id": "d", "label": "Sin necesidad de acta si asistió el Jefe de TI." }
+				],
+				"correct": "b",
+				"explanation": "La Revisión por la Dirección consume los resultados de monitoreo y auditoría interna para decidir mejoras y recursos."
+			}
+		]
+	}
+}

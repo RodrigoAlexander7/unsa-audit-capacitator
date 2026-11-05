@@ -59,7 +59,7 @@ async def test_modulo_r3_devuelve_ejemplo_resuelto_y_sin_claves_privadas(
 
     assert (await client.post("/routes/implementacion/enroll", headers=headers)).status_code == 201
     r3 = (await client.get("/routes/implementacion", headers=headers)).json()
-    soa_summary = next(m for m in r3["modules"] if not m["planned"])
+    soa_summary = next(m for m in r3["modules"] if m["order"] == 4)
 
     mod_resp = await client.get(f"/modules/{soa_summary['id']}", headers=headers)
     assert mod_resp.status_code == 200

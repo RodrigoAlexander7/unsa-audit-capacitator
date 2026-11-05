@@ -1,0 +1,111 @@
+{
+	"kind": "risk_table",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Elabora el cuadro operativo de evaluación de riesgos seleccionando vulnerabilidad, propietario y valoración C/P para cinco activos UNSA.",
+		"scenario": "Aplica la metodología UNSA (escala 0–2, umbral de aceptación < 3, C=2 obligatoria ante datos sensibles) antes de aprobar el ciclo semestral de implementación.",
+		"threshold": 3,
+		"rows": [
+			{
+				"id": "r-notas",
+				"asset": "Sistema de Notas y Actas (ORA)",
+				"asset_owner": "Jefe de Registros Académicos",
+				"data_categories": ["identificación", "calificaciones"],
+				"existing_controls": "Solo usuario/clave sin cuentas individuales para asistentes temporales.",
+				"threat": "Acceso indebido o modificación no autorizada de actas oficiales",
+				"vulnerability": "",
+				"risk_owner": "",
+				"vulnerability_options": [
+					{ "id": "v-compartidas", "label": "Cuentas compartidas entre el personal sin trazabilidad individual" },
+					{ "id": "v-color", "label": "Tipografía poco legible en encabezados del portal" }
+				],
+				"risk_owner_options": [
+					{ "id": "jefe-ora", "label": "Jefe de Registros Académicos" },
+					{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" }
+				],
+				"expected_vulnerability": "v-compartidas",
+				"expected_risk_owner": "jefe-ora",
+				"sensitive_data": false,
+				"expected_consequence": 2,
+				"expected_probability": 2,
+				"tolerance": 0,
+				"explanation": "Alterar actas oficiales causa grave perjuicio académico/legal (C=2) y cuentas compartidas hacen muy probable el abuso (P=2) → nivel 4, dueño: Jefe de ORA."
+			},
+			{
+				"id": "r-bienestar",
+				"asset": "Sistema de Bienestar y Salud (OBU)",
+				"asset_owner": "Jefe de Bienestar Universitario",
+				"data_categories": ["identificación", "datos de salud", "datos socioeconómicos"],
+				"existing_controls": "Sin cifrado en reposo en base de historias clínicas ni segmentación estricta.",
+				"threat": "Divulgación no autorizada de diagnósticos médicos estudiantiles",
+				"vulnerability": "",
+				"risk_owner": "",
+				"vulnerability_options": [
+					{ "id": "v-sin-cifrar", "label": "Base de datos de salud sin cifrado en reposo" },
+					{ "id": "v-pantalla", "label": "Monitor antiguo en recepción administrativa" }
+				],
+				"risk_owner_options": [
+					{ "id": "jefe-obu", "label": "Jefe de Bienestar Universitario" },
+					{ "id": "sec-general", "label": "Secretario General" }
+				],
+				"expected_vulnerability": "v-sin-cifrar",
+				"expected_risk_owner": "jefe-obu",
+				"sensitive_data": true,
+				"expected_consequence": 2,
+				"expected_probability": 2,
+				"tolerance": 0,
+				"explanation": "Datos de salud exigen C=2 y la falta de cifrado mantiene P=2 → nivel 4 crítico, bajo propiedad del Jefe de OBU."
+			},
+			{
+				"id": "r-matricula",
+				"asset": "Sistema de Matrícula (ORA)",
+				"asset_owner": "Jefe de Registros Académicos",
+				"data_categories": ["identificación", "datos académicos"],
+				"existing_controls": "Cifrado en tránsito y cuentas individuales, pero sin control formal de cambios en BD.",
+				"threat": "Alteración accidental o fraudulenta de registros de matrícula",
+				"vulnerability": "Cambios directos en base de datos sin registro de aprobación",
+				"risk_owner": "Jefe de Registros Académicos",
+				"sensitive_data": false,
+				"expected_consequence": 2,
+				"expected_probability": 1,
+				"tolerance": 0,
+				"explanation": "Impacto académico alto (C=2) con controles parciales de transporte y cuentas (P=1) → nivel 3 (no aceptable)."
+			},
+			{
+				"id": "r-correo",
+				"asset": "Correo Institucional (OTI)",
+				"asset_owner": "Jefe de la Oficina de Tecnologías de la Información",
+				"data_categories": ["identificación", "comunicaciones"],
+				"existing_controls": "Filtro antispam básico activo, pero baja concienciación frente a phishing dirigido.",
+				"threat": "Robo de credenciales por suplantación (phishing) al personal",
+				"vulnerability": "Falta de campañas prácticas y verificación adicional ante phishing",
+				"risk_owner": "",
+				"risk_owner_options": [
+					{ "id": "ciso", "label": "Responsable de Seguridad de la Información" },
+					{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+				],
+				"expected_risk_owner": "ciso",
+				"sensitive_data": false,
+				"expected_consequence": 1,
+				"expected_probability": 2,
+				"tolerance": 0,
+				"explanation": "Impacto moderado sobre comunicaciones ordinarias (C=1), probabilidad alta sin concienciación/MFA (P=2) → nivel 3."
+			},
+			{
+				"id": "r-tramite",
+				"asset": "Trámite Documentario (SGEN)",
+				"asset_owner": "Secretario General",
+				"data_categories": ["identificación", "contenido de expedientes"],
+				"existing_controls": "Archivo custodiado con llave y bitácora de entrega, aunque sin inventario digitalizado.",
+				"threat": "Extravío puntual de expediente físico en tránsito interno",
+				"vulnerability": "Archivo físico dependiente de registro manual sin inventario automatizado",
+				"risk_owner": "Secretario General",
+				"sensitive_data": false,
+				"expected_consequence": 1,
+				"expected_probability": 1,
+				"tolerance": 0,
+				"explanation": "Daño moderado recuperable (C=1) con controles físicos razonables (P=1) → nivel 2, aceptable (< 3)."
+			}
+		]
+	}
+}

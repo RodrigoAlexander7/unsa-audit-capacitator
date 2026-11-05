@@ -1,0 +1,165 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Elabora la ficha faltante de Monitoreo y Medición (pims-monitoreo) y su preparación para la Revisión por la Dirección de la UNSA.",
+		"scenario": "Para cerrar el vacío del requisito 9.1 en la UNSA, el DPO estructura la ficha anual de monitoreo del PIMS que servirá de insumo directo a la Revisión por la Dirección presidida por el Rector después de concluir la auditoría interna.",
+		"document_title": "Ficha de Monitoreo, Medición y Revisión por la Dirección (UNSA)",
+		"sections": [
+			{
+				"id": "sec-gobierno",
+				"title": "1. Responsables y secuencia hacia la Revisión por la Dirección",
+				"fields": [
+					{
+						"id": "mon_code",
+						"label": "Código del documento de monitoreo",
+						"type": "text",
+						"required": true,
+						"placeholder": "PIMS-MON-001",
+						"validation": {
+							"pattern": "^PIMS-MON-\\d{3}$",
+							"sample_solution": "PIMS-MON-001",
+							"feedback_error": "Usa el formato PIMS-MON-NNN."
+						}
+					},
+					{
+						"id": "analyst_position",
+						"label": "Cargo que consolida y analiza las métricas del PIMS",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+						],
+						"validation": {
+							"exact": "dpo",
+							"feedback_error": "El DPO consolida el desempeño transversal del PIMS junto con evidencias de OTI/ORH."
+						}
+					},
+					{
+						"id": "review_chair",
+						"label": "Autoridad que preside y aprueba las decisiones de Revisión por la Dirección",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "ciso", "label": "Responsable de Seguridad de la Información" }
+						],
+						"validation": {
+							"exact": "rector",
+							"feedback_error": "La Revisión por la Dirección corresponde a la Alta Dirección (Rector)."
+						}
+					},
+					{
+						"id": "audit_close_date",
+						"label": "Fecha de cierre del informe de auditoría interna (insumo previo)",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-06-01",
+							"max_date": "2026-11-30",
+							"sample_solution": "2026-09-15",
+							"feedback_error": "Define una fecha válida de cierre de auditoría interna."
+						}
+					},
+					{
+						"id": "mgmt_review_date",
+						"label": "Fecha de sesión de Revisión por la Dirección",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-06-15",
+							"max_date": "2027-06-30",
+							"feedback_error": "La sesión debe celebrarse después de contar con auditoría interna e indicadores."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-indicadores",
+				"title": "2. Métricas verificables y acuerdos de mejora",
+				"fields": [
+					{
+						"id": "selected_metrics",
+						"label": "Indicadores válidos basados en evidencia objetiva (elige los tres correctos)",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{
+								"id": "ind-arco",
+								"label": "Porcentaje de solicitudes ARCO atendidas dentro del plazo legal (Fuente: mesa DPO)"
+							},
+							{
+								"id": "ind-riesgos",
+								"label": "Porcentaje de riesgos nivel >= 3 con acciones vencidas vs. mitigadas (Fuente: Plan de tratamiento)"
+							},
+							{
+								"id": "ind-comp",
+								"label": "Porcentaje de cargos críticos con evaluación de eficacia aprobada (Fuente: Matriz ORH)"
+							},
+							{
+								"id": "ind-sensacion",
+								"label": "Nivel estimado de tranquilidad subjetiva sin registros verificables"
+							}
+						],
+						"validation": {
+							"exact_ids": ["ind-arco", "ind-riesgos", "ind-comp"],
+							"feedback_error": "Todo indicador PIMS debe tener fórmula medible y fuente verificable; descarta estimaciones subjetivas."
+						}
+					},
+					{
+						"id": "management_review_outputs",
+						"label": "Entradas y salidas obligatorias que documentará la minuta de Revisión por la Dirección",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Detalla qué insumos revisará el Rector (auditoría, indicadores, no conformidades, titulares) y qué decisiones con recursos/responsables quedarán registradas...",
+						"validation": {
+							"rubric": {
+								"min_words": 15,
+								"forbidden_any": [
+									{
+										"phrases": ["sin cambios porque todo esta bien", "reunion sin acta"],
+										"feedback": "La revisión por dirección exige conservar actas/minutas y analizar insumos reales."
+									}
+								],
+								"criteria": [
+									{
+										"id": "crit-insumos",
+										"label": "Cita insumos obligatorios (indicadores, auditoría o no conformidades)",
+										"keywords_any": ["indicador", "auditoria", "no conformidad", "riesgo", "reclamo", "titular"],
+										"feedback_missing": "Incluye insumos obligatorios como indicadores, auditoría interna, riesgos o no conformidades."
+									},
+									{
+										"id": "crit-decisiones",
+										"label": "Incluye decisiones de mejora, recursos o responsables/plazos",
+										"keywords_any": ["mejora", "recurso", "presupuesto", "responsable", "plazo", "decision"],
+										"feedback_missing": "Detalla las salidas exigidas: decisiones de mejora, asignación de recursos y plazos."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-mon",
+				"kind": "disjoint",
+				"fields": ["review_chair", "analyst_position"],
+				"label": "Presidencia directiva vs. consolidación técnica",
+				"feedback": "El Rector preside y aprueba recursos; el DPO consolida los indicadores técnicos."
+			},
+			{
+				"id": "rule-audit-before-review",
+				"kind": "date_order",
+				"fields": ["audit_close_date", "mgmt_review_date"],
+				"params": { "min_days": 7, "max_days": 180 },
+				"label": "Auditoría previa a Revisión por la Dirección",
+				"feedback": "La Revisión por la Dirección debe realizarse después del cierre de la auditoría interna."
+			}
+		]
+	}
+}
