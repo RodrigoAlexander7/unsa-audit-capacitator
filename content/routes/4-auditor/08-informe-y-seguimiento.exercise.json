@@ -1,0 +1,174 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Elabora el Informe de Auditoría Interna PIMS asegurando exactitud numérica entre el conteo de NC y su detalle, fechas válidas y redacción objetiva.",
+		"scenario": "Concluyó el trabajo de campo de la auditoría interna el 2026-08-21. De las verificaciones realizadas resultaron exactamente DOS no conformidades formales (NC-AUD-01 por ausencia de pims-monitoreo; NC-AUD-02 por pims-soa en borrador) y UNA observación separada (pims-plan-tratamiento vigente sin unidad responsable).",
+		"document_title": "Informe de Auditoría Interna del PIMS — Ciclo 2026 (UNSA)",
+		"sections": [
+			{
+				"id": "sec-meta",
+				"title": "1. Emisión, responsables y fechas",
+				"fields": [
+					{
+						"id": "report_code",
+						"label": "Código del informe de auditoría",
+						"type": "text",
+						"required": true,
+						"placeholder": "AUD-INF-2026-01",
+						"validation": {
+							"pattern": "^AUD-INF-\\d{4}-\\d{2}$",
+							"sample_solution": "AUD-INF-2026-01",
+							"feedback_error": "Usa el código AUD-INF-AAAA-NN."
+						}
+					},
+					{
+						"id": "lead_auditor",
+						"label": "Responsable imparcial que firma el informe",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional (Auditor Líder)" },
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" }
+						],
+						"validation": {
+							"exact": "jefe-oci",
+							"feedback_error": "El informe de auditoría interna lo emite el auditor líder independiente (OCI)."
+						}
+					},
+					{
+						"id": "recipient_authority",
+						"label": "Máxima autoridad receptora para Revisión por Dirección",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" },
+							{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+						],
+						"validation": {
+							"exact": "rector",
+							"feedback_error": "El informe se eleva formalmente a la Alta Dirección (Rector) y responsables auditados."
+						}
+					},
+					{
+						"id": "audit_end_date",
+						"label": "Fecha de cierre del trabajo de campo y reunión final",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-08-21",
+							"max_date": "2026-08-21",
+							"sample_solution": "2026-08-21",
+							"feedback_error": "Según el escenario, el trabajo de campo cerró el 2026-08-21."
+						}
+					},
+					{
+						"id": "report_date",
+						"label": "Fecha de emisión del informe formal",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-08-22",
+							"max_date": "2026-09-20",
+							"feedback_error": "Emite el informe tras concluir la auditoría en campo (dentro de los 30 días siguientes)."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-hallazgos",
+				"title": "2. Recuento exacto de no conformidades y redacción objetiva",
+				"fields": [
+					{
+						"id": "nc_count",
+						"label": "Cantidad total de no conformidades formales (excluyendo observaciones)",
+						"type": "select",
+						"required": true,
+						"options": [
+							{ "id": "1", "label": "1 no conformidad" },
+							{ "id": "2", "label": "2 no conformidades" },
+							{ "id": "3", "label": "3 no conformidades (sumando la observación)" }
+						],
+						"validation": {
+							"exact": "2",
+							"feedback_error": "El total debe contar solo las 2 no conformidades reales; las observaciones se reportan aparte."
+						}
+					},
+					{
+						"id": "nc_references_list",
+						"label": "Fichas de no conformidad detalladas en la tabla de resultados",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "nc-aud-01", "label": "NC-AUD-01 — Ausencia total de evidencia de monitoreo (pims-monitoreo)" },
+							{ "id": "nc-aud-02", "label": "NC-AUD-02 — Declaración de aplicabilidad en borrador sin aprobación (pims-soa)" },
+							{ "id": "obs-01", "label": "Observación — Plan de tratamiento vigente sin responsable (no es NC)" }
+						],
+						"validation": {
+							"exact_ids": ["nc-aud-01", "nc-aud-02"],
+							"feedback_error": "Incluye únicamente NC-AUD-01 y NC-AUD-02 en la tabla de no conformidades."
+						}
+					},
+					{
+						"id": "objective_finding_summary",
+						"label": "Redacción objetiva del hallazgo NC-AUD-01 (criterio + evidencia + incumplimiento)",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Redacta el hallazgo citando el requisito/criterio, la evidencia constatada en el repositorio el 2026-08-21 y el desvío concreto...",
+						"validation": {
+							"rubric": {
+								"min_words": 15,
+								"forbidden_any": [
+									{
+										"phrases": ["parece que", "creemos que", "son descuidados", "culpa del equipo"],
+										"feedback": "Evita juicios personales o especulaciones («parece», «descuidados»); describe criterio y evidencia."
+									}
+								],
+								"criteria": [
+									{
+										"id": "crit-criterio",
+										"label": "Cita el criterio normativo o requisito (`9.1` / monitoreo / medición)",
+										"keywords_any": ["9.1", "requisito", "criterio", "monitoreo", "medicion"],
+										"feedback_missing": "Especifica el criterio evaluado (requisito de monitoreo y medición `9.1`)."
+									},
+									{
+										"id": "crit-evidencia",
+										"label": "Cita la evidencia objetiva verificada y brecha concreta",
+										"keywords_any": ["evidencia", "repositorio", "inexist", "no existe", "constat", "pims-monitoreo"],
+										"feedback_missing": "Describe la evidencia objetiva constatada (inexistencia de `pims-monitoreo` e indicadores)."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-rep",
+				"kind": "disjoint",
+				"fields": ["lead_auditor", "recipient_authority"],
+				"label": "Segregación emisor vs. destinatario",
+				"feedback": "El auditor líder (OCI) emite el informe hacia el Rector; no son el mismo rol."
+			},
+			{
+				"id": "rule-report-after-field",
+				"kind": "date_order",
+				"fields": ["audit_end_date", "report_date"],
+				"params": { "min_days": 1, "max_days": 30 },
+				"label": "Fecha de informe posterior al cierre de campo",
+				"feedback": "El informe debe fecharse después del cierre del trabajo de campo (máx. 30 días)."
+			},
+			{
+				"id": "rule-nc-count-match",
+				"kind": "count_matches",
+				"fields": ["nc_count", "nc_references_list"],
+				"label": "Consistencia exacta total NC == filas detalladas",
+				"feedback": "El total declarado de no conformidades debe coincidir exactamente con el número de fichas NC listadas."
+			}
+		]
+	}
+}

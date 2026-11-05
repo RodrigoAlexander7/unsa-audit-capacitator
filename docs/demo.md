@@ -28,7 +28,7 @@ Todos los datos son ficticios. Arranque: `make dev` (Postgres + migraciones + se
 
 ## Recorrido sugerido
 
-1. **Participante (2 min)** — entra como `ana.quispe@demo.unsa.example`. En *Mis rutas* ve 3 rutas aprobadas (52 h acreditadas). Abre *R2 → Contexto y alcance* o *R3 → Plan de tratamiento y recursos* / *Declaración de aplicabilidad* para ver el panel lado a lado y la corrección por ítem.
+1. **Participante (2 min)** — entra como `ana.quispe@demo.unsa.example`. En *Mis rutas* ve 3 rutas aprobadas (52 h acreditadas) y la Ruta 4 (*Auditor interno*, 32 h) disponible con sus 10 módulos activos. Abre *R2 → Contexto y alcance*, *R3 → Plan de tratamiento* o *R4 → Listas de verificación* / *Informe y seguimiento* para ver el panel lado a lado y la corrección determinista.
 2. **Ejercicio práctico (2 min)** — como `miguel.zuniga`, abre un módulo de R1 pendiente (p. ej. *Riesgos cotidianos*), responde mal a propósito y lee la retroalimentación; el módulo final queda bloqueado hasta aprobar los demás.
 3. **Documentos versionados (2 min)** — *Documentos → ROF → Diferencias* (v1 → v3). *Proponer cambio* y, con el superadmin, aprobarlo o rechazarlo (si la base cambió → conflicto 409).
 4. **PIMS (1 min)** — *Documentos → Conjunto documental del PIMS (ISO/IEC 27701)*: 11 requisitos con estados vigente / borrador / vencido / sin responsable / faltante.

@@ -44,13 +44,17 @@ def _solve_document_form(spec: dict[str, Any]) -> dict[str, Any]:
                 fields_out[fid] = f["options"][0]["id"]
             else:
                 fields_out[fid] = "Texto de ejemplo válido"
-    # Ajustar date_order simples si no tuvieron sample_solution
     for rule in spec.get("cross_rules", []):
         if rule["kind"] == "date_order":
             fa, fb = rule["fields"][0], rule["fields"][1]
             da = date.fromisoformat(fields_out[fa])
-            min_d = int(rule.get("params", {}).get("min_days", 1))
-            fields_out[fb] = (da + timedelta(days=max(min_d, 180))).isoformat()
+            params = rule.get("params", {})
+            min_d = int(params.get("min_days", 1))
+            max_d = params.get("max_days")
+            delta = max(min_d, 180)
+            if max_d is not None:
+                delta = min(delta, int(max_d))
+            fields_out[fb] = (da + timedelta(days=delta)).isoformat()
     return {"fields": fields_out}
 
 

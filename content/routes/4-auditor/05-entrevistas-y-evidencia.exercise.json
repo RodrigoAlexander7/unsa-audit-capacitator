@@ -1,0 +1,105 @@
+{
+	"kind": "branching",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Aplica técnicas de entrevista, muestreo independiente y verificación de evidencia en cuatro situaciones de auditoría en la UNSA.",
+		"steps": [
+			{
+				"id": "s1",
+				"situation": "Entrevistas al responsable de mesas de ayuda sobre el plazo de atención a solicitudes ARCO (derechos de titulares). ¿Qué pregunta cumple mejor ISO 19011?",
+				"options": [
+					{
+						"id": "a",
+						"label": "«Muéstreme en el registro de solicitudes los últimos cinco requerimientos recibidos, su fecha de ingreso y la fecha real de respuesta al titular.»",
+						"points": 2,
+						"feedback": "Exacto: pregunta abierta orientada a constatar evidencia objetiva en registros reales."
+					},
+					{
+						"id": "b",
+						"label": "«¿Verdad que siempre cumplen el plazo de la política sin retrasos?»",
+						"points": 0,
+						"feedback": "Pregunta cerrada e inductiva: invita a responder «sí» sin mostrar evidencia."
+					},
+					{
+						"id": "c",
+						"label": "«No me muestre expedientes reales; dígame solamente si cree que van bien».",
+						"points": 0,
+						"feedback": "Una opinión subjetiva sin evidencia documental carece de validez de auditoría."
+					}
+				]
+			},
+			{
+				"id": "s2",
+				"situation": "Al auditar el control de bajas de cuentas entre ORH y OTI, el responsable ofrece entregarte «dos carpetas ya impresas con casos modelo que salieron perfectos en enero». ¿Cómo actúas?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Agradecer la referencia, pero elegir personalmente una muestra aleatoria de ceses reales de los últimos 60 días desde planillas ORH y cotejarlos contra cuentas activas en OTI.",
+						"points": 2,
+						"feedback": "Correcto: el auditor define la muestra representativa y triangula fuentes independientes (ORH ↔ OTI)."
+					},
+					{
+						"id": "b",
+						"label": "Aceptar únicamente las dos carpetas preseleccionadas por el auditado y dar Conformidad total.",
+						"points": 0,
+						"feedback": "Dejar que el auditado escoja la muestra introduce sesgo total y oculta desvíos recientes."
+					},
+					{
+						"id": "c",
+						"label": "Cancelar el muestreo técnico y confiar en el acta de reunión de apertura.",
+						"points": 0,
+						"feedback": "Sin muestreo directo no puedes verificar eficacia operativa del control."
+					}
+				]
+			},
+			{
+				"id": "s3",
+				"situation": "En OTI te muestran el Programa de Seguridad aprobado (`pims-programa-seguridad`) que ordena pruebas trimestrales de restauración de respaldos, pero el administrador admite verbalmente que «en la práctica solo probaron el año antepasado porque no hubo fallos». ¿Qué evidencia prima?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Existe un incumplimiento entre el criterio documentado y la ejecución real: el papel aprobado no sustituye la ausencia de actas de prueba trimestral.",
+						"points": 2,
+						"feedback": "Exacto: la conformidad exige demostrar tanto la regla documentada como su ejecución eficaz."
+					},
+					{
+						"id": "b",
+						"label": "Marcar Conforme porque el documento vigente tiene fecha de enero 2026.",
+						"points": 0,
+						"feedback": "El documento vigente es criterio, no prueba de haber realizado las pruebas periódicas."
+					},
+					{
+						"id": "c",
+						"label": "Marcar Conforme porque no ocurrió ninguna caída de servidores ese trimestre.",
+						"points": 0,
+						"feedback": "La ausencia de fallos reportados no prueba que la restauración funcione cuando sea necesaria."
+					}
+				]
+			},
+			{
+				"id": "s4",
+				"situation": "Para verificar la competencia de los encargados de privacidad en OBU, recibes únicamente la lista de asistencia con firmas de una charla de 30 minutos y la palabra del jefe de unidad de que «todos prestaron atención». ¿Qué concludes?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Evidencia insuficiente: solicitar evaluaciones de eficacia aprobadas o revisión de registros reales tramitados conforme al procedimiento.",
+						"points": 2,
+						"feedback": "Correcto: asistencia ≠ competencia; se debe verificar la eficacia de la capacitación mediante desempeño o evaluación."
+					},
+					{
+						"id": "b",
+						"label": "Dar la competencia por plenamente acreditada con las firmas de asistencia.",
+						"points": 0,
+						"feedback": "Firmar asistencia solo prueba presencia en sala, nunca comprensión ni capacidad aplicada."
+					},
+					{
+						"id": "c",
+						"label": "Emitir recomendación solo si faltaron sillas en el auditorio.",
+						"points": 0,
+						"feedback": "Irrelevante frente al requisito de eficacia de competencia."
+					}
+				]
+			}
+		]
+	}
+}
