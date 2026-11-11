@@ -15,7 +15,9 @@
 {#if data.routes}
 	<section class="card" aria-labelledby="rutas">
 		<h2 id="rutas">Rutas <span class="meta">({totalEnrolled} matrículas)</span></h2>
-		<div class="scroll">
+		<!-- Una tabla con scroll horizontal debe poder recorrerse con el teclado (axe: scrollable-region-focusable). -->
+		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+		<div class="scroll" role="region" aria-labelledby="rutas" tabindex="0">
 			<table data-testid="routes-table">
 				<thead>
 					<tr>

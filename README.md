@@ -9,7 +9,15 @@ Capacitación en 4 rutas (Sensibilización 12 h → Interpretación 16 h → Imp
 ## Requisitos
 `uv`, Node 24+, Docker.
 
-## Puesta en marcha
+## Probar rápido
+
+```bash
+./dev.sh     # Postgres + migraciones + seed con cohorte demo + API (:8000) + web (:5173)
+```
+
+Abre <http://localhost:5173>. Participantes demo: `ana.quispe@demo.unsa.example` / `Demo-1234`; superadmin: las credenciales de `.env`. Guion de demo de 10 minutos: [docs/demo.md](docs/demo.md). El asesor IA necesita el CLI `agy` instalado y con sesión (sin API key).
+
+## Puesta en marcha paso a paso
 
 ```bash
 cp .env.example .env            # ajustar SUPERADMIN_EMAIL, SUPERADMIN_PASSWORD y JWT_SECRET
@@ -25,6 +33,11 @@ cd backend && uv run python -m unsa_audit.seed   # BD ficticia de la UNSA + cont
 ```
 
 > El contenido de las rutas y de los documentos institucionales vive en [content/](content/README.md). Tras editar las rutas, vuelve a ejecutar el seed. Los documentos **no se pisan** si ya existen (se conserva lo creado desde la app); para restaurarlos: `uv run python -m unsa_audit.seed --reset-documents`.
+
+```bash
+cd backend && uv run python -m unsa_audit.seed --demo         # opcional: 12 participantes demo (idempotente)
+cd backend && uv run python -m unsa_audit.seed --reset-demo   # elimina @demo y @e2e y los recrea
+```
 
 ```bash
 cd backend && uv run unsa-audit          # API en http://localhost:8000/health
@@ -46,6 +59,11 @@ cd frontend && npm run check && npm test && npm run build
 
 Los tests de integración (`-m integration`) requieren Postgres arriba; usan una base `<POSTGRES_DB>_test` que crean y migran solos.
 
+```bash
+cd frontend && npm run test:e2e   # E2E + accesibilidad (Playwright + axe); usa Chrome del sistema y levanta API/web si no están arriba
+```
+
 ## Cuentas
 - **Superadmin:** el email de `SUPERADMIN_EMAIL` con la contraseña `SUPERADMIN_PASSWORD`, creada por el seed. El registro público rechaza ese email.
 - **Participantes:** se registran desde `/register` (rol `learner`).
+- **Participantes demo** (solo con `--demo`): `@demo.unsa.example`, contraseña documentada `Demo-1234` (dato ficticio; solo POC).
