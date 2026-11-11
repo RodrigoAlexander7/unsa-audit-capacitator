@@ -1,0 +1,5 @@
+code: pims-resultados-tratamiento
+kind: PIMS_TREATMENT_RESULTS
+title: Resultados del tratamiento de riesgos
+owner_unit: OTI
+lifecycle: draft

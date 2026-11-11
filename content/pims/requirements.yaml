@@ -1,0 +1,136 @@
+# Requisitos documentales del PIMS (ISO/IEC 27701), en el orden del PLAN §5.
+# Las cláusulas son DATO: verificar la numeración contra la edición de la norma que use la UNSA.
+# Textos redactados para esta plataforma (no reproducen la norma ni plantillas de terceros).
+requirements:
+  - code: pims-alcance
+    clause_ref: "4.3"
+    title: Alcance del PIMS
+    document_kind: PIMS_SCOPE
+    summary: >
+      Delimita qué unidades, procesos, sistemas y tratamientos de datos personales cubre el PIMS,
+      qué queda fuera y por qué, y en qué rol actúa la UNSA en cada tratamiento.
+    expected_evidence: >
+      Documento vigente con procesos, unidades, ubicaciones, infraestructura y exclusiones
+      justificadas; rol de responsable o encargada por tratamiento; aprobación de la dirección.
+    responsible_unit: OTI
+
+  - code: pims-politica-privacidad
+    clause_ref: "5.2"
+    title: Política de privacidad
+    document_kind: PIMS_PRIVACY_POLICY
+    summary: >
+      Declaración de la dirección con los principios de tratamiento, los derechos de los titulares,
+      las responsabilidades y el compromiso de mejora continua.
+    expected_evidence: >
+      Política aprobada por el Rector, comunicada a la comunidad universitaria y revisada en el
+      plazo definido; coherente con el estatuto y con la normativa aplicable.
+    responsible_unit: UNSA
+
+  - code: pims-proceso-riesgos
+    clause_ref: "6.1.2"
+    title: Proceso de evaluación de riesgos de privacidad
+    document_kind: PIMS_RISK_PROCESS
+    summary: >
+      Describe cómo se identifican activos, amenazas y vulnerabilidades, cómo se valoran
+      consecuencia (incluido el impacto sobre los titulares) y probabilidad, y qué niveles de
+      riesgo se aceptan.
+    expected_evidence: >
+      Metodología documentada con escalas, criterio de aceptación, propietarios de riesgo y
+      periodicidad de revisión; aplicada de forma repetible.
+    responsible_unit: OTI
+
+  - code: pims-soa
+    clause_ref: "6.1.3 e"
+    title: Declaración de aplicabilidad (SoA)
+    document_kind: PIMS_SOA
+    summary: >
+      Lista los controles de privacidad y seguridad que se aplican (o no), con su justificación y
+      su estado de implementación, y recoge la aceptación de los riesgos residuales.
+    expected_evidence: >
+      Documento aprobado con cada control marcado como aplica o no aplica, justificación,
+      referencia al riesgo que trata y estado; aceptación formal de riesgos residuales.
+    responsible_unit: OTI
+
+  - code: pims-plan-tratamiento
+    clause_ref: "6.1.3 f"
+    title: Plan de tratamiento de riesgos de privacidad
+    document_kind: PIMS_TREATMENT_PLAN
+    summary: >
+      Planifica las actividades que reducen los riesgos no aceptables: qué se hace, quién lo hace,
+      con qué recursos, para cuándo y cómo se comprobará su eficacia.
+    expected_evidence: >
+      Plan aprobado por los propietarios de los riesgos, con responsable, plazo, recursos y
+      estado por actividad, enlazado con la SoA y con los resultados de la evaluación.
+    responsible_unit: OTI
+
+  - code: pims-programa-seguridad
+    clause_ref: "6.1.3 c"
+    title: Programa de seguridad de la información documentado (con gestión de incidentes)
+    document_kind: PIMS_SECURITY_PROGRAM
+    summary: >
+      Reúne las medidas de seguridad que protegen los datos personales y define cómo se detectan,
+      clasifican, contienen y notifican los incidentes y las brechas de datos.
+    expected_evidence: >
+      Programa vigente con medidas, roles, procedimiento de incidentes, plazos de notificación,
+      registro de incidentes y pruebas periódicas.
+    responsible_unit: OTI
+
+  - code: pims-resultados-riesgos
+    clause_ref: "8.2"
+    title: Resultados de la evaluación de riesgos
+    document_kind: PIMS_RISK_RESULTS
+    summary: >
+      Registra el resultado concreto de aplicar la metodología: activos valorados, riesgos con su
+      nivel, propietarios y fecha.
+    expected_evidence: >
+      Tabla de riesgos fechada, con consecuencia, probabilidad, nivel y propietario, coherente
+      con la metodología y con los sistemas del alcance.
+    responsible_unit: OTI
+
+  - code: pims-resultados-tratamiento
+    clause_ref: "8.3"
+    title: Resultados del tratamiento de riesgos
+    document_kind: PIMS_TREATMENT_RESULTS
+    summary: >
+      Registra la opción elegida para cada riesgo no aceptable, los controles aplicados y el
+      riesgo residual obtenido.
+    expected_evidence: >
+      Registro por riesgo con opción de tratamiento, controles, valoración residual y aprobación;
+      trazable hacia el plan de tratamiento y la SoA.
+    responsible_unit: OTI
+
+  - code: pims-competencia
+    clause_ref: "7.2"
+    title: Evidencia de competencia
+    document_kind: PIMS_COMPETENCE
+    summary: >
+      Demuestra que las personas con funciones en el PIMS tienen la formación y la experiencia
+      necesarias, y qué se hizo cuando faltaba.
+    expected_evidence: >
+      Matriz de competencias por cargo, registros de capacitación, evaluación de eficacia y
+      acciones ante brechas de competencia.
+    responsible_unit: ORH
+
+  - code: pims-monitoreo
+    clause_ref: "9.1"
+    title: Evidencia de monitoreo y medición
+    document_kind: PIMS_MONITORING
+    summary: >
+      Muestra qué se mide del PIMS, con qué método y periodicidad, quién analiza los resultados y
+      qué decisiones se tomaron.
+    expected_evidence: >
+      Indicadores definidos (p. ej. solicitudes de titulares atendidas en plazo, incidentes,
+      capacitación), resultados periódicos y su análisis reportado a la dirección.
+    responsible_unit: OTI
+
+  - code: pims-no-conformidades
+    clause_ref: "10.2"
+    title: Evidencia de no conformidades y acciones correctivas
+    document_kind: PIMS_NONCONFORMITIES
+    summary: >
+      Registra los incumplimientos detectados, su corrección inmediata, el análisis de causa, la
+      acción correctiva y la verificación de su eficacia.
+    expected_evidence: >
+      Registro de no conformidades con origen, causa, corrección, acción correctiva, responsable,
+      fechas y verificación de eficacia; vinculado a auditorías e incidentes.
+    responsible_unit: OTI

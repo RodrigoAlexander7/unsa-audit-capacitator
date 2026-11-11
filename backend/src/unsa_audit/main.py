@@ -9,6 +9,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from unsa_audit.core.config import Settings, get_settings
 from unsa_audit.core.database import create_engine, create_session_factory
+from unsa_audit.documents.application.pims_use_cases import (
+    GetPimsCompleteness,
+    ListPimsRequirements,
+)
 from unsa_audit.documents.application.use_cases import (
     GetChangeRequest,
     GetDiff,
@@ -20,7 +24,11 @@ from unsa_audit.documents.application.use_cases import (
     ProposeChange,
     ResolveChangeRequest,
 )
-from unsa_audit.documents.infrastructure.sqlalchemy_repository import SqlAlchemyDocumentRepository
+from unsa_audit.documents.infrastructure.sqlalchemy_repository import (
+    SqlAlchemyDocumentRepository,
+    SqlAlchemyPimsRequirementRepository,
+)
+from unsa_audit.documents.interface.pims_router import router as pims_router
 from unsa_audit.documents.interface.router import router as documents_router
 from unsa_audit.health.application.check_health import CheckHealth, DatabaseProbe
 from unsa_audit.health.infrastructure.sqlalchemy_probe import SqlAlchemyDatabaseProbe
@@ -64,6 +72,7 @@ def create_app(
     learning = SqlAlchemyLearningRepository(session_factory)
     university_facts = SqlAlchemyUniversityFacts(session_factory)
     documents = SqlAlchemyDocumentRepository(session_factory)
+    pims_requirements = SqlAlchemyPimsRequirementRepository(session_factory)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -103,12 +112,15 @@ def create_app(
     app.state.list_change_requests = ListChangeRequests(documents)
     app.state.get_change_request = GetChangeRequest(documents)
     app.state.resolve_change_request = ResolveChangeRequest(documents)
+    app.state.list_pims_requirements = ListPimsRequirements(pims_requirements)
+    app.state.get_pims_completeness = GetPimsCompleteness(pims_requirements, documents)
 
     app.include_router(health_router)
     app.include_router(identity_router)
     app.include_router(university_router)
     app.include_router(learning_router)
     app.include_router(documents_router)
+    app.include_router(pims_router)
     return app
 
 

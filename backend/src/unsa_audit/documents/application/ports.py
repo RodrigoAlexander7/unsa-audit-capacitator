@@ -10,6 +10,7 @@ from unsa_audit.documents.domain.documents import (
     Document,
     DocumentVersion,
 )
+from unsa_audit.documents.domain.pims import PimsRequirement
 
 
 @dataclass(frozen=True)
@@ -35,6 +36,26 @@ class ApplyOutcome(StrEnum):
 
 class DocumentSource(Protocol):
     def load(self) -> list[SeedDocument]: ...
+
+
+@dataclass(frozen=True)
+class PimsRequirementView:
+    requirement: PimsRequirement
+    responsible_unit_name: str | None
+
+
+class PimsRequirementSource(Protocol):
+    def load(self) -> list[PimsRequirement]: ...
+
+
+class PimsRequirementRepository(Protocol):
+    async def replace_all(self, requirements: list[PimsRequirement]) -> None:
+        """Dato de referencia: reemplaza el conjunto completo (upsert + borra los retirados)."""
+        ...
+
+    async def list_all(self) -> list[PimsRequirementView]:
+        """Ordenados por `sort_order`."""
+        ...
 
 
 class DocumentRepository(Protocol):

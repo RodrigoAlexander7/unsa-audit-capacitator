@@ -1,0 +1,22 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — contrato Fase 4 (conjunto documental PIMS)
+  version: 0.5.0
+paths:
+  /pims/requirements:
+    get:
+      summary: Los 11 requisitos documentales del PIMS, en orden
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Requisitos con cláusula, evidencia esperada y responsable }
+        "401": { description: No autenticado }
+  /pims/completeness:
+    get:
+      summary: Matriz requisito ↔ documento con estado y totales de completitud
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Matriz, totales por estado y porcentaje de vigentes }
+        "401": { description: No autenticado }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer }

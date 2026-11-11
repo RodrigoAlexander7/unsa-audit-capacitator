@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Annotated, Literal
 from uuid import UUID
 
@@ -41,6 +41,8 @@ class DocumentSummaryResponse(BaseModel):
     title: str
     owner_unit_code: str | None
     owner_unit_name: str | None
+    lifecycle: str
+    review_date: date | None
     current_version: int
     updated_at: datetime
     open_change_requests: int
@@ -54,6 +56,8 @@ class DocumentSummaryResponse(BaseModel):
             title=d.title,
             owner_unit_code=d.owner_unit_code,
             owner_unit_name=s.owner_unit_name,
+            lifecycle=d.lifecycle.value,
+            review_date=d.review_date,
             current_version=s.current_number,
             updated_at=s.updated_at,
             open_change_requests=s.open_change_requests,

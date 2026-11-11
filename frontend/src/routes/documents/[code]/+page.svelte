@@ -14,6 +14,8 @@
 	{DOCUMENT_KIND_LABEL[doc.kind] ?? doc.kind} · responsable: {doc.owner_unit_name ?? '—'} ·
 	<strong data-testid="current-version">versión vigente v{doc.current_version}</strong>
 	({formatDate(doc.updated_at)})
+	{#if doc.lifecycle === 'draft'}· <strong class="draft">Borrador</strong>{/if}
+	{#if doc.review_date}· revisión: {formatDate(doc.review_date + 'T00:00:00Z')}{/if}
 </p>
 
 <div class="actions">
@@ -85,6 +87,10 @@
 	.meta {
 		color: var(--muted);
 		font-size: 0.9rem;
+	}
+
+	.draft {
+		color: var(--primary);
 	}
 
 	.actions {

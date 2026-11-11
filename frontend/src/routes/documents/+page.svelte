@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DOCUMENT_KIND_LABEL, IMPACT_LABEL } from '../../lib/api';
+	import { DOCUMENT_KIND_LABEL, IMPACT_LABEL, LIFECYCLE_LABEL } from '../../lib/api';
 	import ChangeBadge from '../../lib/ChangeBadge.svelte';
 	import { formatDate } from '../../lib/format';
 	import type { PageProps } from './$types';
@@ -12,6 +12,7 @@
 	Normas internas de la UNSA (ficticia) con su historial de versiones. Cada cambio queda registrado:
 	qué cambió, quién, cuándo y por qué.
 </p>
+<p><a class="pims-link" href="/documents/pims">Ver el conjunto documental del PIMS (privacidad) →</a></p>
 
 <div class="card table-card">
 	<table data-testid="documents-table">
@@ -20,6 +21,7 @@
 				<th>Documento</th>
 				<th>Tipo</th>
 				<th>Responsable</th>
+				<th>Estado</th>
 				<th>Versión</th>
 				<th>Actualizado</th>
 				<th>Solicitudes</th>
@@ -31,12 +33,13 @@
 					<td><a href={`/documents/${doc.code}`}>{doc.title}</a></td>
 					<td>{DOCUMENT_KIND_LABEL[doc.kind] ?? doc.kind}</td>
 					<td>{doc.owner_unit_name ?? '—'}</td>
+					<td data-testid={`lifecycle-${doc.code}`}>{LIFECYCLE_LABEL[doc.lifecycle] ?? doc.lifecycle}</td>
 					<td>v{doc.current_version}</td>
 					<td>{formatDate(doc.updated_at)}</td>
 					<td>{doc.open_change_requests > 0 ? `${doc.open_change_requests} abierta(s)` : '—'}</td>
 				</tr>
 			{:else}
-				<tr><td colspan="6">No hay documentos cargados. Ejecuta el seed del backend.</td></tr>
+				<tr><td colspan="7">No hay documentos cargados. Ejecuta el seed del backend.</td></tr>
 			{/each}
 		</tbody>
 	</table>
