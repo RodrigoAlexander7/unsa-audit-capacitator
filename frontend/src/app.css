@@ -1,0 +1,44 @@
+/* Unico tema: claro. No existe variante oscura (constitucion, principio 5). */
+:root {
+	color-scheme: light;
+	--bg: #f7f8fa;
+	--surface: #ffffff;
+	--text: #1c2430;
+	--muted: #5b6676;
+	--border: #d9dee6;
+	--primary: #1d4f91;
+	--primary-contrast: #ffffff;
+	--ok: #1f7a3d;
+	--warn: #b45309;
+	--danger: #b42318;
+	--radius: 10px;
+	font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--text);
+	line-height: 1.5;
+}
+
+a {
+	color: var(--primary);
+}
+
+.container {
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 0 16px;
+}
+
+.card {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 20px;
+}
