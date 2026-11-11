@@ -18,6 +18,7 @@
 		<a class="brand" href="/">Auditores UNSA</a>
 		<nav aria-label="Principal">
 			{#if data.user}
+				<a href="/routes">Mis rutas</a>
 				<a href="/university">Universidad</a>
 				<a href="/systems">Sistemas</a>
 			{/if}

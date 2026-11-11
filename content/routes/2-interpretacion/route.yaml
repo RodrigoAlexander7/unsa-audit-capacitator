@@ -1,0 +1,8 @@
+code: interpretacion
+order: 2
+title: Interpretación
+description: >
+  Interpreta los requisitos de ISO/IEC 27001 e ISO/IEC 27701 y aprende a relacionarlos con los
+  documentos y responsables reales de la UNSA.
+hours: 16
+prerequisite: sensibilizacion

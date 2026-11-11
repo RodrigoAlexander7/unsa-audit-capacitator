@@ -1,0 +1,53 @@
+{
+	"kind": "quiz",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Clasifica el impacto de cada modificación.",
+		"questions": [
+			{
+				"id": "d1",
+				"prompt": "ROF v1.1 → v1.2, art. 5\n- El Rector prescide el Consejo Universitario.\n+ El Rector preside el Consejo Universitario.",
+				"options": [
+					{ "id": "cosmetico", "label": "Cosmético (solo redacción)" },
+					{ "id": "procedimental", "label": "Procedimental (cambia cómo o cuándo)" },
+					{ "id": "estructural", "label": "Estructural (cambia quién decide o responde)" }
+				],
+				"correct": "cosmetico",
+				"explanation": "Solo se corrige una errata; el significado no cambia."
+			},
+			{
+				"id": "d2",
+				"prompt": "Procedimiento de actas v2.0 → v2.1\n- Las actas se entregan a Registros Académicos en 10 días.\n+ Las actas se entregan a Registros Académicos en 5 días.",
+				"options": [
+					{ "id": "cosmetico", "label": "Cosmético (solo redacción)" },
+					{ "id": "procedimental", "label": "Procedimental (cambia cómo o cuándo)" },
+					{ "id": "estructural", "label": "Estructural (cambia quién decide o responde)" }
+				],
+				"correct": "procedimental",
+				"explanation": "Cambia el plazo, no quién responde."
+			},
+			{
+				"id": "d3",
+				"prompt": "ROF v1.2 → v1.3, art. 21\n- La Oficina de Registros Académicos depende del Vicerrectorado Académico.\n+ La Oficina de Registros Académicos depende del Rectorado.",
+				"options": [
+					{ "id": "cosmetico", "label": "Cosmético (solo redacción)" },
+					{ "id": "procedimental", "label": "Procedimental (cambia cómo o cuándo)" },
+					{ "id": "estructural", "label": "Estructural (cambia quién decide o responde)" }
+				],
+				"correct": "estructural",
+				"explanation": "Cambia la dependencia jerárquica: a quién reporta y quién responde."
+			},
+			{
+				"id": "d4",
+				"prompt": "MOF v3.0 → v3.1\n+ Se crea el cargo de Oficial de Protección de Datos Personales en la Oficina de Tecnologías de la Información.",
+				"options": [
+					{ "id": "cosmetico", "label": "Cosmético (solo redacción)" },
+					{ "id": "procedimental", "label": "Procedimental (cambia cómo o cuándo)" },
+					{ "id": "estructural", "label": "Estructural (cambia quién decide o responde)" }
+				],
+				"correct": "estructural",
+				"explanation": "Un cargo nuevo crea una responsabilidad nueva."
+			}
+		]
+	}
+}

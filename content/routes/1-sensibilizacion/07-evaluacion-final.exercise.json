@@ -1,0 +1,129 @@
+{
+	"kind": "quiz",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Evaluación final de la ruta de Sensibilización.",
+		"questions": [
+			{
+				"id": "q1",
+				"prompt": "¿Qué cargo ocupa el nivel más alto del organigrama?",
+				"options": [
+					{ "id": "a", "label": "Vicerrector Académico" },
+					{ "id": "b", "label": "Rector" },
+					{ "id": "c", "label": "Secretario General" },
+					{ "id": "d", "label": "Decano" }
+				],
+				"correct": "b",
+				"explanation": "El Rectorado es el nivel más alto."
+			},
+			{
+				"id": "q2",
+				"prompt": "¿De qué órgano depende la Oficina de Registros Académicos?",
+				"options": [
+					{ "id": "a", "label": "Vicerrectorado de Investigación" },
+					{ "id": "b", "label": "Facultad de Ciencias de la Salud" },
+					{ "id": "c", "label": "Vicerrectorado Académico" },
+					{ "id": "d", "label": "Oficina de Recursos Humanos" }
+				],
+				"correct": "c",
+				"explanation": "Registros Académicos cuelga del Vicerrectorado Académico."
+			},
+			{
+				"id": "q3",
+				"prompt": "¿Qué describe el MOF?",
+				"options": [
+					{ "id": "a", "label": "Las funciones y requisitos de cada cargo" },
+					{ "id": "b", "label": "El presupuesto anual" },
+					{ "id": "c", "label": "Los horarios de clase" },
+					{ "id": "d", "label": "Los contratos con proveedores" }
+				],
+				"correct": "a",
+				"explanation": "El MOF define cargos; el ROF define órganos y unidades."
+			},
+			{
+				"id": "q4",
+				"prompt": "Un procedimiento de oficina contradice el Estatuto. ¿Qué prevalece?",
+				"options": [
+					{ "id": "a", "label": "El procedimiento, por ser más específico" },
+					{ "id": "b", "label": "El Estatuto, por su mayor jerarquía" },
+					{ "id": "c", "label": "El que se aprobó primero" },
+					{ "id": "d", "label": "Ninguno, deben negociarse" }
+				],
+				"correct": "b",
+				"explanation": "Una norma inferior no puede contradecir a una superior."
+			},
+			{
+				"id": "q5",
+				"prompt": "¿Cuándo un documento está vigente?",
+				"options": [
+					{ "id": "a", "label": "Cuando es el más antiguo" },
+					{ "id": "b", "label": "Cuando está archivado en la oficina" },
+					{ "id": "c", "label": "Cuando su última versión aprobada no ha sido reemplazada ni derogada" },
+					{ "id": "d", "label": "Cuando lo firma cualquier jefe" }
+				],
+				"correct": "c",
+				"explanation": "Vigente = última versión aprobada, aún en uso."
+			},
+			{
+				"id": "q6",
+				"prompt": "¿Quién es el responsable (controller) de los datos del Sistema de Matrícula?",
+				"options": [
+					{ "id": "a", "label": "El Jefe de Registros Académicos" },
+					{ "id": "b", "label": "Cualquier docente" },
+					{ "id": "c", "label": "El Jefe de la Biblioteca" },
+					{ "id": "d", "label": "El estudiante" }
+				],
+				"correct": "a",
+				"explanation": "Registros Académicos decide para qué y cómo se tratan esos datos."
+			},
+			{
+				"id": "q7",
+				"prompt": "¿Qué unidad actúa como encargada (processor) en la mayoría de sistemas?",
+				"options": [
+					{ "id": "a", "label": "Tecnologías de la Información" },
+					{ "id": "b", "label": "Bienestar Universitario" },
+					{ "id": "c", "label": "Órgano de Control Institucional" },
+					{ "id": "d", "label": "Secretaría General" }
+				],
+				"correct": "a",
+				"explanation": "TI opera la infraestructura que trata los datos por cuenta del responsable."
+			},
+			{
+				"id": "q8",
+				"prompt": "¿Cuál es una categoría de datos sensibles?",
+				"options": [
+					{ "id": "a", "label": "Nombre del curso" },
+					{ "id": "b", "label": "Código de la asignatura" },
+					{ "id": "c", "label": "Datos de salud" },
+					{ "id": "d", "label": "Horario de atención" }
+				],
+				"correct": "c",
+				"explanation": "Salud y datos socioeconómicos son sensibles."
+			},
+			{
+				"id": "q9",
+				"prompt": "Un cambio en el ROF modifica de qué órgano depende una oficina. ¿Qué impacto tiene?",
+				"options": [
+					{ "id": "a", "label": "Cosmético" },
+					{ "id": "b", "label": "Procedimental" },
+					{ "id": "c", "label": "Estructural" },
+					{ "id": "d", "label": "Ninguno" }
+				],
+				"correct": "c",
+				"explanation": "Cambia quién decide y responde."
+			},
+			{
+				"id": "q10",
+				"prompt": "Encuentras un USB desconocido. ¿Qué haces?",
+				"options": [
+					{ "id": "a", "label": "Lo conecto para ver de quién es" },
+					{ "id": "b", "label": "No lo conecto y lo entrego a Tecnologías de la Información" },
+					{ "id": "c", "label": "Lo formateo en mi equipo" },
+					{ "id": "d", "label": "Lo comparto en el grupo del curso" }
+				],
+				"correct": "b",
+				"explanation": "TI puede analizarlo de forma segura."
+			}
+		]
+	}
+}

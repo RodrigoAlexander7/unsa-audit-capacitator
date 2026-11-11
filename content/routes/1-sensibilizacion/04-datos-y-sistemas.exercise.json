@@ -1,0 +1,6 @@
+{
+	"kind": "matching",
+	"pass_score": 70,
+	"generator": "system_owners",
+	"params": { "limit": 6 }
+}

@@ -1,0 +1,74 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — contrato Fase 2 (learning)
+  version: 0.3.0
+paths:
+  /routes:
+    get:
+      summary: Catálogo de rutas con estado y progreso del usuario
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Rutas + total_hours_credited }
+        "401": { description: No autenticado }
+  /routes/{code}:
+    get:
+      summary: Detalle de una ruta con sus módulos y estado por módulo
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Ruta y módulos }
+        "401": { description: No autenticado }
+        "404": { description: Ruta inexistente }
+  /routes/{code}/enroll:
+    post:
+      summary: Matricularse en una ruta (exige prerrequisito aprobado)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Ya matriculado (idempotente) }
+        "201": { description: Matrícula creada }
+        "401": { description: No autenticado }
+        "404": { description: Ruta inexistente }
+        "409": { description: prerequisite_not_met }
+  /modules/{module_id}:
+    get:
+      summary: Lección y ejercicio público (sin soluciones)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: module_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Módulo }
+        "401": { description: No autenticado }
+        "403": { description: No matriculado }
+        "404": { description: No existe }
+        "409": { description: Módulo bloqueado }
+  /modules/{module_id}/attempts:
+    post:
+      summary: Enviar una respuesta al ejercicio del módulo
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: module_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Resultado del intento }
+        "401": { description: No autenticado }
+        "403": { description: No matriculado }
+        "404": { description: No existe }
+        "409": { description: Módulo bloqueado o sin ejercicio }
+        "422": { description: Respuesta con forma inválida }
+  /modules/{module_id}/complete:
+    post:
+      summary: Completar un módulo de solo lectura
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: module_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Módulo completado }
+        "401": { description: No autenticado }
+        "403": { description: No matriculado }
+        "404": { description: No existe }
+        "409": { description: Bloqueado o tiene ejercicio }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer }

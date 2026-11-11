@@ -1,0 +1,27 @@
+{
+	"kind": "quiz",
+	"pass_score": 70,
+	"generator": "responsibility_cases",
+	"params": {
+		"distractors": 3,
+		"cases": [
+			{ "text": "Se extravió el acta de notas de un curso del semestre pasado.", "unit_code": "ORA" },
+			{
+				"text": "Una docente no puede ingresar al Aula Virtual desde hace una semana.",
+				"unit_code": "OTI"
+			},
+			{
+				"text": "Un trabajador administrativo pide corregir un descuento en su planilla.",
+				"unit_code": "ORH"
+			},
+			{
+				"text": "Hay que registrar y dar seguimiento a un expediente presentado por un estudiante.",
+				"unit_code": "SGEN"
+			},
+			{
+				"text": "Un estudiante solicita una beca por situación socioeconómica.",
+				"unit_code": "OBU"
+			}
+		]
+	}
+}

@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -19,6 +20,9 @@ class Settings(BaseSettings):
     superadmin_password: str | None = None
     jwt_secret: str = Field(min_length=16)
     jwt_expire_minutes: int = 120
+
+    # Contenido de las rutas (raiz del repo / content por defecto).
+    content_dir: Path = Path(__file__).resolve().parents[4] / "content"
 
     agy_command: str = "agy"
     agy_args: str = "--output-format json --mode plan --sandbox --effort low"

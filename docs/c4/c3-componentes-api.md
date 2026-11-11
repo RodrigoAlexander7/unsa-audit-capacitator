@@ -23,4 +23,6 @@ C4Component
 Regla: `domain` y `application` no importan frameworks de I/O (verificado por `tests/unit/test_architecture.py`).
 
 Módulos previstos: `identity`, `university`, `learning`, `assessment`, `documents`, `analytics`.
-Implementado: `health` y `core` (F0); `identity` (registro, login JWT, `/me`, control de rol) y `university` (organigrama, cargos, sistemas, dueños de datos) con su seed (F1).
+Implementado: `health` y `core` (F0); `identity` (registro, login JWT, `/me`, control de rol) y `university` (organigrama, cargos, sistemas, dueños de datos) con su seed (F1); `learning` (rutas, módulos, matrícula con prerrequisitos, 5 tipos de ejercicio corregidos en backend, generadores desde la BD ficticia, progreso y horas) y el `ContentLoader` que sincroniza `content/` (F2).
+
+Dependencia entre módulos: `learning` lee hechos de `university` solo a través de un puerto (`UniversityFacts`) cuyo adaptador vive en `learning/infrastructure`.

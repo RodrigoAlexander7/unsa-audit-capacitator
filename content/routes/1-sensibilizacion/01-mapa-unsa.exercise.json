@@ -1,0 +1,6 @@
+{
+	"kind": "matching",
+	"pass_score": 70,
+	"generator": "org_levels",
+	"params": { "per_kind": 2 }
+}

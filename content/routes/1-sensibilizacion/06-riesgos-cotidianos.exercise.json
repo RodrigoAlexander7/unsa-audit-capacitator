@@ -1,0 +1,93 @@
+{
+	"kind": "branching",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Decide cómo actuar en cada situación.",
+		"steps": [
+			{
+				"id": "phishing",
+				"situation": "Recibes un correo de «soporte.unsa» que dice: «Tu cuenta será bloqueada hoy. Confirma tu contraseña en este enlace».",
+				"options": [
+					{
+						"id": "responder",
+						"label": "Respondo con mi contraseña para no perder el acceso.",
+						"points": 0,
+						"feedback": "Nunca compartas tu contraseña: ningún soporte legítimo la pide."
+					},
+					{
+						"id": "enlace",
+						"label": "Abro el enlace para verificar si es real.",
+						"points": 0,
+						"feedback": "Abrir el enlace ya puede comprometer tu equipo o tus datos."
+					},
+					{
+						"id": "borrar",
+						"label": "Lo borro y sigo con mi trabajo.",
+						"points": 4,
+						"feedback": "Evitas el riesgo propio, pero otros pueden caer: conviene reportarlo."
+					},
+					{
+						"id": "reportar",
+						"label": "No hago clic y lo reporto al Responsable de Seguridad de la Información.",
+						"points": 10,
+						"feedback": "Correcto: reportar permite avisar a los demás y bloquear el remitente."
+					}
+				]
+			},
+			{
+				"id": "usb",
+				"situation": "Encuentras en un pasillo un USB con la etiqueta «Notas 2025».",
+				"options": [
+					{
+						"id": "conectar",
+						"label": "Lo conecto a mi computadora para ver de quién es.",
+						"points": 0,
+						"feedback": "Un USB desconocido puede instalar software malicioso al conectarlo."
+					},
+					{
+						"id": "casa",
+						"label": "Me lo llevo a casa para revisarlo con calma.",
+						"points": 0,
+						"feedback": "Expones tu equipo personal y los datos que pueda contener."
+					},
+					{
+						"id": "dejar",
+						"label": "Lo dejo donde estaba.",
+						"points": 3,
+						"feedback": "No te expones, pero puede contener datos de estudiantes y quedar al alcance de cualquiera."
+					},
+					{
+						"id": "entregar",
+						"label": "No lo conecto y lo entrego a Tecnologías de la Información.",
+						"points": 10,
+						"feedback": "Correcto: TI puede analizarlo de forma segura y ubicar a su dueño."
+					}
+				]
+			},
+			{
+				"id": "whatsapp",
+				"situation": "Un colega te pide por WhatsApp personal la lista de notas de un curso «para adelantar trabajo».",
+				"options": [
+					{
+						"id": "enviar",
+						"label": "Se la envío, es de confianza.",
+						"points": 0,
+						"feedback": "Los datos de estudiantes no deben salir por canales personales."
+					},
+					{
+						"id": "anonimizar",
+						"label": "Le envío la lista sin nombres.",
+						"points": 5,
+						"feedback": "Reduces el riesgo, pero sigue siendo un canal no institucional."
+					},
+					{
+						"id": "oficial",
+						"label": "Le indico que la solicite por el sistema o canal institucional.",
+						"points": 10,
+						"feedback": "Correcto: el canal institucional deja registro y control de acceso."
+					}
+				]
+			}
+		]
+	}
+}

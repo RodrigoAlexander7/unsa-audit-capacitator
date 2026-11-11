@@ -1,6 +1,6 @@
 # Plan — Plataforma Capacitadora de Auditores Internos UNSA (POC)
 
-> Estado: **plan v2 (no hay código aún)**. Documento vivo: se ajusta al cerrar cada fase.
+> Estado: **plan v2; Fases 0–2 implementadas** (ver `specs/*/tasks.md`). Documento vivo: se ajusta al cerrar cada fase.
 > Toda la información de la UNSA es **ficticia** y solo con fines de prueba de concepto (POC).
 > Cambios v2: metodología **Spec-Driven Development (SDD)**, integración real con `agy`, y **conjunto de información documentada del PIMS (ISO 27701)** integrado en documentos, rutas y evaluación.
 
@@ -240,7 +240,7 @@ Información documentada que la UNSA ficticia debe tener y que sirve de **eje co
 
 - **identity**: `users(id, email, password_hash, full_name, role)`; roles `learner`, `superadmin`.
 - **university**: `org_units(id, parent_id, kind, name)`, `positions(id, org_unit_id, title, reports_to_position_id)`, `people(id, full_name, kind, position_id?)`, `systems(id, name, owner_org_unit_id, data_categories[])`, `data_owners(system_id, person_id, role[controller|processor|steward])`, `processing_activities(id, org_unit_id, purpose, legal_basis, data_categories, retention)`.
-- **learning**: `routes(id, code, order, hours, prerequisite_route_id)`, `modules(id, route_id, order, title, content_ref, minutes, mandatory, pims_requirement_id?)`, `exercises(id, module_id, kind, spec_json, max_score)`, `enrollments`, `module_progress`, `exercise_attempts`.
+- **learning**: `routes(id, code, order, hours, prerequisite_route_id)`, `modules(id, route_id, order, title, content_ref, minutes, mandatory, pims_requirement_id?)`, `enrollments`, `module_progress`, `exercise_attempts`. *(Implementado en F2: el ejercicio vive en columnas de `modules` — `exercise_kind`, `exercise_spec`, `exercise_generator`, `exercise_params`, `pass_score` — y la ruta se identifica por `code`; se reevalúa en F5 si un módulo necesita varios ejercicios.)*
 - **assessment**: `question_banks`, `questions(..., pims_requirement_id?)`, `assessments`, `assessment_answers`, `competency_scores`.
 - **documents** ("git de incidencias"): `documents(id, code, kind, title, current_version_id, owner_position_id?, review_date?)`, `document_versions(id, document_id, number, content_md, content_hash, parent_version_id, author_id, message, created_at)`, `change_requests(id, document_id, title, rationale, status, proposed_by, resolved_by, resulting_version_id)`, **`pims_requirements(id, clause_ref, title, document_kind, owner_position_id, expected_evidence)`**. Diff con `difflib` en backend.
 - **analytics**: vistas por ruta (matriculados, % avance, horas promedio, aprobación, ejercicios con más fallos, abandono por módulo) y por requisito PIMS (fallos por cláusula).
