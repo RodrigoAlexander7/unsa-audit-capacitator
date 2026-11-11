@@ -15,6 +15,8 @@ class Settings(BaseSettings):
 
     database_url: str
     superadmin_email: str
+    # Solo lo usa el seed para crear la cuenta superadmin (el registro publico la rechaza).
+    superadmin_password: str | None = None
     jwt_secret: str = Field(min_length=16)
     jwt_expire_minutes: int = 120
 

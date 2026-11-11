@@ -6,13 +6,21 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.ext.asyncio import AsyncEngine
 
 from unsa_audit.core.config import Settings, get_settings
-from unsa_audit.core.database import create_engine
+from unsa_audit.core.database import create_engine, create_session_factory
 from unsa_audit.health.application.check_health import CheckHealth, DatabaseProbe
 from unsa_audit.health.infrastructure.sqlalchemy_probe import SqlAlchemyDatabaseProbe
 from unsa_audit.health.interface.router import router as health_router
+from unsa_audit.identity.application.use_cases import GetCurrentUser, Login, RegisterUser
+from unsa_audit.identity.infrastructure.security import Argon2PasswordHasher, JwtTokenService
+from unsa_audit.identity.infrastructure.sqlalchemy_user_repository import SqlAlchemyUserRepository
+from unsa_audit.identity.interface.router import router as identity_router
+from unsa_audit.university.application.use_cases import GetOrgTree, GetOrgUnitDetail, ListSystems
+from unsa_audit.university.infrastructure.sqlalchemy_repository import (
+    SqlAlchemyUniversityReadRepository,
+)
+from unsa_audit.university.interface.router import router as university_router
 
 
 def create_app(
@@ -20,16 +28,18 @@ def create_app(
     probe: DatabaseProbe | None = None,
 ) -> FastAPI:
     settings = settings or get_settings()
-    engine: AsyncEngine | None = None
-    if probe is None:
-        engine = create_engine(settings.database_url)
-        probe = SqlAlchemyDatabaseProbe(engine)
+    engine = create_engine(settings.database_url)
+    session_factory = create_session_factory(engine)
+
+    users = SqlAlchemyUserRepository(session_factory)
+    hasher = Argon2PasswordHasher()
+    tokens = JwtTokenService(settings.jwt_secret, settings.jwt_expire_minutes)
+    university = SqlAlchemyUniversityReadRepository(session_factory)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         yield
-        if engine is not None:
-            await engine.dispose()
+        await engine.dispose()
 
     app = FastAPI(title="UNSA Audit Capacitator (POC)", lifespan=lifespan)
     app.add_middleware(
@@ -39,8 +49,20 @@ def create_app(
         allow_headers=["*"],
     )
     app.state.settings = settings
-    app.state.check_health = CheckHealth(probe)
+    app.state.engine = engine
+    app.state.session_factory = session_factory
+
+    app.state.check_health = CheckHealth(probe or SqlAlchemyDatabaseProbe(engine))
+    app.state.register_user = RegisterUser(users, hasher, settings.superadmin_email)
+    app.state.login = Login(users, hasher, tokens)
+    app.state.get_current_user = GetCurrentUser(users, tokens)
+    app.state.get_org_tree = GetOrgTree(university)
+    app.state.get_org_unit_detail = GetOrgUnitDetail(university)
+    app.state.list_systems = ListSystems(university)
+
     app.include_router(health_router)
+    app.include_router(identity_router)
+    app.include_router(university_router)
     return app
 
 

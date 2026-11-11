@@ -1,0 +1,60 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — contrato Fase 1 (identity + university)
+  version: 0.2.0
+paths:
+  /auth/register:
+    post:
+      summary: Registro público de un participante (rol learner)
+      responses:
+        "201": { description: Usuario creado }
+        "409": { description: Email no disponible (duplicado o reservado) }
+        "422": { description: Datos inválidos }
+  /auth/login:
+    post:
+      summary: Inicio de sesión
+      responses:
+        "200": { description: Token Bearer }
+        "401": { description: Credenciales inválidas }
+  /me:
+    get:
+      summary: Perfil del usuario autenticado
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Perfil }
+        "401": { description: No autenticado }
+  /admin/ping:
+    get:
+      summary: Endpoint solo superadmin (verifica control de rol)
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: OK }
+        "401": { description: No autenticado }
+        "403": { description: Sin permiso }
+  /org-units:
+    get:
+      summary: Árbol de unidades orgánicas de la UNSA (ficticia)
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Árbol anidado con raíz en el rectorado }
+        "401": { description: No autenticado }
+  /org-units/{unit_id}:
+    get:
+      summary: Detalle de una unidad con cargos y titulares
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: unit_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Detalle }
+        "401": { description: No autenticado }
+        "404": { description: No existe }
+  /systems:
+    get:
+      summary: Sistemas de información con dueños de datos
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Lista de sistemas }
+        "401": { description: No autenticado }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer }
