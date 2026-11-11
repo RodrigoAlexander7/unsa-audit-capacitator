@@ -7,6 +7,22 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from unsa_audit.analytics.application.ports import AnalyticsAdvisorPort
+from unsa_audit.analytics.application.use_cases import (
+    AskAdvisor,
+    BuildSnapshot,
+    GetAssessmentStats,
+    GetRouteDetailStats,
+    GetRouteStats,
+    ListAdvisorHistory,
+)
+from unsa_audit.analytics.infrastructure.agy_advisor import AgyCliAdvisor
+from unsa_audit.analytics.infrastructure.pims_summary import PimsSummaryAdapter
+from unsa_audit.analytics.infrastructure.sqlalchemy_repository import (
+    SqlAlchemyAdvisorQueryRepository,
+    SqlAlchemyAnalyticsRepository,
+)
+from unsa_audit.analytics.interface.router import router as analytics_router
 from unsa_audit.assessment.application.use_cases import (
     GetAssessment,
     ListAssessments,
@@ -75,6 +91,7 @@ from unsa_audit.university.interface.router import router as university_router
 def create_app(
     settings: Settings | None = None,
     probe: DatabaseProbe | None = None,
+    advisor: AnalyticsAdvisorPort | None = None,
 ) -> FastAPI:
     settings = settings or get_settings()
     engine = create_engine(settings.database_url)
@@ -93,6 +110,20 @@ def create_app(
     assessments = SqlAlchemyAssessmentRepository(session_factory)
     question_bank = FileQuestionBank(settings.content_dir)
     requirement_catalog = PimsRequirementCatalog(ListPimsRequirements(pims_requirements))
+    analytics = SqlAlchemyAnalyticsRepository(session_factory)
+    advisor_queries = SqlAlchemyAdvisorQueryRepository(session_factory)
+    snapshots = BuildSnapshot(analytics, PimsSummaryAdapter(pims_completeness, documents))
+    system_prompt = (
+        settings.advisor_prompt_path.read_text(encoding="utf-8")
+        if settings.advisor_prompt_path.exists()
+        else ""
+    )
+    advisor = advisor or AgyCliAdvisor(
+        settings.agy_command,
+        settings.agy_args,
+        settings.agy_timeout_seconds,
+        settings.agy_max_chars,
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -138,6 +169,12 @@ def create_app(
     app.state.get_assessment = GetAssessment(question_bank, assessments)
     app.state.submit_assessment = SubmitAssessment(question_bank, assessments, requirement_catalog)
     app.state.list_assessments = ListAssessments(assessments)
+    app.state.get_route_stats = GetRouteStats(analytics)
+    app.state.get_route_detail_stats = GetRouteDetailStats(analytics)
+    app.state.get_assessment_stats = GetAssessmentStats(analytics)
+    app.state.build_snapshot = snapshots
+    app.state.ask_advisor = AskAdvisor(snapshots, advisor, advisor_queries, system_prompt)
+    app.state.list_advisor_history = ListAdvisorHistory(advisor_queries)
 
     app.include_router(health_router)
     app.include_router(identity_router)
@@ -146,6 +183,7 @@ def create_app(
     app.include_router(documents_router)
     app.include_router(pims_router)
     app.include_router(assessment_router)
+    app.include_router(analytics_router)
     return app
 
 
