@@ -20,5 +20,8 @@ Los documentos institucionales cambian. Lo importante es poder responder: **¿qu
 
 Un auditor presta más atención a los cambios estructurales: alteran responsabilidades y pueden dejar controles huérfanos.
 
+## Mira ejemplos reales
+En la sección [Documentos](/documents/rof) está el historial del ROF de la UNSA ficticia: la versión 2 corrige una errata y la versión 3 crea una responsabilidad nueva. Compáralas con el botón **Ver diferencias**. También puedes proponer tu propio cambio e indicar su impacto.
+
 ## Practica
-Lee cada diff (ficticio) y clasifica su impacto.
+Lee cada diff (ficticio) y clasifica su impacto. Las líneas que empiezan con `-` se eliminaron y las que empiezan con `+` se añadieron.

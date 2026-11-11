@@ -1,3 +1,6 @@
+# Material de terceros (plantillas ISO 27001 de apoyo); ver docs/adaptacion-plantillas-27001-a-27701.md
+raw/
+
 # Entorno
 .env
 .env.*

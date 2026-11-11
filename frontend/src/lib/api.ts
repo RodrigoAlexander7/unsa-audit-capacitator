@@ -94,6 +94,90 @@ export type LoginResult = {
 	user: SessionUser;
 };
 
+export type DocumentSummary = {
+	code: string;
+	kind: string;
+	title: string;
+	owner_unit_code: string | null;
+	owner_unit_name: string | null;
+	current_version: number;
+	updated_at: string;
+	open_change_requests: number;
+};
+export type DocumentDetail = DocumentSummary & {
+	content_md: string;
+	content_hash: string;
+	author_label: string;
+	message: string;
+};
+export type VersionInfo = {
+	number: number;
+	message: string;
+	author_label: string;
+	created_at: string;
+	content_hash: string;
+	parent_number: number | null;
+};
+
+export type DiffLine = {
+	kind: 'add' | 'del' | 'ctx';
+	old_line: number | null;
+	new_line: number | null;
+	text: string;
+};
+export type Hunk = { old_start: number; new_start: number; lines: DiffLine[] };
+export type DiffResult = { additions: number; deletions: number; hunks: Hunk[] };
+export type VersionDiff = DiffResult & {
+	document_code: string;
+	from_version: number;
+	to_version: number;
+};
+
+export type ChangeImpact = 'cosmetico' | 'procedimental' | 'estructural';
+export type ChangeStatus = 'open' | 'approved' | 'rejected';
+export type ChangeRequest = {
+	id: string;
+	document_code: string;
+	title: string;
+	rationale: string;
+	impact: ChangeImpact;
+	status: ChangeStatus;
+	base_version: number;
+	proposed_by_name: string;
+	created_at: string;
+	resolved_by_name: string | null;
+	resolution_note: string | null;
+	resulting_version: number | null;
+	resolved_at: string | null;
+};
+export type ChangeRequestDetail = ChangeRequest & {
+	proposed_content_md: string;
+	diff: DiffResult;
+};
+
+export const IMPACT_LABEL: Record<ChangeImpact, string> = {
+	cosmetico: 'Cosmético',
+	procedimental: 'Procedimental',
+	estructural: 'Estructural'
+};
+export const IMPACT_HINT: Record<ChangeImpact, string> = {
+	cosmetico: 'solo cambia la redacción',
+	procedimental: 'cambia cómo o cuándo se hace algo',
+	estructural: 'cambia quién decide o responde'
+};
+export const CHANGE_STATUS_LABEL: Record<ChangeStatus, string> = {
+	open: 'Abierta',
+	approved: 'Aprobada',
+	rejected: 'Rechazada'
+};
+export const DOCUMENT_KIND_LABEL: Record<string, string> = {
+	ROF: 'ROF',
+	MOF: 'MOF',
+	ESTATUTO: 'Estatuto',
+	CUADRO_ASIGNACION: 'Cuadro de asignación',
+	REGLAMENTO: 'Reglamento'
+};
+
 type FetchFn = typeof fetch;
 
 /** GET autenticado contra el API. Devuelve null si el servidor responde con error. */

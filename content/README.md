@@ -9,6 +9,14 @@ routes/<n>-<codigo>/
 └── NN-slug.exercise.json       kind, pass_score, y spec  |  generator + params
 ```
 
+```
+institutional/<codigo>/
+├── document.yaml               code (= nombre de la carpeta), kind, title, owner_unit (código de unidad)
+└── vN.md                       v1.md … vN.md contiguas; frontmatter (message, author, date) + Markdown
+```
+
+La versión vigente de un documento es la mayor `vN`. Tipos (`kind`): `ROF`, `MOF`, `ESTATUTO`, `CUADRO_ASIGNACION`, `REGLAMENTO`.
+
 Tipos de ejercicio: `ordering`, `matching`, `single_choice`, `quiz`, `branching`.
 Generadores (desde la BD ficticia): `org_levels`, `responsibility_cases`, `system_owners`.
 

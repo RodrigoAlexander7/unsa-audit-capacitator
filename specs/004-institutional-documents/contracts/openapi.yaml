@@ -1,0 +1,111 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — contrato Fase 3 (documents)
+  version: 0.4.0
+paths:
+  /documents:
+    get:
+      summary: Lista de documentos institucionales con su versión vigente
+      security: [{ bearer: [] }]
+      responses:
+        "200": { description: Documentos }
+        "401": { description: No autenticado }
+  /documents/{code}:
+    get:
+      summary: Documento con el contenido de la versión vigente
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Documento }
+        "401": { description: No autenticado }
+        "404": { description: No existe }
+  /documents/{code}/versions:
+    get:
+      summary: Historial de versiones (ascendente)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Versiones }
+        "401": { description: No autenticado }
+        "404": { description: No existe }
+  /documents/{code}/versions/{number}:
+    get:
+      summary: Contenido de una versión
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+        - { name: number, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: Versión }
+        "401": { description: No autenticado }
+        "404": { description: No existe }
+  /documents/{code}/diff:
+    get:
+      summary: Diff entre dos versiones (from por defecto = to-1)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+        - { name: from, in: query, required: false, schema: { type: integer } }
+        - { name: to, in: query, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: Diff en hunks }
+        "401": { description: No autenticado }
+        "404": { description: Documento o versión inexistente }
+  /documents/{code}/change-requests:
+    get:
+      summary: Solicitudes de cambio de un documento
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200": { description: Solicitudes }
+        "401": { description: No autenticado }
+        "404": { description: No existe }
+    post:
+      summary: Proponer un cambio (cualquier usuario autenticado)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      responses:
+        "201": { description: Solicitud creada }
+        "401": { description: No autenticado }
+        "404": { description: No existe }
+        "422": { description: Datos inválidos o sin cambios }
+  /change-requests:
+    get:
+      summary: Todas las solicitudes (filtro opcional por estado)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200": { description: Solicitudes }
+        "401": { description: No autenticado }
+  /change-requests/{request_id}:
+    get:
+      summary: Detalle de una solicitud con su diff
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: request_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Solicitud }
+        "401": { description: No autenticado }
+        "404": { description: No existe }
+  /change-requests/{request_id}/resolve:
+    post:
+      summary: Aprobar o rechazar (solo superadmin)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: request_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200": { description: Resuelta }
+        "401": { description: No autenticado }
+        "403": { description: Sin permiso }
+        "404": { description: No existe }
+        "409": { description: Ya resuelta o stale_base }
+        "422": { description: Decisión inválida }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer }

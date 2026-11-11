@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from unsa_audit.core.config import get_settings
 from unsa_audit.core.database import Base
+from unsa_audit.documents.infrastructure import models as _documents_models  # noqa: F401
 from unsa_audit.identity.infrastructure import models as _identity_models  # noqa: F401
 from unsa_audit.learning.infrastructure import models as _learning_models  # noqa: F401
 from unsa_audit.university.infrastructure import models as _university_models  # noqa: F401

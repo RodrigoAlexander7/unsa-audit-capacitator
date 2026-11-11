@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DiffText from '../DiffText.svelte';
 	import type { ItemFeedback, Opt } from './types';
 
 	let {
@@ -19,7 +20,7 @@
 </script>
 
 <fieldset class:ok={feedback?.correct === true} class:bad={feedback?.correct === false}>
-	<legend>{legend}</legend>
+	<legend><DiffText text={legend} /></legend>
 	{#each options as option (option.id)}
 		<label class="option">
 			<input

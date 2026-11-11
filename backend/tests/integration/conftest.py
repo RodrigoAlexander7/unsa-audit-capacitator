@@ -22,13 +22,19 @@ from unsa_audit.learning.infrastructure.sqlalchemy_university_facts import (
     SqlAlchemyUniversityFacts,
 )
 from unsa_audit.main import create_app
-from unsa_audit.seed.loader import ensure_superadmin, load_university, sync_content
+from unsa_audit.seed.loader import (
+    ensure_superadmin,
+    load_university,
+    sync_content,
+    sync_documents,
+)
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
 SUPERADMIN_EMAIL = "superadmin@test.example"
 SUPERADMIN_PASSWORD = "superadmin-test-pass"
 
 _TABLES = (
+    "change_requests, document_versions, documents, "
     "exercise_attempts, module_progress, enrollments, modules, routes, "
     "users, data_owners, processing_activities, systems, people, positions, org_units"
 )
@@ -107,9 +113,10 @@ async def register_and_login(
 
 @pytest.fixture
 async def seeded(app):
-    """App con la BD ficticia de la UNSA y el contenido de las rutas cargados."""
+    """App con la BD ficticia de la UNSA, el contenido de las rutas y los documentos cargados."""
     await load_university(app.state.session_factory)
     await sync_content(app.state.session_factory, app.state.settings)
+    await sync_documents(app.state.session_factory, app.state.settings)
     return app
 
 
