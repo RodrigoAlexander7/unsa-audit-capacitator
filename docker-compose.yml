@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-unsa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-unsa_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-unsa_audit}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-unsa} -d ${POSTGRES_DB:-unsa_audit}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  db_data:
