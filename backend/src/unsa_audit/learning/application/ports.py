@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from datetime import date
 from typing import Protocol
 from uuid import UUID
 
@@ -31,12 +32,27 @@ class SystemFact:
 
 
 @dataclass(frozen=True)
+class PimsFact:
+    """Estado de un requisito documental del PIMS (hecho para ejercicios de auditoria)."""
+
+    code: str
+    clause_ref: str
+    title: str
+    state: str  # in_force | draft | expired | unowned | missing
+    document_title: str | None = None
+    version: int | None = None
+    review_date: date | None = None
+    owner_unit_name: str | None = None
+
+
+@dataclass(frozen=True)
 class UniversitySnapshot:
     """Hechos de la UNSA ficticia que alimentan los ejercicios generados."""
 
     units: list[UnitFact] = field(default_factory=list)
     positions: list[PositionFact] = field(default_factory=list)
     systems: list[SystemFact] = field(default_factory=list)
+    pims: list[PimsFact] = field(default_factory=list)
 
 
 class UniversityFacts(Protocol):

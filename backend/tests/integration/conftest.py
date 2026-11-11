@@ -17,6 +17,7 @@ from sqlalchemy.engine import make_url
 from tests.solutions import solve
 from unsa_audit.core.config import Settings, get_settings
 from unsa_audit.learning.application.generators import generate_spec
+from unsa_audit.learning.infrastructure.learning_facts import LearningFacts
 from unsa_audit.learning.infrastructure.sqlalchemy_repository import SqlAlchemyLearningRepository
 from unsa_audit.learning.infrastructure.sqlalchemy_university_facts import (
     SqlAlchemyUniversityFacts,
@@ -35,7 +36,7 @@ SUPERADMIN_EMAIL = "superadmin@test.example"
 SUPERADMIN_PASSWORD = "superadmin-test-pass"
 
 _TABLES = (
-    "pims_requirements, change_requests, document_versions, documents, "
+    "assessments, pims_requirements, change_requests, document_versions, documents, "
     "exercise_attempts, module_progress, enrollments, modules, routes, "
     "users, data_owners, processing_activities, systems, people, positions, org_units"
 )
@@ -129,7 +130,9 @@ async def solve_module(app, module_id: str) -> dict[str, Any]:
     assert module is not None and module.exercise is not None
     ex = module.exercise
     if ex.generator:
-        facts = await SqlAlchemyUniversityFacts(app.state.session_factory).snapshot()
+        facts = await LearningFacts(
+            SqlAlchemyUniversityFacts(app.state.session_factory), app.state.get_pims_completeness
+        ).snapshot()
         spec = generate_spec(ex.generator, ex.params, facts)
     else:
         spec = ex.spec

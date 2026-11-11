@@ -5,9 +5,14 @@ Todo el contenido es **ficticio** (POC) y parafraseado. El backend lo sincroniza
 ```
 routes/<n>-<codigo>/
 ├── route.yaml                  code, order, title, description, hours, prerequisite
-├── NN-slug.md                  frontmatter (title, minutes, mandatory, final) + lección en Markdown
+├── NN-slug.md                  frontmatter (title, minutes, mandatory, final, planned) + lección en Markdown
 └── NN-slug.exercise.json       kind, pass_score, y spec  |  generator + params
+
+assessment/<perfil>.json        profile (controller | processor), title, pass_score, competencies,
+                                questions[id, competency, requirement (código PIMS), prompt, options, correct, explanation]
 ```
+
+`planned: true` marca un módulo previsto pero aún sin desarrollar (se lista como «Próximamente»; no es obligatorio ni lleva ejercicio). Tipos de ejercicio: `ordering`, `matching`, `single_choice`, `quiz`, `branching`, `soa_form`. Generadores: `org_levels`, `responsibility_cases`, `system_owners`, `pims_audit_findings`.
 
 ```
 institutional/<codigo>/

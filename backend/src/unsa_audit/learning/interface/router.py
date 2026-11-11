@@ -10,6 +10,7 @@ from unsa_audit.learning.application.errors import (
     HasExercise,
     ModuleLocked,
     ModuleNotFound,
+    ModulePlanned,
     NoExercise,
     NotEnrolled,
     PrerequisiteNotMet,
@@ -40,6 +41,7 @@ class RouteSummaryResponse(BaseModel):
     status: str
     modules_total: int
     modules_completed: int
+    modules_planned: int
     minutes_credited: int
     hours_credited: float
 
@@ -56,6 +58,7 @@ class RouteSummaryResponse(BaseModel):
             status=s.status.value,
             modules_total=s.modules_total,
             modules_completed=s.modules_completed,
+            modules_planned=s.modules_planned,
             minutes_credited=s.minutes_credited,
             hours_credited=s.hours_credited,
         )
@@ -74,6 +77,7 @@ class ModuleSummaryResponse(BaseModel):
     mandatory: bool
     is_final: bool
     has_exercise: bool
+    planned: bool
     status: str
     best_score: int | None
 
@@ -95,6 +99,7 @@ class RouteDetailResponse(BaseModel):
                     mandatory=m.module.mandatory,
                     is_final=m.module.is_final,
                     has_exercise=m.module.exercise is not None,
+                    planned=m.module.planned,
                     status=m.status.value,
                     best_score=m.best_score,
                 )
@@ -205,6 +210,8 @@ def _module_error(exc: Exception) -> HTTPException:
         return HTTPException(status.HTTP_404_NOT_FOUND, "Módulo no encontrado")
     if isinstance(exc, NotEnrolled):
         return _NOT_ENROLLED
+    if isinstance(exc, ModulePlanned):
+        return HTTPException(status.HTTP_409_CONFLICT, "Este módulo está en preparación")
     if isinstance(exc, ModuleLocked):
         return HTTPException(
             status.HTTP_409_CONFLICT, "Completa antes los demás módulos de la ruta"
@@ -265,7 +272,7 @@ async def enroll(
 async def get_module(module_id: UUID, user: CurrentUser, request: Request) -> ModuleResponse:
     try:
         view = await request.app.state.get_module.execute(user.id, module_id)
-    except (ModuleNotFound, NotEnrolled, ModuleLocked) as exc:
+    except (ModuleNotFound, NotEnrolled, ModuleLocked, ModulePlanned) as exc:
         raise _module_error(exc) from exc
     return ModuleResponse.from_domain(view)
 
@@ -276,7 +283,14 @@ async def submit_attempt(
 ) -> AttemptResponse:
     try:
         result = await request.app.state.submit_attempt.execute(user.id, module_id, body.answer)
-    except (ModuleNotFound, NotEnrolled, ModuleLocked, NoExercise, InvalidAnswer) as exc:
+    except (
+        ModuleNotFound,
+        NotEnrolled,
+        ModuleLocked,
+        ModulePlanned,
+        NoExercise,
+        InvalidAnswer,
+    ) as exc:
         raise _module_error(exc) from exc
     return AttemptResponse.from_domain(result)
 
@@ -287,7 +301,7 @@ async def complete_module(
 ) -> CompletionResponse:
     try:
         result = await request.app.state.complete_reading.execute(user.id, module_id)
-    except (ModuleNotFound, NotEnrolled, ModuleLocked, HasExercise) as exc:
+    except (ModuleNotFound, NotEnrolled, ModuleLocked, ModulePlanned, HasExercise) as exc:
         raise _module_error(exc) from exc
     return CompletionResponse(
         module_completed=result.module_completed, route_completed=result.route_completed

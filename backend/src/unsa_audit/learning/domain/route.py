@@ -13,6 +13,7 @@ class ExerciseKind(StrEnum):
     SINGLE_CHOICE = "single_choice"
     QUIZ = "quiz"
     BRANCHING = "branching"
+    SOA_FORM = "soa_form"
 
 
 class EnrollmentStatus(StrEnum):
@@ -66,6 +67,8 @@ class Module:
     is_final: bool
     lesson_md: str
     exercise: ExerciseDef | None
+    # Modulo previsto pero aun sin desarrollar: se lista, no es accesible ni obligatorio.
+    planned: bool = False
 
 
 @dataclass(frozen=True)

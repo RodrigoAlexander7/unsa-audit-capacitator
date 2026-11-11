@@ -7,6 +7,20 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from unsa_audit.assessment.application.use_cases import (
+    GetAssessment,
+    ListAssessments,
+    StartAssessment,
+    SubmitAssessment,
+)
+from unsa_audit.assessment.infrastructure.question_bank import (
+    FileQuestionBank,
+    PimsRequirementCatalog,
+)
+from unsa_audit.assessment.infrastructure.sqlalchemy_repository import (
+    SqlAlchemyAssessmentRepository,
+)
+from unsa_audit.assessment.interface.router import router as assessment_router
 from unsa_audit.core.config import Settings, get_settings
 from unsa_audit.core.database import create_engine, create_session_factory
 from unsa_audit.documents.application.pims_use_cases import (
@@ -45,6 +59,7 @@ from unsa_audit.learning.application.use_cases import (
     ListRoutes,
     SubmitAttempt,
 )
+from unsa_audit.learning.infrastructure.learning_facts import LearningFacts
 from unsa_audit.learning.infrastructure.sqlalchemy_repository import SqlAlchemyLearningRepository
 from unsa_audit.learning.infrastructure.sqlalchemy_university_facts import (
     SqlAlchemyUniversityFacts,
@@ -73,6 +88,11 @@ def create_app(
     university_facts = SqlAlchemyUniversityFacts(session_factory)
     documents = SqlAlchemyDocumentRepository(session_factory)
     pims_requirements = SqlAlchemyPimsRequirementRepository(session_factory)
+    pims_completeness = GetPimsCompleteness(pims_requirements, documents)
+    learning_facts = LearningFacts(university_facts, pims_completeness)
+    assessments = SqlAlchemyAssessmentRepository(session_factory)
+    question_bank = FileQuestionBank(settings.content_dir)
+    requirement_catalog = PimsRequirementCatalog(ListPimsRequirements(pims_requirements))
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -100,8 +120,8 @@ def create_app(
     app.state.list_routes = ListRoutes(learning)
     app.state.get_route = GetRoute(learning)
     app.state.enroll_in_route = EnrollInRoute(learning)
-    app.state.get_module = GetModule(learning, university_facts)
-    app.state.submit_attempt = SubmitAttempt(learning, university_facts)
+    app.state.get_module = GetModule(learning, learning_facts)
+    app.state.submit_attempt = SubmitAttempt(learning, learning_facts)
     app.state.complete_reading = CompleteReadingModule(learning)
     app.state.list_documents = ListDocuments(documents)
     app.state.get_document = GetDocument(documents)
@@ -113,7 +133,11 @@ def create_app(
     app.state.get_change_request = GetChangeRequest(documents)
     app.state.resolve_change_request = ResolveChangeRequest(documents)
     app.state.list_pims_requirements = ListPimsRequirements(pims_requirements)
-    app.state.get_pims_completeness = GetPimsCompleteness(pims_requirements, documents)
+    app.state.get_pims_completeness = pims_completeness
+    app.state.start_assessment = StartAssessment(question_bank, assessments)
+    app.state.get_assessment = GetAssessment(question_bank, assessments)
+    app.state.submit_assessment = SubmitAssessment(question_bank, assessments, requirement_catalog)
+    app.state.list_assessments = ListAssessments(assessments)
 
     app.include_router(health_router)
     app.include_router(identity_router)
@@ -121,6 +145,7 @@ def create_app(
     app.include_router(learning_router)
     app.include_router(documents_router)
     app.include_router(pims_router)
+    app.include_router(assessment_router)
     return app
 
 

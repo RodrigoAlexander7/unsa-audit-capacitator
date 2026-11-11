@@ -58,6 +58,40 @@ describe('initialAnswer y completion', () => {
 		expect(canSubmit(ordering, answer)).toBe(true);
 	});
 
+	it('soa_form exige decidir aplicabilidad y justificacion de cada control', () => {
+		const soa: Exercise = {
+			kind: 'soa_form',
+			pass_score: 70,
+			spec: {
+				prompt: 'p',
+				scenario: 's',
+				reasons: opts('r1', 'r2'),
+				controls: opts('c1', 'c2')
+			}
+		};
+		expect(initialAnswer(soa)).toEqual({ decisions: {} });
+		expect(completion(soa, { decisions: { c1: { applies: true, reason: 'r1' } } })).toEqual({
+			done: 1,
+			total: 2
+		});
+		// aplicabilidad sin justificacion o justificacion sin aplicabilidad no cuentan
+		expect(
+			canSubmit(soa, {
+				decisions: { c1: { applies: true, reason: 'r1' }, c2: { applies: false, reason: '' } }
+			})
+		).toBe(false);
+		expect(
+			canSubmit(soa, {
+				decisions: { c1: { applies: true, reason: 'r1' }, c2: { applies: null, reason: 'r2' } }
+			})
+		).toBe(false);
+		expect(
+			canSubmit(soa, {
+				decisions: { c1: { applies: true, reason: 'r1' }, c2: { applies: false, reason: 'r2' } }
+			})
+		).toBe(true);
+	});
+
 	it('matching exige asignar todos los elementos', () => {
 		expect(initialAnswer(matching)).toEqual({ assignments: {} });
 		expect(completion(matching, { assignments: { l1: 'r1' } })).toEqual({ done: 1, total: 2 });

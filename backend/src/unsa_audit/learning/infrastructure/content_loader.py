@@ -81,6 +81,12 @@ def _load_module(route_code: str, md_path: Path) -> Module:
         raise ContentError(f"{md_path}: el frontmatter necesita `title` y `minutes` (entero)")
     exercise_path = md_path.with_name(f"{md_path.stem}.exercise.json")
     slug = match["slug"]
+    planned = bool(meta.get("planned", False))
+    exercise = _load_exercise(exercise_path) if exercise_path.exists() else None
+    if planned and (exercise is not None or meta.get("mandatory", False)):
+        raise ContentError(
+            f"{md_path}: un modulo `planned` no puede ser obligatorio ni tener ejercicio"
+        )
     return Module(
         id=module_id(route_code, slug),
         route_code=route_code,
@@ -88,10 +94,11 @@ def _load_module(route_code: str, md_path: Path) -> Module:
         order=int(match["order"]),
         title=str(meta["title"]),
         minutes=meta["minutes"],
-        mandatory=bool(meta.get("mandatory", True)),
+        mandatory=False if planned else bool(meta.get("mandatory", True)),
         is_final=bool(meta.get("final", False)),
         lesson_md=parsed["body"].strip(),
-        exercise=_load_exercise(exercise_path) if exercise_path.exists() else None,
+        exercise=exercise,
+        planned=planned,
     )
 
 

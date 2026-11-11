@@ -32,6 +32,7 @@ class ModuleModel(Base):
     minutes: Mapped[int] = mapped_column(Integer)
     mandatory: Mapped[bool] = mapped_column(Boolean, default=True)
     is_final: Mapped[bool] = mapped_column(Boolean, default=False)
+    planned: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
     lesson_md: Mapped[str] = mapped_column(Text)
     exercise_kind: Mapped[str | None] = mapped_column(String(30))
     exercise_spec: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)

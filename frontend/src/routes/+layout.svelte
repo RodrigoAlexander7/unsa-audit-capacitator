@@ -19,6 +19,7 @@
 		<nav aria-label="Principal">
 			{#if data.user}
 				<a href="/routes">Mis rutas</a>
+				<a href="/assessment">Evaluación</a>
 				<a href="/documents">Documentos</a>
 				<a href="/university">Universidad</a>
 				<a href="/systems">Sistemas</a>

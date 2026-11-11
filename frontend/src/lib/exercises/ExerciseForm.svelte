@@ -4,8 +4,9 @@
 	import Matching from './Matching.svelte';
 	import Ordering from './Ordering.svelte';
 	import RadioGroup from './RadioGroup.svelte';
+	import SoaForm from './SoaForm.svelte';
 	import { canSubmit, completion, initialAnswer } from './logic';
-	import type { Answer, AttemptResult, Exercise } from './types';
+	import type { Answer, AttemptResult, Exercise, SoaDecision } from './types';
 
 	let {
 		exercise,
@@ -32,7 +33,13 @@
 >
 	<p class="prompt">{exercise.spec.prompt}</p>
 
-	{#if exercise.kind === 'ordering'}
+	{#if exercise.kind === 'soa_form'}
+		<SoaForm
+			spec={exercise.spec}
+			answer={answer as { decisions: Record<string, SoaDecision> }}
+			feedback={result?.items ?? []}
+		/>
+	{:else if exercise.kind === 'ordering'}
 		<Ordering
 			spec={exercise.spec}
 			answer={answer as { order: string[] }}
