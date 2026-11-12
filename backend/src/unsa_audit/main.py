@@ -37,6 +37,18 @@ from unsa_audit.assessment.infrastructure.sqlalchemy_repository import (
     SqlAlchemyAssessmentRepository,
 )
 from unsa_audit.assessment.interface.router import router as assessment_router
+from unsa_audit.assistant.application.ports import AssistantModelPort
+from unsa_audit.assistant.application.use_cases import (
+    AskStudentAssistant,
+    ClearStudentHistory,
+    ListStudentHistory,
+)
+from unsa_audit.assistant.infrastructure.agy_adapter import AgyStudentModelAdapter
+from unsa_audit.assistant.infrastructure.context_provider import PlatformStudentContextProvider
+from unsa_audit.assistant.infrastructure.sqlalchemy_repository import (
+    SqlAlchemyAssistantHistoryRepository,
+)
+from unsa_audit.assistant.interface.router import router as assistant_router
 from unsa_audit.core.config import Settings, get_settings
 from unsa_audit.core.database import create_engine, create_session_factory
 from unsa_audit.documents.application.pims_use_cases import (
@@ -92,6 +104,7 @@ def create_app(
     settings: Settings | None = None,
     probe: DatabaseProbe | None = None,
     advisor: AnalyticsAdvisorPort | None = None,
+    assistant: AssistantModelPort | None = None,
 ) -> FastAPI:
     settings = settings or get_settings()
     engine = create_engine(settings.database_url)
@@ -118,12 +131,21 @@ def create_app(
         if settings.advisor_prompt_path.exists()
         else ""
     )
-    advisor = advisor or AgyCliAdvisor(
+    student_prompt = (
+        settings.student_assistant_prompt_path.read_text(encoding="utf-8")
+        if settings.student_assistant_prompt_path.exists()
+        else ""
+    )
+    agy_cli = AgyCliAdvisor(
         settings.agy_command,
         settings.agy_args,
         settings.agy_timeout_seconds,
         settings.agy_max_chars,
     )
+    advisor = advisor or agy_cli
+    assistant_model = assistant or AgyStudentModelAdapter(agy_cli)
+    assistant_history = SqlAlchemyAssistantHistoryRepository(session_factory)
+    student_contexts = PlatformStudentContextProvider(learning_facts, learning, documents)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -175,6 +197,11 @@ def create_app(
     app.state.build_snapshot = snapshots
     app.state.ask_advisor = AskAdvisor(snapshots, advisor, advisor_queries, system_prompt)
     app.state.list_advisor_history = ListAdvisorHistory(advisor_queries)
+    app.state.ask_student_assistant = AskStudentAssistant(
+        student_contexts, assistant_model, assistant_history, student_prompt
+    )
+    app.state.list_student_history = ListStudentHistory(assistant_history)
+    app.state.clear_student_history = ClearStudentHistory(assistant_history)
 
     app.include_router(health_router)
     app.include_router(identity_router)
@@ -184,6 +211,7 @@ def create_app(
     app.include_router(pims_router)
     app.include_router(assessment_router)
     app.include_router(analytics_router)
+    app.include_router(assistant_router)
     return app
 
 
