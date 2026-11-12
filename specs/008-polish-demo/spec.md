@@ -23,7 +23,7 @@ Dejar el sistema **listo para probar**: datos demo realistas (participantes con 
 - **AC-008-3** *Given* `--reset-demo`, *Then* se eliminan solo las cuentas `@demo.unsa.example` y `@e2e.unsa.example` (con su progreso) y se recrea el cohorte; las demás cuentas, incluido el superadmin, no cambian.
 - **AC-008-4** *Given* el stack levantado, *When* corre la suite E2E (Playwright), *Then* pasan: registro → matrícula → módulo con ejercicio → resultado; login del participante demo y acceso a `/routes`; un participante no accede a `/admin`; login del superadmin → panel con estadísticas; documentos: diff y matriz PIMS; evaluación controller completa hasta ver resultados por competencia.
 - **AC-008-5** *Given* las páginas principales (login, rutas, matriz PIMS, panel admin), *Then* axe-core no reporta violaciones de impacto *serious* o *critical*.
-- **AC-008-6** *Given* el repo, *Then* `./dev.sh` levanta Postgres, aplica migraciones, carga el seed (con demo) y arranca API y web, y el README y `docs/demo.md` describen cómo probar.
+- **AC-008-6** *Given* el repo, *Then* `make dev` levanta Postgres, aplica migraciones, carga el seed (con demo) y arranca API y web, y el README y `docs/demo.md` describen cómo probar.
 - **AC-008-7** *(manual, `agy` real)* Con los datos demo, la pregunta «¿Cómo están los alumnos de sensibilización?» devuelve un diagnóstico que cita cifras del cohorte demo.
 
 ## Fuera de alcance
