@@ -1,0 +1,169 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Parametriza el procedimiento operativo de respuesta ante brechas de datos personales de la UNSA alineado con el Programa de Seguridad.",
+		"scenario": "Tras aprobar la SoA, OTI y el DPO redactan el procedimiento operativo de respuesta a incidentes con datos personales. Debes asignar los roles correctos para contención técnica y evaluación hacia titulares, fijar el plazo interno de reporte, los pasos secuenciales obligatorios y la cadencia de simulacro/revisión.",
+		"document_title": "Procedimiento Operativo de Brechas e Incidentes (UNSA)",
+		"sections": [
+			{
+				"id": "sec-roles",
+				"title": "1. Autoridades, segregación de funciones y SLA",
+				"fields": [
+					{
+						"id": "proc_code",
+						"label": "Código del procedimiento",
+						"type": "text",
+						"required": true,
+						"placeholder": "PIMS-INC-001",
+						"validation": {
+							"pattern": "^PIMS-INC-\\d{3}$",
+							"sample_solution": "PIMS-INC-001",
+							"feedback_error": "Usa el código PIMS-INC-NNN."
+						}
+					},
+					{
+						"id": "tech_lead",
+						"label": "Cargo que dirige la contención técnica y restauración",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "ciso", "label": "Responsable de Seguridad de la Información" },
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "sec-general", "label": "Secretario General" }
+						],
+						"validation": {
+							"exact": "ciso",
+							"feedback_error": "La respuesta técnica e intervención sobre sistemas recae en el CISO."
+						}
+					},
+					{
+						"id": "privacy_lead",
+						"label": "Cargo que evalúa el impacto sobre titulares y dirige notificaciones externas",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "ciso", "label": "Responsable de Seguridad de la Información" },
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" }
+						],
+						"validation": {
+							"exact": "dpo",
+							"feedback_error": "El DPO evalúa riesgo sobre los titulares y gestiona notificaciones a la autoridad/afectados."
+						}
+					},
+					{
+						"id": "internal_sla",
+						"label": "Meta interna máxima de reporte al canal de incidentes tras la detección",
+						"type": "select",
+						"required": true,
+						"options": [
+							{ "id": "24h", "label": "Menos de 24 horas desde la detección" },
+							{ "id": "30d", "label": "Al final de cada mes calendario" },
+							{ "id": "anual", "label": "Únicamente durante la auditoría anual" }
+						],
+						"validation": {
+							"exact": "24h",
+							"feedback_error": "El Programa de Seguridad fija reporte interno en menos de 24 horas para cumplir luego plazos legales."
+						}
+					},
+					{
+						"id": "effective_date",
+						"label": "Fecha de entrada en vigor",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-01-01",
+							"max_date": "2026-12-31",
+							"sample_solution": "2026-01-12",
+							"feedback_error": "Usa una fecha válida del ciclo 2026."
+						}
+					},
+					{
+						"id": "drill_date",
+						"label": "Fecha programada del primer simulacro anual",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-02-01",
+							"max_date": "2027-06-30",
+							"feedback_error": "Programa el simulacro anual después de entrar en vigor el procedimiento."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-flujo",
+				"title": "2. Controles obligatorios de ejecución y prueba",
+				"fields": [
+					{
+						"id": "mandatory_steps",
+						"label": "Actividades mínimas exigidas en todo incidente con datos personales",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "clasificar", "label": "Clasificar severidad y marcar si afecta datos personales" },
+							{ "id": "contener", "label": "Contener el acceso indebido y preservar evidencias" },
+							{ "id": "notificar", "label": "Evaluar riesgo a titulares y notificar cuando corresponda" },
+							{ "id": "aprender", "label": "Registrar causa raíz y abrir acción correctiva" },
+							{ "id": "ocultar", "label": "Reiniciar bitácoras para no dejar rastros del error" }
+						],
+						"validation": {
+							"exact_ids": ["clasificar", "contener", "notificar", "aprender"],
+							"feedback_error": "Selecciona los 4 pasos obligatorios y rechaza destruir bitácoras."
+						}
+					},
+					{
+						"id": "evidence_and_learning",
+						"label": "Cómo se verifica anualmente la eficacia operativa de este procedimiento",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Describe el simulacro anual, su informe, tiempos medidos y acciones de mejora...",
+						"validation": {
+							"rubric": {
+								"min_words": 14,
+								"forbidden_any": [
+									{
+										"phrases": ["no hace falta probar", "solo si ocurre uno real"],
+										"feedback": "Esperar a un incidente real incumple la prevención; el procedimiento exige pruebas anuales."
+									}
+								],
+								"criteria": [
+									{
+										"id": "crit-simulacro",
+										"label": "Simulacro anual documentado con informe de resultados",
+										"keywords_any": ["simulacro", "prueba", "ejercicio", "informe", "anual"],
+										"feedback_missing": "Incluye la realización de un simulacro anual con informe de resultados."
+									},
+									{
+										"id": "crit-mejora",
+										"label": "Medición de tiempos o apertura de mejoras/acciones",
+										"keywords_any": ["tiempo", "mejora", "accion", "correctiva", "causa", "leccion"],
+										"feedback_missing": "Explica el seguimiento de tiempos o acciones correctivas tras el simulacro."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-inc",
+				"kind": "disjoint",
+				"fields": ["tech_lead", "privacy_lead"],
+				"label": "Segregación técnico vs. privacidad",
+				"feedback": "El líder técnico de contención (CISO) y el evaluador de titulares (DPO) son roles complementarios diferenciados."
+			},
+			{
+				"id": "rule-drill-order",
+				"kind": "date_order",
+				"fields": ["effective_date", "drill_date"],
+				"params": { "min_days": 30, "max_days": 365 },
+				"label": "Simulacro anual tras entrada en vigor",
+				"feedback": "El simulacro debe programarse entre 30 y 365 días después de aprobar el procedimiento."
+			}
+		]
+	}
+}

@@ -261,6 +261,25 @@ asyncio.run(main())
 		await expectAccessible(page);
 	});
 
+	test('R3 completa muestra los 9 módulos reales (tratamiento y no conformidades) y pasa axe-core', async ({
+		page
+	}) => {
+		await loginDemo(page);
+		await page.goto('/routes/implementacion');
+		await expect(page.getByText('Próximamente')).toHaveCount(0);
+
+		await page.getByRole('link', { name: /Plan de tratamiento y recursos/i }).click();
+		await expect(page.getByTestId('treatment-scenario')).toBeVisible();
+		await expect(page.getByTestId('practice-side-by-side')).toBeVisible();
+		await expectAccessible(page);
+
+		await page.goto('/routes/implementacion');
+		await page.getByRole('link', { name: /Evidencias y registros/i }).click();
+		await expect(page.getByTestId('nc-scenario')).toBeVisible();
+		await expect(page.getByTestId('practice-side-by-side')).toBeVisible();
+		await expectAccessible(page);
+	});
+
 	test('document_form valida reglas cruzadas, muestra guía al 3er fallo, aprueba y pasa axe-core', async ({
 		page
 	}) => {

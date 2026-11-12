@@ -28,7 +28,7 @@ def _modules(loaded, code):
 @pytest.mark.ac("AC-006-1")
 @pytest.mark.parametrize(
     ("code", "count", "minutes"),
-    [("implementacion", 9, 1440), ("auditor", 10, 1920)],
+    [("auditor", 10, 1920)],
 )
 def test_estructura_completa_con_un_unico_modulo_publicado(loaded, code, count, minutes) -> None:
     modules = _modules(loaded, code)
@@ -68,15 +68,45 @@ def test_ruta_2_completa_sin_planned_con_16_horas_y_referencias(loaded) -> None:
         assert grade(ex.kind, ex.spec, ans).score == 100, f"{m.slug}: solve() no alcanza 100"
 
 
+@pytest.mark.ac("AC-011-1")
+@pytest.mark.ac("AC-011-3")
+@pytest.mark.ac("AC-011-4")
+@pytest.mark.ac("AC-011-5")
+@pytest.mark.ac("AC-011-6")
+def test_ruta_3_completa_sin_planned_con_24_horas_y_referencias(loaded) -> None:
+    modules = _modules(loaded, "implementacion")
+    assert len(modules) == 9
+    assert sum(m.minutes for m in modules) == 1440
+    assert [m.order for m in modules] == list(range(1, 10))
+    assert all(not m.planned and m.mandatory and m.exercise is not None for m in modules)
+    assert modules[-1].is_final and not any(m.is_final for m in modules[:-1])
+
+    for m in modules:
+        assert m.reference_title and m.reference_md, f"{m.slug}: falta ejemplo resuelto"
+        ex = m.exercise
+        assert ex is not None
+        validate_spec(ex.kind, ex.spec)
+        public = to_public(ex.kind, ex.spec, "r3-test")
+        for secret in (
+            '"correct"',
+            '"pairs"',
+            '"rubric"',
+            '"cross_rules"',
+            '"sample_solution"',
+            '"expected_',
+        ):
+            assert secret not in str(public), f"{m.slug}: filtración {secret}"
+        ans = solve(ex.kind, ex.spec)
+        assert grade(ex.kind, ex.spec, ans).score == 100, f"{m.slug}: solve() no alcanza 100"
+
+
 @pytest.mark.ac("AC-006-1")
 def test_los_demos_son_los_previstos(loaded) -> None:
     demos = {
-        code: next(m for m in _modules(loaded, code) if not m.planned)
-        for code in ("implementacion", "auditor")
+        code: next(m for m in _modules(loaded, code) if not m.planned) for code in ("auditor",)
     }
-    assert demos["implementacion"].exercise.kind is ExerciseKind.SOA_FORM
     assert demos["auditor"].exercise.generator == "pims_audit_findings"
-    assert [demos[c].minutes for c in demos] == [180, 240]
+    assert [demos[c].minutes for c in demos] == [240]
 
 
 @pytest.mark.ac("AC-006-4")
@@ -98,8 +128,11 @@ def test_demo_de_interpretacion_usa_requisitos_pims_reales(loaded) -> None:
 
 
 @pytest.mark.ac("AC-006-6")
+@pytest.mark.ac("AC-011-2")
 def test_demo_de_implementacion_es_resoluble_y_da_credito_parcial(loaded) -> None:
-    demo = next(m for m in _modules(loaded, "implementacion") if not m.planned)
+    demo = next(
+        m for m in _modules(loaded, "implementacion") if m.slug == "declaracion-de-aplicabilidad"
+    )
     spec = demo.exercise.spec
     validate_spec(ExerciseKind.SOA_FORM, spec)
     assert len(spec["controls"]) == 8

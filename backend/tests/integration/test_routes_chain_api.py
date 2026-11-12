@@ -41,6 +41,7 @@ async def _pass_all_published(client, app, headers, code):
 
 @pytest.mark.ac("AC-006-2")
 @pytest.mark.ac("AC-010-1")
+@pytest.mark.ac("AC-011-1")
 async def test_la_estructura_de_las_rutas_2_a_4_y_sus_modulos_planned(
     client: httpx.AsyncClient, seeded
 ) -> None:
@@ -50,15 +51,15 @@ async def test_la_estructura_de_las_rutas_2_a_4_y_sus_modulos_planned(
     assert [(c, by_code[c]["modules_total"], by_code[c]["modules_planned"]) for c in ROUTES] == [
         ("sensibilizacion", 7, 0),
         ("interpretacion", 8, 0),
-        ("implementacion", 1, 8),
+        ("implementacion", 9, 0),
         ("auditor", 1, 9),
     ]
 
-    # la R1 esta disponible; las demas, bloqueadas por prerrequisito (R3 y R4 aun tienen planned)
+    # la R1 esta disponible; las demas, bloqueadas por prerrequisito (R4 aun tiene planned)
     for code in ROUTES[1:]:
         detail = await _detail(client, headers, code)
         planned = [m for m in detail["modules"] if m["planned"]]
-        if code == "interpretacion":
+        if code in ("interpretacion", "implementacion"):
             assert not planned
         else:
             assert planned and all(
@@ -71,12 +72,12 @@ async def test_la_estructura_de_las_rutas_2_a_4_y_sus_modulos_planned(
 @pytest.mark.ac("AC-006-2")
 async def test_un_modulo_planned_responde_409(client: httpx.AsyncClient, seeded) -> None:
     headers = await register_and_login(client)
-    for code in ("sensibilizacion", "interpretacion"):
+    for code in ("sensibilizacion", "interpretacion", "implementacion"):
         await _enroll(client, headers, code)
         await _pass_all_published(client, seeded, headers, code)
-    assert (await _enroll(client, headers, "implementacion")).status_code == 201
+    assert (await _enroll(client, headers, "auditor")).status_code == 201
 
-    detail = await _detail(client, headers, "implementacion")
+    detail = await _detail(client, headers, "auditor")
     planned = next(m for m in detail["modules"] if m["planned"])
     assert (await client.get(f"/modules/{planned['id']}", headers=headers)).status_code == 409
     attempt = await client.post(
@@ -91,6 +92,7 @@ async def test_un_modulo_planned_responde_409(client: httpx.AsyncClient, seeded)
 @pytest.mark.ac("AC-006-3")
 @pytest.mark.ac("AC-006-8")
 @pytest.mark.ac("AC-010-7")
+@pytest.mark.ac("AC-011-7")
 async def test_cadena_completa_de_las_cuatro_rutas_acredita_horas_vigentes(
     client: httpx.AsyncClient, seeded
 ) -> None:
@@ -122,14 +124,15 @@ async def test_cadena_completa_de_las_cuatro_rutas_acredita_horas_vigentes(
     assert hours == {
         "sensibilizacion": 12.0,
         "interpretacion": 16.0,
-        "implementacion": 3.0,
+        "implementacion": 24.0,
         "auditor": 4.0,
     }
-    assert body["total_hours_credited"] == 35.0
+    assert body["total_hours_credited"] == 56.0
     assert all(r["status"] == "completed" for r in body["routes"])
 
 
 @pytest.mark.ac("AC-006-6")
+@pytest.mark.ac("AC-011-2")
 async def test_el_demo_de_implementacion_da_credito_parcial_y_aun_aprueba(
     client: httpx.AsyncClient, seeded
 ) -> None:
@@ -139,7 +142,7 @@ async def test_el_demo_de_implementacion_da_credito_parcial_y_aun_aprueba(
         await _pass_all_published(client, seeded, headers, code)
     await _enroll(client, headers, "implementacion")
     module = next(
-        m for m in (await _detail(client, headers, "implementacion"))["modules"] if not m["planned"]
+        m for m in (await _detail(client, headers, "implementacion"))["modules"] if m["order"] == 4
     )
 
     spec = (await client.get(f"/modules/{module['id']}", headers=headers)).json()["exercise"]
@@ -154,7 +157,7 @@ async def test_el_demo_de_implementacion_da_credito_parcial_y_aun_aprueba(
         f"/modules/{module['id']}/attempts", json={"answer": half}, headers=headers
     )
     body = response.json()
-    assert (body["score"], body["passed"], body["route_completed"]) == (75, True, True)
+    assert (body["score"], body["passed"], body["route_completed"]) == (75, True, False)
     assert sum(i["correct"] for i in body["items"]) == 4
 
     bad_shape = await client.post(
