@@ -13,9 +13,16 @@ Formas de `spec` (privada, con solucion) y de `answer` por tipo:
 """
 
 import random
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from unsa_audit.learning.domain import document_exercises as doc_ex
+from unsa_audit.learning.domain.document_exercises import (
+    DocAnswerError,
+    DocSpecError,
+    SolutionGuideItem,
+)
 from unsa_audit.learning.domain.route import ExerciseKind
 
 Spec = dict[str, Any]
@@ -84,6 +91,15 @@ def _expect_dict(answer: Any, key: str) -> dict[str, str]:
 
 # ----------------------------------------------------------------------------- validacion
 
+_DOC_VALIDATORS: dict[ExerciseKind, Callable[[Spec], None]] = {
+    ExerciseKind.DOCUMENT_FORM: doc_ex.validate_document_form,
+    ExerciseKind.RISK_TABLE: doc_ex.validate_risk_table,
+    ExerciseKind.TREATMENT_TABLE: doc_ex.validate_treatment_table,
+    ExerciseKind.AUDIT_CHECKLIST: doc_ex.validate_audit_checklist,
+    ExerciseKind.NONCONFORMITY_FORM: doc_ex.validate_nonconformity_form,
+    ExerciseKind.COMPETENCE_MATRIX: doc_ex.validate_competence_matrix,
+}
+
 
 def _validate_options(options: Any, correct: Any, what: str) -> None:
     ids = _labelled_ids(options, f"{what}.options")
@@ -94,6 +110,12 @@ def _validate_options(options: Any, correct: Any, what: str) -> None:
 def validate_spec(kind: ExerciseKind, spec: Spec) -> None:
     _need(isinstance(spec, dict) and bool(spec.get("prompt") or kind is ExerciseKind.QUIZ),
           "falta `prompt`")  # fmt: skip
+    if kind in _DOC_VALIDATORS:
+        try:
+            _DOC_VALIDATORS[kind](spec)
+        except DocSpecError as exc:
+            raise InvalidExerciseSpec(str(exc)) from exc
+        return
     if kind is ExerciseKind.ORDERING:
         ids = _labelled_ids(spec.get("items"), "items")
         order = spec.get("correct_order")
@@ -155,6 +177,19 @@ def _strip(options: list[dict[str, Any]]) -> list[dict[str, str]]:
 
 def to_public(kind: ExerciseKind, spec: Spec, seed: str) -> Spec:
     """Version del ejercicio apta para el cliente: sin respuestas, puntos ni explicaciones."""
+    if kind is ExerciseKind.DOCUMENT_FORM:
+        return doc_ex.public_document_form(spec)
+    if kind is ExerciseKind.RISK_TABLE:
+        return doc_ex.public_risk_table(spec, seed)
+    if kind is ExerciseKind.TREATMENT_TABLE:
+        return doc_ex.public_treatment_table(spec)
+    if kind is ExerciseKind.AUDIT_CHECKLIST:
+        return doc_ex.public_audit_checklist(spec, seed)
+    if kind is ExerciseKind.NONCONFORMITY_FORM:
+        return doc_ex.public_nonconformity_form(spec, seed)
+    if kind is ExerciseKind.COMPETENCE_MATRIX:
+        return doc_ex.public_competence_matrix(spec, seed)
+
     prompt = spec.get("prompt", "")
     if kind is ExerciseKind.ORDERING:
         items = _strip(spec["items"])
@@ -289,6 +324,90 @@ _GRADERS = {
     ExerciseKind.BRANCHING: _grade_branching,
 }
 
+_DOC_GRADERS: dict[ExerciseKind, Callable[[Spec, Any], doc_ex.DocGradeResult]] = {
+    ExerciseKind.DOCUMENT_FORM: doc_ex.grade_document_form,
+    ExerciseKind.RISK_TABLE: doc_ex.grade_risk_table,
+    ExerciseKind.TREATMENT_TABLE: doc_ex.grade_treatment_table,
+    ExerciseKind.AUDIT_CHECKLIST: doc_ex.grade_audit_checklist,
+    ExerciseKind.NONCONFORMITY_FORM: doc_ex.grade_nonconformity_form,
+    ExerciseKind.COMPETENCE_MATRIX: doc_ex.grade_competence_matrix,
+}
+
+_DOC_GUIDES: dict[ExerciseKind, Callable[[Spec, set[str]], list[SolutionGuideItem]]] = {
+    ExerciseKind.DOCUMENT_FORM: doc_ex.guide_document_form,
+    ExerciseKind.RISK_TABLE: doc_ex.guide_risk_table,
+    ExerciseKind.TREATMENT_TABLE: doc_ex.guide_treatment_table,
+    ExerciseKind.AUDIT_CHECKLIST: doc_ex.guide_audit_checklist,
+    ExerciseKind.NONCONFORMITY_FORM: doc_ex.guide_nonconformity_form,
+    ExerciseKind.COMPETENCE_MATRIX: doc_ex.guide_competence_matrix,
+}
+
 
 def grade(kind: ExerciseKind, spec: Spec, answer: Any) -> GradeResult:
+    if kind in _DOC_GRADERS:
+        try:
+            res = _DOC_GRADERS[kind](spec, answer)
+        except DocAnswerError as exc:
+            raise InvalidAnswer(str(exc)) from exc
+        return GradeResult(
+            res.score, tuple(ItemFeedback(i.id, i.correct, i.feedback) for i in res.items)
+        )
     return _GRADERS[kind](spec, answer)
+
+
+def solution_guide(
+    kind: ExerciseKind, spec: Spec, failed_ids: set[str]
+) -> tuple[SolutionGuideItem, ...]:
+    """Guia de orientacion por item fallido (solo tras agotar intentos)."""
+    if not failed_ids:
+        return ()
+    if kind in _DOC_GUIDES:
+        return tuple(_DOC_GUIDES[kind](spec, failed_ids))
+    if kind is ExerciseKind.SOA_FORM:
+        reasons = {r["id"]: r["label"] for r in spec["reasons"]}
+        return tuple(
+            SolutionGuideItem(
+                c["id"],
+                c["label"],
+                f"Aplica: {'Sí' if c['applies'] else 'No'} · Justificación: {reasons[c['reason']]}",
+            )
+            for c in spec["controls"]
+            if c["id"] in failed_ids
+        )
+    if kind is ExerciseKind.MATCHING:
+        right = {r["id"]: r["label"] for r in spec["right"]}
+        return tuple(
+            SolutionGuideItem(
+                item["id"], item["label"], f"Corresponde a: {right[spec['pairs'][item['id']]]}"
+            )
+            for item in spec["left"]
+            if item["id"] in failed_ids
+        )
+    if kind is ExerciseKind.ORDERING:
+        labels = {i["id"]: i["label"] for i in spec["items"]}
+        return tuple(
+            SolutionGuideItem(item_id, labels[item_id], f"Posición esperada: {idx + 1}")
+            for idx, item_id in enumerate(spec["correct_order"])
+            if item_id in failed_ids
+        )
+    if kind is ExerciseKind.SINGLE_CHOICE and "choice" in failed_ids:
+        opt = next(o for o in spec["options"] if o["id"] == spec["correct"])
+        return (SolutionGuideItem("choice", "Opción esperada", opt["label"]),)
+    if kind is ExerciseKind.QUIZ:
+        guides: list[SolutionGuideItem] = []
+        for q in spec["questions"]:
+            if q["id"] in failed_ids:
+                opt = next(o for o in q["options"] if o["id"] == q["correct"])
+                guides.append(SolutionGuideItem(q["id"], q["prompt"], opt["label"]))
+        return tuple(guides)
+    if kind is ExerciseKind.BRANCHING:
+        return tuple(
+            SolutionGuideItem(
+                s["id"],
+                s["situation"],
+                max(s["options"], key=lambda o: o["points"])["label"],
+            )
+            for s in spec["steps"]
+            if s["id"] in failed_ids
+        )
+    return ()

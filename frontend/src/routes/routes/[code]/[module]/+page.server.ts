@@ -37,9 +37,11 @@ export const load: PageServerLoad = async ({ fetch, locals, params }) => {
 	);
 
 	const lessonHtml = renderMarkdown(data.lesson_md);
+	const referenceHtml = data.reference ? renderMarkdown(data.reference.body_md) : null;
 	return {
 		module: data,
 		lessonHtml,
+		referenceHtml,
 		routeTitle: route.data?.route.title ?? '',
 		nextModuleId: next?.id ?? null
 	};

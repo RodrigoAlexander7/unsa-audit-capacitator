@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ExerciseForm from '../../../../lib/exercises/ExerciseForm.svelte';
+	import ReferencePanel from '../../../../lib/exercises/ReferencePanel.svelte';
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
@@ -21,7 +22,17 @@
 	{@html data.lessonHtml}
 </article>
 
-{#if mod.exercise}
+{#if mod.exercise && data.referenceHtml && mod.reference}
+	<div class="practice-grid" data-testid="practice-side-by-side">
+		<ReferencePanel title={mod.reference.title} html={data.referenceHtml} />
+		<section class="card exercise" aria-labelledby="ej">
+			<h2 id="ej">Tu documento · Ejercicio</h2>
+			{#key mod.id}
+				<ExerciseForm exercise={mod.exercise} {result} {error} />
+			{/key}
+		</section>
+	</div>
+{:else if mod.exercise}
 	<section class="card exercise" aria-labelledby="ej">
 		<h2 id="ej">Ejercicio</h2>
 		{#key mod.id}
@@ -59,6 +70,23 @@
 
 	.card {
 		margin: 16px 0;
+	}
+
+	.practice-grid {
+		display: grid;
+		gap: 16px;
+		margin: 16px 0;
+	}
+
+	.practice-grid :global(.card) {
+		margin: 0;
+	}
+
+	@media (min-width: 1024px) {
+		.practice-grid {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+			align-items: start;
+		}
 	}
 
 	.lesson :global(h1) {

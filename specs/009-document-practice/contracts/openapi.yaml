@@ -1,0 +1,129 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — contrato Fase 8 (motor de práctica documental)
+  version: 0.9.0
+paths:
+  /modules/{module_id}:
+    get:
+      summary: Lección, ejemplo resuelto opcional (`reference`) y ejercicio público (sin soluciones)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: module_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: Módulo con `reference` opcional y spec pública sin claves de solución
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModuleResponse"
+        "401": { description: No autenticado }
+        "403": { description: No matriculado }
+        "404": { description: No existe }
+        "409": { description: Módulo bloqueado o en preparación }
+  /modules/{module_id}/attempts:
+    post:
+      summary: Enviar respuesta a un ejercicio (incluye guía progresiva tras intentos agotados)
+      security: [{ bearer: [] }]
+      parameters:
+        - { name: module_id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: Resultado del intento con retroalimentación por ítem/regla y guía tras 3 fallos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttemptResponse"
+        "401": { description: No autenticado }
+        "403": { description: No matriculado }
+        "404": { description: No existe }
+        "409": { description: Módulo bloqueado, en preparación o sin ejercicio }
+        "422": { description: Respuesta con forma inválida }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer }
+  schemas:
+    ModuleReferenceResponse:
+      type: object
+      required: [title, body_md]
+      properties:
+        title: { type: string }
+        body_md: { type: string }
+    ExercisePublic:
+      type: object
+      required: [kind, pass_score, spec]
+      properties:
+        kind:
+          type: string
+          enum:
+            - ordering
+            - matching
+            - single_choice
+            - quiz
+            - branching
+            - soa_form
+            - document_form
+            - risk_table
+            - treatment_table
+            - audit_checklist
+            - nonconformity_form
+            - competence_matrix
+        pass_score: { type: integer }
+        spec: { type: object }
+    ModuleResponse:
+      type: object
+      required: [id, route_code, title, minutes, is_final, status, lesson_md]
+      properties:
+        id: { type: string }
+        route_code: { type: string }
+        title: { type: string }
+        minutes: { type: integer }
+        is_final: { type: boolean }
+        status: { type: string }
+        best_score: { type: integer, nullable: true }
+        lesson_md: { type: string }
+        reference:
+          nullable: true
+          $ref: "#/components/schemas/ModuleReferenceResponse"
+        exercise:
+          nullable: true
+          $ref: "#/components/schemas/ExercisePublic"
+    ItemFeedbackResponse:
+      type: object
+      required: [id, correct, feedback]
+      properties:
+        id: { type: string }
+        correct: { type: boolean }
+        feedback: { type: string }
+    SolutionGuideItemResponse:
+      type: object
+      required: [id, label, expected_summary]
+      properties:
+        id: { type: string }
+        label: { type: string }
+        expected_summary: { type: string }
+    AttemptResponse:
+      type: object
+      required:
+        - score
+        - passed
+        - pass_score
+        - items
+        - module_completed
+        - route_completed
+        - attempt_number
+        - solution_revealed
+      properties:
+        score: { type: integer }
+        passed: { type: boolean }
+        pass_score: { type: integer }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/ItemFeedbackResponse" }
+        module_completed: { type: boolean }
+        route_completed: { type: boolean }
+        attempt_number: { type: integer }
+        solution_revealed: { type: boolean }
+        solution_guide:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/SolutionGuideItemResponse" }

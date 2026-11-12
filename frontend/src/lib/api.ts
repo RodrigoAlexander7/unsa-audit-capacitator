@@ -80,6 +80,7 @@ export type ModuleDetail = {
 	status: ModuleStatus;
 	best_score: number | null;
 	lesson_md: string;
+	reference: { title: string; body_md: string } | null;
 	exercise: Exercise | null;
 };
 
