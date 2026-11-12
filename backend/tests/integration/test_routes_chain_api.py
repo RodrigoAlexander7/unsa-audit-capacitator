@@ -40,6 +40,7 @@ async def _pass_all_published(client, app, headers, code):
 
 
 @pytest.mark.ac("AC-006-2")
+@pytest.mark.ac("AC-010-1")
 async def test_la_estructura_de_las_rutas_2_a_4_y_sus_modulos_planned(
     client: httpx.AsyncClient, seeded
 ) -> None:
@@ -48,30 +49,34 @@ async def test_la_estructura_de_las_rutas_2_a_4_y_sus_modulos_planned(
     by_code = {r["code"]: r for r in listing}
     assert [(c, by_code[c]["modules_total"], by_code[c]["modules_planned"]) for c in ROUTES] == [
         ("sensibilizacion", 7, 0),
-        ("interpretacion", 1, 7),
+        ("interpretacion", 8, 0),
         ("implementacion", 1, 8),
         ("auditor", 1, 9),
     ]
 
-    # la R1 esta disponible; las demas, bloqueadas por prerrequisito
+    # la R1 esta disponible; las demas, bloqueadas por prerrequisito (R3 y R4 aun tienen planned)
     for code in ROUTES[1:]:
         detail = await _detail(client, headers, code)
         planned = [m for m in detail["modules"] if m["planned"]]
-        assert planned and all(
-            m["status"] == "locked" and not m["mandatory"] and not m["has_exercise"]
-            for m in planned
-        )
+        if code == "interpretacion":
+            assert not planned
+        else:
+            assert planned and all(
+                m["status"] == "locked" and not m["mandatory"] and not m["has_exercise"]
+                for m in planned
+            )
         assert len(detail["modules"]) == detail["route"]["modules_total"] + len(planned)
 
 
 @pytest.mark.ac("AC-006-2")
 async def test_un_modulo_planned_responde_409(client: httpx.AsyncClient, seeded) -> None:
     headers = await register_and_login(client)
-    await _enroll(client, headers, "sensibilizacion")
-    await _pass_all_published(client, seeded, headers, "sensibilizacion")
-    assert (await _enroll(client, headers, "interpretacion")).status_code == 201
+    for code in ("sensibilizacion", "interpretacion"):
+        await _enroll(client, headers, code)
+        await _pass_all_published(client, seeded, headers, code)
+    assert (await _enroll(client, headers, "implementacion")).status_code == 201
 
-    detail = await _detail(client, headers, "interpretacion")
+    detail = await _detail(client, headers, "implementacion")
     planned = next(m for m in detail["modules"] if m["planned"])
     assert (await client.get(f"/modules/{planned['id']}", headers=headers)).status_code == 409
     attempt = await client.post(
@@ -85,7 +90,8 @@ async def test_un_modulo_planned_responde_409(client: httpx.AsyncClient, seeded)
 
 @pytest.mark.ac("AC-006-3")
 @pytest.mark.ac("AC-006-8")
-async def test_cadena_completa_de_las_cuatro_rutas_acredita_21_horas(
+@pytest.mark.ac("AC-010-7")
+async def test_cadena_completa_de_las_cuatro_rutas_acredita_horas_vigentes(
     client: httpx.AsyncClient, seeded
 ) -> None:
     headers = await register_and_login(client)
@@ -115,11 +121,11 @@ async def test_cadena_completa_de_las_cuatro_rutas_acredita_21_horas(
     hours = {r["code"]: r["hours_credited"] for r in body["routes"]}
     assert hours == {
         "sensibilizacion": 12.0,
-        "interpretacion": 2.0,
+        "interpretacion": 16.0,
         "implementacion": 3.0,
         "auditor": 4.0,
     }
-    assert body["total_hours_credited"] == 21.0
+    assert body["total_hours_credited"] == 35.0
     assert all(r["status"] == "completed" for r in body["routes"])
 
 

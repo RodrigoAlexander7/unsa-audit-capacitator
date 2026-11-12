@@ -1,0 +1,105 @@
+{
+	"kind": "branching",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Analiza cuatro situaciones reales de la UNSA y elige la decisión correcta según el rol controller/processor.",
+		"steps": [
+			{
+				"id": "s1",
+				"situation": "El Sistema de Matrícula lo decide funcionalmente ORA (finalidad, campos obligatorios y plazos académicos) y lo opera técnicamente OTI en servidores del campus. Frente a un estudiante que pregunta quién responde como responsable (controller) por la licitud de su matrícula, ¿qué debes concluir?",
+				"options": [
+					{
+						"id": "a",
+						"label": "La UNSA es el responsable (ORA fija finalidad de negocio y OTI da soporte técnico interno); ambos deben coordinarse sin trasladar culpa al área técnica.",
+						"points": 2,
+						"feedback": "Exacto: internamente OTI es soporte/operador técnico, pero frente al titular la UNSA responde unitariamente como responsable."
+					},
+					{
+						"id": "b",
+						"label": "OTI asume exclusivamente la condición de responsable porque los datos reposan en su servidor.",
+						"points": 0,
+						"feedback": "Tener la custodia física del servidor no convierte a TI en quien define la finalidad académica del tratamiento."
+					},
+					{
+						"id": "c",
+						"label": "Se debe firmar un contrato mercantil externo entre ORA y OTI como si fueran empresas distintas.",
+						"points": 0,
+						"feedback": "Ambas son oficinas orgánicas de la misma entidad; las responsabilidades internas se rigen por el ROF/MOF y el PIMS."
+					}
+				]
+			},
+			{
+				"id": "s2",
+				"situation": "El proveedor externo de respaldos en la nube informa que usará copias de seguridad históricas de la UNSA para entrenar su algoritmo comercial de compresión inteligente, sin mencionarlo en el contrato. ¿Cuál es el criterio correcto?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Impedirlo de inmediato: un encargado no puede tratar datos para finalidades propias no autorizadas por instrucciones documentadas del responsable.",
+						"points": 2,
+						"feedback": "Correcto: tratar para fin propio convierte al proveedor en infractor de sus obligaciones como encargado."
+					},
+					{
+						"id": "b",
+						"label": "Permitirlo sin cambio contractual si promete que su algoritmo mejora la velocidad del respaldo.",
+						"points": 0,
+						"feedback": "Un beneficio técnico implícito nunca reemplaza la instrucción documentada ni la base legal."
+					},
+					{
+						"id": "c",
+						"label": "Aceptarlo verbalmente por teléfono para ahorrar costos de licencia.",
+						"points": 0,
+						"feedback": "Toda instrucción sobre datos confiados a un encargado debe constar documentada y aprobada."
+					}
+				]
+			},
+			{
+				"id": "s3",
+				"situation": "Revisas el contrato entre OBU/FCSA y un laboratorio médico externo que recibe muestras con datos identificativos de salud de estudiantes. El contrato solo estipula tarifas y entrega en 48 horas. ¿Qué acción correctiva interpretativa procede?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Exigir adenda o contrato de encargo con instrucciones documentadas, confidencialidad, seguridad, control de subencargados, notificación de brechas y supresión al término.",
+						"points": 2,
+						"feedback": "Excelente: reúne los requisitos mínimos para gobernar formalmente a un encargado que trata datos sensibles."
+					},
+					{
+						"id": "b",
+						"label": "Dejar el contrato tal como está porque la relación médico-paciente ya presume confidencialidad implícita.",
+						"points": 0,
+						"feedback": "En un PIMS la confidencialidad ética no sustituye las cláusulas verificables de encargo ni la gestión de brechas y devolución."
+					},
+					{
+						"id": "c",
+						"label": "Transferir toda la responsabilidad legal al laboratorio desentendiéndose OBU del historial clínico.",
+						"points": 0,
+						"feedback": "El responsable sigue obligado a supervisar y garantizar medidas sobre los datos que remite."
+					}
+				]
+			},
+			{
+				"id": "s4",
+				"situation": "Un proveedor de alojamiento en la nube recibe directamente en su mesa de ayuda un reclamo de un docente solicitando la eliminación de sus datos de una base de pruebas de la UNSA. ¿Cómo debe actuar el encargado?",
+				"options": [
+					{
+						"id": "a",
+						"label": "No eliminar ni responder por iniciativa propia: trasladar la solicitud de inmediato a la UNSA (DPO) y ejecutar solo las instrucciones documentadas de esta.",
+						"points": 2,
+						"feedback": "Correcto: el encargado asiste al responsable sin sustituir sus decisiones sobre licitud, retención o archivos obligatorios."
+					},
+					{
+						"id": "b",
+						"label": "Borrar de inmediato toda la tabla de respaldo sin avisar a la UNSA para evitar reclamos.",
+						"points": 0,
+						"feedback": "Podría destruir registros legales o académicos cuya conservación es obligatoria según tabla de retención."
+					},
+					{
+						"id": "c",
+						"label": "Ignorar el mensaje porque el docente no es cliente comercial directo del proveedor.",
+						"points": 0,
+						"feedback": "Ignorarlo vulneraría la obligación de asistir al responsable frente a derechos de los titulares."
+					}
+				]
+			}
+		]
+	}
+}

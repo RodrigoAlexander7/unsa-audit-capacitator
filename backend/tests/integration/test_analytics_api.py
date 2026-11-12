@@ -68,10 +68,9 @@ async def _populate(client, app):
     final = (await _modules(client, users["ana"]))[-1]
     await _pass(client, app, users["ana"], final["id"])
     await client.post("/routes/interpretacion/enroll", headers=users["ana"])
-    demo = next(
-        m for m in await _modules(client, users["ana"], "interpretacion") if not m["planned"]
-    )
-    await _pass(client, app, users["ana"], demo["id"])
+    for mod in await _modules(client, users["ana"], "interpretacion"):
+        if not mod["planned"]:
+            await _pass(client, app, users["ana"], mod["id"])
 
     r1 = await _modules(client, users["beto"])
     for module in r1[:3]:
@@ -155,7 +154,7 @@ async def test_estadisticas_por_ruta_con_datos_reales(client: httpx.AsyncClient,
     )  # Ana 720 min; Beto 100+110+100
 
     assert (r2["enrolled"], r2["completed"], r2["completion_rate"]) == (1, 1, 100)
-    assert r2["avg_hours_credited"] == 2.0 and r2["pass_rate"] == 100
+    assert r2["avg_hours_credited"] == 16.0 and r2["pass_rate"] == 100
     assert (r3["enrolled"], r3["attempts"], r4["enrolled"]) == (0, 0, 0)
     assert r3["completion_rate"] == 0 and r3["avg_hours_credited"] == 0.0
 
@@ -180,7 +179,9 @@ async def test_detalle_de_ruta_con_modulos_y_dificiles(client: httpx.AsyncClient
     assert modules[6]["attempts"] == 1 and modules[6]["avg_score"] == 100
     assert (await client.get("/admin/stats/routes/nada", headers=admin)).status_code == 404
 
-    planned = (await client.get("/admin/stats/routes/interpretacion", headers=admin)).json()
+    r2_stats = (await client.get("/admin/stats/routes/interpretacion", headers=admin)).json()
+    assert len(r2_stats["modules"]) == 8
+    planned = (await client.get("/admin/stats/routes/implementacion", headers=admin)).json()
     assert len(planned["modules"]) == 1, "los modulos planned no aparecen"
 
 
