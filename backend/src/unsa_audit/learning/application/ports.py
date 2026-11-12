@@ -23,12 +23,29 @@ class UnitFact:
 class PositionFact:
     title: str
     unit_kind: str
+    unit_code: str = ""
+    unit_name: str = ""
 
 
 @dataclass(frozen=True)
 class SystemFact:
     name: str
     owner_unit_name: str
+    owner_unit_code: str = ""
+    data_categories: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class ActivityFact:
+    """Actividad de tratamiento de datos personales de la UNSA."""
+
+    name: str
+    org_unit_code: str
+    org_unit_name: str
+    purpose: str
+    legal_basis: str
+    data_categories: tuple[str, ...]
+    retention: str
 
 
 @dataclass(frozen=True)
@@ -43,6 +60,8 @@ class PimsFact:
     version: int | None = None
     review_date: date | None = None
     owner_unit_name: str | None = None
+    expected_evidence: str = ""
+    summary: str = ""
 
 
 @dataclass(frozen=True)
@@ -53,6 +72,7 @@ class UniversitySnapshot:
     positions: list[PositionFact] = field(default_factory=list)
     systems: list[SystemFact] = field(default_factory=list)
     pims: list[PimsFact] = field(default_factory=list)
+    activities: list[ActivityFact] = field(default_factory=list)
 
 
 class UniversityFacts(Protocol):
@@ -91,3 +111,5 @@ class LearningRepository(Protocol):
     async def save_progress(self, progress: ModuleProgress) -> None: ...
 
     async def add_attempt(self, attempt: ExerciseAttempt) -> None: ...
+
+    async def count_attempts(self, user_id: UUID, module_id: UUID) -> int: ...

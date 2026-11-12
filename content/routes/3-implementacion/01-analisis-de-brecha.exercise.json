@@ -1,0 +1,170 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Completa la ficha ejecutiva de análisis de brecha del conjunto documental PIMS de la UNSA.",
+		"scenario": "El DPO revisa el inventario actual de documentos PIMS de la UNSA (visible en Documentos -> PIMS): pims-alcance y pims-politica-privacidad están vigentes; pims-proceso-riesgos y pims-no-conformidades están vencidos; pims-soa y pims-resultados-tratamiento siguen en borrador; pims-plan-tratamiento carece de unidad responsable; y pims-monitoreo no existe.",
+		"document_title": "Diagnóstico de Brecha PIMS — Ciclo 2026 (UNSA)",
+		"sections": [
+			{
+				"id": "sec-cabecera",
+				"title": "1. Control y coordinación del diagnóstico",
+				"fields": [
+					{
+						"id": "gap_code",
+						"label": "Código del informe de brecha",
+						"type": "text",
+						"required": true,
+						"placeholder": "PIMS-GAP-2026",
+						"validation": {
+							"pattern": "^PIMS-GAP-\\d{4}$",
+							"sample_solution": "PIMS-GAP-2026",
+							"feedback_error": "Usa el formato PIMS-GAP-AAAA (cuatro dígitos del año)."
+						}
+					},
+					{
+						"id": "lead_coordinator",
+						"label": "Cargo que coordina el diagnóstico de brecha",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" },
+							{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+						],
+						"validation": {
+							"exact": "dpo",
+							"feedback_error": "La implementación y cierre de brechas es coordinada por el DPO; el OCI conserva independencia auditora."
+						}
+					},
+					{
+						"id": "sponsor_position",
+						"label": "Autoridad que respalda el plan de cierre",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "ciso", "label": "Responsable de Seguridad de la Información" }
+						],
+						"validation": {
+							"exact": "rector",
+							"feedback_error": "La Alta Dirección (Rector) respalda recursos y plazos institucionales."
+						}
+					},
+					{
+						"id": "baseline_date",
+						"label": "Fecha de corte del diagnóstico",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-01-01",
+							"max_date": "2026-12-31",
+							"sample_solution": "2026-05-10",
+							"feedback_error": "Indica una fecha de corte dentro de 2026."
+						}
+					},
+					{
+						"id": "target_closure_date",
+						"label": "Fecha meta para verificación del cierre",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-06-01",
+							"max_date": "2027-06-30",
+							"feedback_error": "La verificación de cierre debe fijarse posterior a la fecha de corte."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-hallazgos",
+				"title": "2. Clasificación real de brechas por estado",
+				"fields": [
+					{
+						"id": "missing_or_draft_docs",
+						"label": "Documentos críticos actualmente inexistentes o en borrador sin aprobar",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "pims-monitoreo", "label": "pims-monitoreo — Evidencia de monitoreo y medición (9.1)" },
+							{ "id": "pims-soa", "label": "pims-soa — Declaración de aplicabilidad (6.1.3 e)" },
+							{ "id": "pims-resultados-tratamiento", "label": "pims-resultados-tratamiento — Resultados del tratamiento (8.3)" },
+							{ "id": "pims-alcance", "label": "pims-alcance — Alcance del PIMS (4.3)" },
+							{ "id": "pims-politica-privacidad", "label": "pims-politica-privacidad — Política de privacidad (5.2)" }
+						],
+						"validation": {
+							"exact_ids": ["pims-monitoreo", "pims-soa", "pims-resultados-tratamiento"],
+							"feedback_error": "Faltante o borrador en UNSA son pims-monitoreo, pims-soa y pims-resultados-tratamiento."
+						}
+					},
+					{
+						"id": "governance_gap_docs",
+						"label": "Documentos vencidos o sin responsable asignado",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "pims-proceso-riesgos", "label": "pims-proceso-riesgos (vencido desde 2024)" },
+							{ "id": "pims-no-conformidades", "label": "pims-no-conformidades (fecha de revisión vencida)" },
+							{ "id": "pims-plan-tratamiento", "label": "pims-plan-tratamiento (sin unidad responsable)" },
+							{ "id": "pims-programa-seguridad", "label": "pims-programa-seguridad (vigente)" }
+						],
+						"validation": {
+							"exact_ids": ["pims-proceso-riesgos", "pims-no-conformidades", "pims-plan-tratamiento"],
+							"feedback_error": "Identifica los dos vencidos y el documento sin propietario; pims-programa-seguridad está vigente."
+						}
+					},
+					{
+						"id": "prioritization_rationale",
+						"label": "Criterio técnico para ordenar el plan de cierre",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Explica el orden lógico entre metodología/alcance, SoA/tratamiento y monitoreo antes de auditar...",
+						"validation": {
+							"rubric": {
+								"min_words": 15,
+								"forbidden_any": [
+									{
+										"phrases": ["al azar", "orden alfabetico", "primero los mas faciles"],
+										"feedback": "Nunca priorices al azar o por facilidad estética ignorando dependencias y severidad."
+									}
+								],
+								"criteria": [
+									{
+										"id": "crit-dependencia",
+										"label": "Respeta dependencias normativas (metodología → SoA/plan → monitoreo)",
+										"keywords_any": ["metodologia", "soa", "tratamiento", "dependencia", "riesgo", "secuencia"],
+										"feedback_missing": "Explica cómo la metodología y la SoA condicionan el plan de tratamiento y el monitoreo."
+									},
+									{
+										"id": "crit-severidad",
+										"label": "Prioriza documentos inexistentes/borrador y riesgos altos",
+										"keywords_any": ["faltante", "inexistente", "borrador", "vencido", "severidad", "critica"],
+										"feedback_missing": "Indica que se atiende primero lo inexistente, en borrador o vencido según severidad."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-gap",
+				"kind": "disjoint",
+				"fields": ["sponsor_position", "lead_coordinator"],
+				"label": "Separación patrocinio vs. coordinación",
+				"feedback": "El patrocinio institucional (Rector) es distinto de la coordinación técnica operativa (DPO)."
+			},
+			{
+				"id": "rule-date-gap",
+				"kind": "date_order",
+				"fields": ["baseline_date", "target_closure_date"],
+				"params": { "min_days": 30, "max_days": 365 },
+				"label": "Horizonte realista de cierre",
+				"feedback": "La fecha meta de verificación debe ser al menos 30 días posterior al diagnóstico."
+			}
+		]
+	}
+}

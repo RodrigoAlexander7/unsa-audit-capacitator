@@ -36,7 +36,7 @@ SUPERADMIN_EMAIL = "superadmin@test.example"
 SUPERADMIN_PASSWORD = "superadmin-test-pass"
 
 _TABLES = (
-    "advisor_queries, assessments, pims_requirements, change_requests, document_versions, documents, "
+    "curriculum_proposals, assistant_messages, advisor_queries, assessments, pims_requirements, change_requests, document_versions, documents, "
     "exercise_attempts, module_progress, enrollments, modules, routes, "
     "users, data_owners, processing_activities, systems, people, positions, org_units"
 )
@@ -90,8 +90,14 @@ def advisor():
 
 
 @pytest.fixture
-async def app(test_settings: Settings, advisor) -> AsyncIterator:
-    application = create_app(test_settings, advisor=advisor)
+def assistant_model():
+    """Modelo IA inyectado para el asistente del estudiante; los tests lo sobrescriben."""
+    return None
+
+
+@pytest.fixture
+async def app(test_settings: Settings, advisor, assistant_model) -> AsyncIterator:
+    application = create_app(test_settings, advisor=advisor, assistant=assistant_model)
     async with application.state.engine.begin() as conn:
         await conn.execute(text(f"TRUNCATE {_TABLES} CASCADE"))
     yield application

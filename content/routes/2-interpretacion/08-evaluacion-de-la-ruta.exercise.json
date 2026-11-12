@@ -1,0 +1,129 @@
+{
+	"kind": "quiz",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Evaluación integradora de la Ruta 2 — Interpretación de ISO/IEC 27701 sobre 27001 en la UNSA.",
+		"questions": [
+			{
+				"id": "q1",
+				"prompt": "En una revisión del Alcance del PIMS, la oficina declara incluir a Bienestar Universitario (OBU) pero excluye su Sistema de Bienestar y Salud «porque cifrar la base es costoso». ¿Qué criterio aplica?",
+				"options": [
+					{ "id": "a", "label": "Es válido si el jefe de OBU firma una nota interna aceptando el ahorro." },
+					{ "id": "b", "label": "Es inválido: una unidad incluida con tratamientos sensibles activos no puede excluir su sistema por costo." },
+					{ "id": "c", "label": "Solo aplica si el sistema pertenece a la Facultad de Ingeniería." },
+					{ "id": "d", "label": "Basta con cambiar el nombre del sistema a «archivo histórico»." }
+				],
+				"correct": "b",
+				"explanation": "El alcance exige coherencia unidades↔sistemas y prohíbe excluir tratamientos sensibles para evadir costos de control."
+			},
+			{
+				"id": "q2",
+				"prompt": "¿Quién debe aprobar formalmente el Alcance y la Política de Privacidad de la UNSA, y quién mantiene su seguimiento operativo?",
+				"options": [
+					{ "id": "a", "label": "Aprueba y mantiene el mismo Oficial de Datos para agilizar cambios." },
+					{ "id": "b", "label": "Aprueba el Rector (Alta Dirección); mantiene y vigila el Oficial de Protección de Datos Personales." },
+					{ "id": "c", "label": "Aprueba el Jefe del OCI para validar legalidad previa." },
+					{ "id": "d", "label": "Aprueba cualquier docente designado por rotación semestral." }
+				],
+				"correct": "b",
+				"explanation": "La Alta Dirección asume la aprobación institucional y el DPO vigila cumplimiento, preservando segregación frente al OCI."
+			},
+			{
+				"id": "q3",
+				"prompt": "El Sistema de Bienestar y Salud trata datos médicos de estudiantes. Al valorar la consecuencia en la matriz UNSA (0..2), ¿qué regla normativa manda?",
+				"options": [
+					{ "id": "a", "label": "Puede ponerse 0 si los servidores están dentro del campus." },
+					{ "id": "b", "label": "Puede bajarse a 1 si el personal firmó compromiso de reserva." },
+					{ "id": "c", "label": "Debe valorarse siempre en 2 (alta) porque la presencia de datos sensibles define un impacto grave sobre el titular." },
+					{ "id": "d", "label": "Se promedia entre el presupuesto de TI y la cantidad de estudiantes." }
+				],
+				"correct": "c",
+				"explanation": "La consecuencia refleja el impacto sobre las personas; ante datos sensibles la metodología fija C=2 y los controles solo reducen probabilidad."
+			},
+			{
+				"id": "q4",
+				"prompt": "Si la UNSA obtiene C=2 y P=1 en el Sistema de Matrícula (nivel 3, con umbral de aceptación < 3), ¿qué corresponde según el PIMS?",
+				"options": [
+					{ "id": "a", "label": "Aceptarlo automáticamente porque P=1 significa que ya hay controles." },
+					{ "id": "b", "label": "Tratar el riesgo: todo nivel >= 3 supera el umbral de aceptación y exige plan de tratamiento." },
+					{ "id": "c", "label": "Eliminar la matrícula de estudiantes para evitar el cálculo." },
+					{ "id": "d", "label": "Reducir artificialmente C a 1 aunque afecte actas oficiales." }
+				],
+				"correct": "b",
+				"explanation": "En la escala UNSA (0..4), 3 y 4 no son aceptables y deben pasar al Plan de tratamiento."
+			},
+			{
+				"id": "q5",
+				"prompt": "¿Cuándo es válido marcar «No aplica» en un control de la Declaración de Aplicabilidad (SoA)?",
+				"options": [
+					{ "id": "a", "label": "Cuando el presupuesto anual de OTI aún no cubre el software." },
+					{ "id": "b", "label": "Cuando corresponde únicamente a un rol que la entidad no ejerce (p. ej., obligaciones de encargado externo si solo actúa como responsable)." },
+					{ "id": "c", "label": "Cuando el responsable del sistema prefiere simplificar la auditoría." },
+					{ "id": "d", "label": "Cuando el documento aún está en borrador antes de ser revisado." }
+				],
+				"correct": "b",
+				"explanation": "Solo la ausencia real del rol o del tipo de tratamiento justifica descartar un control en la SoA."
+			},
+			{
+				"id": "q6",
+				"prompt": "Un proveedor de respaldos en la nube guarda copias de la UNSA y decide analizarlas para mejorar un producto comercial propio. ¿Qué rol incumple?",
+				"options": [
+					{ "id": "a", "label": "Ninguno, si borra los nombres después de entrenar su modelo." },
+					{ "id": "b", "label": "Su obligación esencial de encargado (processor) de tratar los datos únicamente bajo instrucciones documentadas del responsable." },
+					{ "id": "c", "label": "El papel de Auditor Interno independiente." },
+					{ "id": "d", "label": "La política de vacaciones de Recursos Humanos." }
+				],
+				"correct": "b",
+				"explanation": "El encargado no puede fijar finalidades propias sobre datos confiados por el responsable."
+			},
+			{
+				"id": "q7",
+				"prompt": "Durante una verificación, un jefe muestra la metodología de riesgos aprobada (`pims-proceso-riesgos`) como prueba de que evaluaron riesgos este semestre. ¿Qué responde el auditor?",
+				"options": [
+					{ "id": "a", "label": "La acepta como evidencia completa porque explica las escalas 0..2." },
+					{ "id": "b", "label": "Distingue método de resultado: la metodología explica cómo se hace; faltan los resultados concretos (`pims-resultados-riesgos`) fechados." },
+					{ "id": "c", "label": "La sustituye por el organigrama ROF de la universidad." },
+					{ "id": "d", "label": "Marca conformidad total si el PDF tiene portada y código." }
+				],
+				"correct": "b",
+				"explanation": "El método define las reglas; el cumplimiento se demuestra con registros reales ejecutados."
+			},
+			{
+				"id": "q8",
+				"prompt": "¿Cuál de estos requisitos del PIMS evidencia que las medidas acordadas en el plan realmente redujeron los riesgos iniciales?",
+				"options": [
+					{ "id": "a", "label": "El Estatuto Universitario." },
+					{ "id": "b", "label": "Los Resultados del tratamiento de riesgos (valoración del riesgo residual)." },
+					{ "id": "c", "label": "La lista de cargos del MOF." },
+					{ "id": "d", "label": "El manual de bienvenida general." }
+				],
+				"correct": "b",
+				"explanation": "El plan proyecta qué hacer; los Resultados del tratamiento (`8.3`) muestran qué controles se implementaron y cuál es el riesgo residual real."
+			},
+			{
+				"id": "q9",
+				"prompt": "Recursos Humanos entrega una hoja con 25 firmas de asistencia a una charla sobre privacidad como única evidencia de competencia del equipo DPO y OTI. ¿Cuál es el criterio correcto?",
+				"options": [
+					{ "id": "a", "label": "Es insuficiente: asistir no prueba competencia; se requiere evaluación de eficacia (examen, práctica o desempeño) sin autoevaluación." },
+					{ "id": "b", "label": "Es suficiente si la charla duró más de dos horas." },
+					{ "id": "c", "label": "Solo es insuficiente si faltó firma del Vicerrector." },
+					{ "id": "d", "label": "Basta con agregar la fecha de nacimiento de los asistentes." }
+				],
+				"correct": "a",
+				"explanation": "El PIMS exige acreditar competencia efectiva aplicada al rol y evaluada con imparcialidad."
+			},
+			{
+				"id": "q10",
+				"prompt": "Se descubre que una cuenta de docente cesado siguió activa dos meses por falla entre ORH y OTI. Se revoca de inmediato el acceso ese mismo día. ¿Qué diferencia esa acción inmediata de la acción correctiva?",
+				"options": [
+					{ "id": "a", "label": "No hay diferencia; cerrar esa cuenta concluye la no conformidad." },
+					{ "id": "b", "label": "Revocar la cuenta es la corrección inmediata; la acción correctiva debe eliminar la causa raíz integrando el flujo automático ORH→OTI y verificando su eficacia después." },
+					{ "id": "c", "label": "La acción correctiva consiste únicamente en enviar un correo recordatorio al docente." },
+					{ "id": "d", "label": "La corrección corresponde al OCI y nunca a TI." }
+				],
+				"correct": "b",
+				"explanation": "La corrección contiene el caso puntual; la acción correctiva modifica el proceso para evitar recurrencia y verifica eficacia posterior."
+			}
+		]
+	}
+}

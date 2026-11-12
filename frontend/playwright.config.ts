@@ -3,7 +3,7 @@ import { defineConfig } from '@playwright/test';
 const WEB_PORT = 5173;
 const API_PORT = 8000;
 
-// Requiere Postgres levantado y migrado (`./dev.sh` lo hace). El seed demo lo carga global-setup.
+// Requiere Postgres levantado y migrado (`make db migrate` lo hace). El seed demo lo carga global-setup.
 export default defineConfig({
 	testDir: './e2e',
 	globalSetup: './e2e/global-setup.ts',

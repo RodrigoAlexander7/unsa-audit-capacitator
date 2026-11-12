@@ -1,0 +1,176 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Documenta la ficha del Registro de Actividades de Tratamiento (RAT) para la Oficina de Recursos Humanos (ORH).",
+		"scenario": "La Oficina de Recursos Humanos (ORH) opera la Gestión de planillas sobre el Sistema de Planillas y RR. HH., administrado técnicamente por OTI y supervisado por el DPO. Trata datos de identificación, laborales, cuentas bancarias para pago de haberes y descansos médicos (datos de salud). La conservación legal vigente exige 10 años y la unidad sí emplea almacenamiento de respaldos contratado en la nube.",
+		"document_title": "Ficha de Registro de Tratamiento — ORH (UNSA)",
+		"sections": [
+			{
+				"id": "sec-roles",
+				"title": "1. Sistema, responsables y bases de tratamiento",
+				"fields": [
+					{
+						"id": "rat_code",
+						"label": "Código del registro RAT",
+						"type": "text",
+						"required": true,
+						"placeholder": "RAT-ORH-001",
+						"validation": {
+							"pattern": "^RAT-ORH-\\d{3}$",
+							"sample_solution": "RAT-ORH-001",
+							"feedback_error": "Usa el formato institucional RAT-ORH-NNN."
+						}
+					},
+					{
+						"id": "functional_owner",
+						"label": "Responsable funcional del tratamiento (Controller interno)",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "jefe-orh", "label": "Jefe de la Oficina de Recursos Humanos" },
+							{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" },
+							{ "id": "jefe-ora", "label": "Jefe de Registros Académicos" }
+						],
+						"validation": {
+							"exact": "jefe-orh",
+							"feedback_error": "ORH decide finalidades y contenido de planillas; OTI brinda soporte técnico."
+						}
+					},
+					{
+						"id": "technical_operator",
+						"label": "Custodio técnico de infraestructura",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" },
+							{ "id": "jefe-orh", "label": "Jefe de la Oficina de Recursos Humanos" },
+							{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+						],
+						"validation": {
+							"exact": "jefe-oti",
+							"feedback_error": "La operación técnica del servidor y respaldos recae en la OTI."
+						}
+					},
+					{
+						"id": "legal_basis",
+						"label": "Base jurídica principal de la gestión de planillas",
+						"type": "select",
+						"required": true,
+						"options": [
+							{ "id": "obligacion-legal", "label": "Obligación legal y ejecución del vínculo laboral" },
+							{ "id": "interes-publicitario", "label": "Fines de marketing comercial externo" },
+							{ "id": "ninguna", "label": "Sin base definida (uso discrecional)" }
+						],
+						"validation": {
+							"exact": "obligacion-legal",
+							"feedback_error": "El cálculo y pago de remuneraciones se fundamenta en obligación legal y vínculo laboral."
+						}
+					},
+					{
+						"id": "retention_rule",
+						"label": "Criterio de retención y disposición final",
+						"type": "select",
+						"required": true,
+						"options": [
+							{ "id": "10-anios", "label": "Conservar 10 años conforme a norma laboral y luego eliminar/anonimizar" },
+							{ "id": "indefinido", "label": "Guardar permanentemente sin revisión en carpetas locales" },
+							{ "id": "7-dias", "label": "Borrar al séptimo día tras pagar la planilla" }
+						],
+						"validation": {
+							"exact": "10-anios",
+							"feedback_error": "La tabla institucional de ORH fija 10 años para planillas y prohíbe retención indefinida sin criterio."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-datos",
+				"title": "2. Categorías, salvaguardas y transferencias",
+				"fields": [
+					{
+						"id": "data_categories",
+						"label": "Categorías de datos tratadas en planillas",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "identificacion", "label": "Identificación del trabajador" },
+							{ "id": "laborales", "label": "Datos laborales y cargo" },
+							{ "id": "bancarios", "label": "Datos bancarios para abono" },
+							{ "id": "salud", "label": "Datos de salud (descansos médicos)" },
+							{ "id": "calificaciones", "label": "Calificaciones de cursos estudiantiles" }
+						],
+						"validation": {
+							"required_ids": ["identificacion", "laborales", "bancarios", "salud"],
+							"forbidden_ids": ["calificaciones"],
+							"feedback_error": "Incluye identificación, laborales, bancarios y salud; calificaciones estudiantiles pertenecen a ORA."
+						}
+					},
+					{
+						"id": "safeguards",
+						"label": "Medidas obligatorias por contener datos de salud y bancarios",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "minimo-privilegio", "label": "Mínimo privilegio y separación del módulo bancario" },
+							{ "id": "cifrado", "label": "Cifrado de respaldos y de campos médicos sensibles" },
+							{ "id": "contrato-nube", "label": "Contrato de encargo vigente con proveedor de nube" },
+							{ "id": "excel-publico", "label": "Publicar hoja de planillas en cartelera abierta" }
+						],
+						"validation": {
+							"exact_ids": ["minimo-privilegio", "cifrado", "contrato-nube"],
+							"feedback_error": "Exige mínimo privilegio, cifrado sensible y contrato de encargo en nube."
+						}
+					},
+					{
+						"id": "disposal_justification",
+						"label": "Sustento de minimización y control de acceso al terminar el vínculo",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Explica cómo se restringen datos médicos y qué ocurre cuando cesa el trabajador o concluye el plazo...",
+						"validation": {
+							"rubric": {
+								"min_words": 14,
+								"criteria": [
+									{
+										"id": "crit-acceso",
+										"label": "Restricción del acceso tras cese o segregación de datos médicos",
+										"keywords_any": ["acceso", "restring", "salud", "medico", "minimo"],
+										"feedback_missing": "Explica cómo se segregan y restringen los datos médicos y cuentas bancarias."
+									},
+									{
+										"id": "crit-supresion",
+										"label": "Eliminación o bloqueo al cumplirse los 10 años",
+										"keywords_any": ["elimina", "supresion", "anonimiz", "bloqueo", "plazo", "10"],
+										"feedback_missing": "Indica la supresión, anonimización o bloqueo seguro al cumplirse el plazo de retención."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-rat",
+				"kind": "disjoint",
+				"fields": ["functional_owner", "technical_operator"],
+				"label": "Separación responsable funcional vs. custodio TI",
+				"feedback": "Diferencia al Jefe de ORH (dueño funcional) del Jefe de OTI (operador técnico)."
+			},
+			{
+				"id": "rule-sensitive-controls",
+				"kind": "requires_if",
+				"fields": ["data_categories", "safeguards"],
+				"params": {
+					"when_in": ["salud"],
+					"require_all": ["cifrado", "minimo-privilegio"],
+					"forbid_any": ["excel-publico"]
+				},
+				"label": "Coherencia datos sensibles ↔ salvaguardas",
+				"feedback": "Tratar datos de salud exige obligatoriamente cifrado y mínimo privilegio."
+			}
+		]
+	}
+}

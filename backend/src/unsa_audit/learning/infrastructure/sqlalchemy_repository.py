@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import delete, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from unsa_audit.learning.domain.route import (
@@ -48,6 +48,8 @@ def _module(m: ModuleModel) -> Module:
         planned=m.planned,
         lesson_md=m.lesson_md,
         exercise=exercise,
+        reference_title=m.reference_title,
+        reference_md=m.reference_md,
     )
 
 
@@ -97,6 +99,8 @@ class SqlAlchemyLearningRepository:
                 row.is_final = module.is_final
                 row.planned = module.planned
                 row.lesson_md = module.lesson_md
+                row.reference_title = module.reference_title
+                row.reference_md = module.reference_md
                 row.exercise_kind = ex.kind.value if ex else None
                 row.exercise_spec = ex.spec if ex else {}
                 row.exercise_generator = ex.generator if ex else None
@@ -194,3 +198,15 @@ class SqlAlchemyLearningRepository:
                     created_at=attempt.created_at,
                 )
             )
+
+    async def count_attempts(self, user_id: UUID, module_id: UUID) -> int:
+        async with self._sf() as session:
+            result = await session.scalar(
+                select(func.count())
+                .select_from(ExerciseAttemptModel)
+                .where(
+                    ExerciseAttemptModel.user_id == user_id,
+                    ExerciseAttemptModel.module_id == module_id,
+                )
+            )
+            return int(result or 0)

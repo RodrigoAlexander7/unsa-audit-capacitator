@@ -20,10 +20,12 @@ from unsa_audit.learning.application.ports import (
     LearningRepository,
     UniversityFacts,
 )
+from unsa_audit.learning.domain.document_exercises import SolutionGuideItem
 from unsa_audit.learning.domain.exercises import (
     ItemFeedback,
     Spec,
     grade,
+    solution_guide,
     to_public,
     validate_spec,
 )
@@ -34,6 +36,7 @@ from unsa_audit.learning.domain.progress import (
     route_status,
 )
 from unsa_audit.learning.domain.route import (
+    REVEAL_AFTER_ATTEMPTS,
     Enrollment,
     EnrollmentStatus,
     ExerciseAttempt,
@@ -107,6 +110,9 @@ class AttemptResult:
     items: tuple[ItemFeedback, ...]
     module_completed: bool
     route_completed: bool
+    attempt_number: int = 1
+    solution_revealed: bool = False
+    solution_guide: tuple[SolutionGuideItem, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -287,6 +293,19 @@ class SubmitAttempt:
         spec = await _resolve_spec(module, self._facts)
         result = grade(module.exercise.kind, spec, answer)  # InvalidAnswer si la forma es mala
         passed = result.score >= module.exercise.pass_score
+        prior_attempts = await self._repo.count_attempts(user_id, module_id)
+        attempt_number = prior_attempts + 1
+        reveal_after = int(spec.get("reveal_after_attempts", REVEAL_AFTER_ATTEMPTS))
+        revealed = (not passed) and attempt_number >= reveal_after
+        guide = (
+            solution_guide(
+                module.exercise.kind,
+                spec,
+                {item.id for item in result.items if not item.correct},
+            )
+            if revealed
+            else ()
+        )
         now = self._clock()
 
         await self._repo.add_attempt(
@@ -332,6 +351,9 @@ class SubmitAttempt:
             items=result.items,
             module_completed=is_completed,
             route_completed=route_done,
+            attempt_number=attempt_number,
+            solution_revealed=revealed,
+            solution_guide=guide,
         )
 
 

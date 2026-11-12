@@ -1,0 +1,182 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Evalúa y completa la ficha de aprobación y requisitos de la Política de Privacidad de la UNSA.",
+		"scenario": "Tras incorporar datos clínicos de salud estudiantil en OBU/FCSA y formalizar contratos de respaldo externo, la UNSA actualiza su Política de Privacidad para el período 2026. Debes validar quién la aprueba, quién custodia su cumplimiento, su ciclo anual de revisión, los compromisos normativos obligatorios y cómo demuestra liderazgo efectivo ante una auditoría.",
+		"document_title": "Ficha de Liderazgo y Política de Privacidad (UNSA)",
+		"sections": [
+			{
+				"id": "sec-gob",
+				"title": "1. Autoridad, custodia y vigencia",
+				"fields": [
+					{
+						"id": "policy_code",
+						"label": "Código institucional de la política",
+						"type": "text",
+						"required": true,
+						"placeholder": "PIMS-POL-002",
+						"validation": {
+							"pattern": "^PIMS-POL-\\d{3}$",
+							"sample_solution": "PIMS-POL-002",
+							"feedback_error": "Usa el código PIMS-POL-NNN (tres dígitos)."
+						}
+					},
+					{
+						"id": "approved_by",
+						"label": "Cargo que aprueba formalmente la política",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" },
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" }
+						],
+						"validation": {
+							"exact": "rector",
+							"feedback_error": "El compromiso de liderazgo y la aprobación de políticas institucionales recae en la Alta Dirección (Rector)."
+						}
+					},
+					{
+						"id": "custodian_position",
+						"label": "Cargo responsable de vigilar su cumplimiento y canalizar solicitudes",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" },
+							{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+						],
+						"validation": {
+							"exact": "dpo",
+							"feedback_error": "Corresponde al Oficial de Protección de Datos Personales; el OCI audita con independencia y no ejecuta controles."
+						}
+					},
+					{
+						"id": "approval_date",
+						"label": "Fecha de aprobación",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-01-01",
+							"max_date": "2026-12-31",
+							"sample_solution": "2026-02-16",
+							"feedback_error": "Elige una fecha válida dentro del año 2026."
+						}
+					},
+					{
+						"id": "next_review_date",
+						"label": "Fecha de revisión programada",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-03-01",
+							"max_date": "2027-12-31",
+							"feedback_error": "Programa la revisión como máximo dentro de los 365 días siguientes."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-contenido",
+				"title": "2. Contenidos obligatorios y comunicación",
+				"fields": [
+					{
+						"id": "mandatory_elements",
+						"label": "Compromisos que debe incluir el cuerpo de la política",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "principios", "label": "Principios de licitud, finalidad, minimización y seguridad" },
+							{ "id": "arco", "label": "Atención a los derechos de acceso, rectificación, cancelación y oposición" },
+							{ "id": "sensibles", "label": "Medidas reforzadas para datos sensibles (salud y socioeconómicos)" },
+							{ "id": "encargados", "label": "Contratos y reglas para encargados externos y transferencias" },
+							{ "id": "mejora", "label": "Compromiso con objetivos medibles, cumplimiento legal y mejora continua" },
+							{ "id": "sueldos", "label": "Escala detallada de remuneraciones de la ORH" },
+							{ "id": "claves-admin", "label": "Contraseñas maestras de servidores de la OTI" }
+						],
+						"validation": {
+							"exact_ids": ["principios", "arco", "sensibles", "encargados", "mejora"],
+							"feedback_error": "Selecciona los cinco compromisos normativos obligatorios y excluye datos salariales o credenciales."
+						}
+					},
+					{
+						"id": "communication_channel",
+						"label": "Esquema válido de comunicación y disponibilidad",
+						"type": "select",
+						"required": true,
+						"options": [
+							{
+								"id": "portal-induccion",
+								"label": "Publicación accesible en portal institucional + inducción al personal y encargados"
+							},
+							{
+								"id": "archivo-secreto",
+								"label": "Copia archivada únicamente en el despacho del Rectorado"
+							},
+							{
+								"id": "solo-ti",
+								"label": "Envío único por correo interno solo al equipo técnico de la OTI"
+							}
+						],
+						"validation": {
+							"exact": "portal-induccion",
+							"feedback_error": "La política debe comunicarse dentro de la organización y estar disponible para las partes interesadas."
+						}
+					},
+					{
+						"id": "leadership_commitment_note",
+						"label": "Evidencia de liderazgo más allá de la firma del documento",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Explica qué acciones demuestran liderazgo real de la Alta Dirección en la UNSA...",
+						"validation": {
+							"rubric": {
+								"min_words": 14,
+								"forbidden_any": [
+									{
+										"phrases": ["solo firmar", "basta con firmar", "es solo un tramite"],
+										"feedback": "Una firma aislada sin recursos, objetivos ni seguimiento constituye un hallazgo de falta de liderazgo."
+									}
+								],
+								"criteria": [
+									{
+										"id": "crit-recursos",
+										"label": "Asignación de recursos y autoridad clara",
+										"keywords_any": ["recurso", "presupuesto", "autoridad", "rol", "tiempo"],
+										"feedback_missing": "Menciona cómo la dirección asegura recursos y autoridad para operar el PIMS."
+									},
+									{
+										"id": "crit-objetivos",
+										"label": "Objetivos de privacidad medibles y seguimiento",
+										"keywords_any": ["objetivo", "medible", "indicador", "revision", "mejora"],
+										"feedback_missing": "Incluye la definición de objetivos de privacidad medibles o revisión por la dirección."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-policy",
+				"kind": "disjoint",
+				"fields": ["approved_by", "custodian_position"],
+				"label": "Segregación dirección vs. vigilancia",
+				"feedback": "El aprobador (Rector) debe ser distinto del Oficial de Protección de Datos que vigila el cumplimiento."
+			},
+			{
+				"id": "rule-review-cycle",
+				"kind": "date_order",
+				"fields": ["approval_date", "next_review_date"],
+				"params": { "min_days": 30, "max_days": 365 },
+				"label": "Ciclo de revisión anual",
+				"feedback": "La próxima revisión debe planificarse entre 30 y 365 días después de aprobar."
+			}
+		]
+	}
+}

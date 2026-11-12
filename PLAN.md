@@ -1,6 +1,6 @@
 # Plan — Plataforma Capacitadora de Auditores Internos UNSA (POC)
 
-> Estado: **plan v2; Fases 0–7 implementadas (sistema listo para probar con `./dev.sh`)** (ver `specs/*/tasks.md`). Documento vivo: se ajusta al cerrar cada fase.
+> Estado: **Fases 0–13 implementadas** (4 rutas completas — 84 h, motor documental, asistentes flotantes de estudiante y administrador; ver `specs/*/tasks.md` y `specs/009-practica-real-y-asistentes/plan.md`). Documento vivo: se ajusta al cerrar cada fase.
 > Toda la información de la UNSA es **ficticia** y solo con fines de prueba de concepto (POC).
 > Cambios v2: metodología **Spec-Driven Development (SDD)**, integración real con `agy`, y **conjunto de información documentada del PIMS (ISO 27701)** integrado en documentos, rutas y evaluación.
 
@@ -310,6 +310,12 @@ Componentes de ejercicio reutilizables: `DragSort`, `Matching`, `BranchingScenar
 | **F5 — Rutas 2–4 + Evaluación** | 006 | Estructura de rutas 2–4 con gating, 1 demo por ruta (mapeo, SoA, auditoría), evaluación controller/processor etiquetada por cláusula. | Ruta 3 bloqueada sin aprobar 1–2; puntajes por competencia/cláusula. |
 | **F6 — Analytics + IA** | 007 | Spike `agy`, vistas de estadísticas, panel admin, `AgyCliAdapter`, chat, snapshot anonimizado, propuestas de ajuste. | "¿Cómo están los alumnos de sensibilización?" devuelve respuesta con datos reales. |
 | **F7 — Pulido y cierre** | 008 | E2E, accesibilidad, seed de demo (alumnos en distintos avances), guion de demo, README y docs finales. | Demo punta a punta reproducible en < 10 min. |
+| **F8 — Motor de práctica documental** | 009 | 6 tipos documentales deterministas (`document_form`, `risk_table`, `treatment_table`, `audit_checklist`, `nonconformity_form`, `competence_matrix`), vista lado a lado y guía progresiva al 3er fallo. | Corrección por reglas y ejemplo resuelto paralelo en tema claro. |
+| **F9 — Ruta 2 completa (16 h)** | 010 | 8 módulos reales de planificación e interpretación PIMS con referencia UNSA. | 8/8 activos, 0 `planned`, 16 h acumuladas. |
+| **F10 — Ruta 3 completa (24 h)** | 011 | 9 módulos reales de implementación PIMS (RAT, riesgos, SoA, incidentes, tratamiento, monitoreo). | 9/9 activos, 0 `planned`, 24 h acumuladas. |
+| **F11 — Ruta 4 completa (32 h)** | 012 | 10 módulos reales de auditoría interna ISO 19011 con checklist dinámico del PIMS e informe final. | 10/10 activos, 84 h totales entre R1–R4. |
+| **F12 — Asistente flotante estudiante** | 013 | Módulo `assistant`, guardrails anti-inyección y anti-soluciones, contexto UNSA/lección, historial privado y popup global. | Asistente disponible en toda página autenticada con WCAG AA. |
+| **F13 — Asistente admin y reestructuración** | 014 | Modo administrador con seudonimización `P-xx`, resolución local en UI y borradores revisables en `curriculum_proposals`. | Cero PII enviada a `agy` y propuestas `draft`/`accepted`/`discarded`. |
 
 Trabajo por *vertical slices* (migración → caso de uso → API → UI → test), siempre precedido por su spec aprobada.
 

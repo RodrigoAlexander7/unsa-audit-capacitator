@@ -8,6 +8,7 @@ from unsa_audit.documents.infrastructure.content_loader import (
     FilePimsRequirementSource,
 )
 from unsa_audit.learning.application.ports import (
+    ActivityFact,
     PimsFact,
     PositionFact,
     SystemFact,
@@ -51,6 +52,8 @@ def pims_facts(today: date = date(2026, 11, 11)) -> list[PimsFact]:
                 1 if doc else None,
                 doc.review_date if doc else None,
                 names.get(doc.owner_unit_code or "") if doc else None,
+                expected_evidence=r.expected_evidence,
+                summary=r.summary,
             )
         )
     return facts
@@ -63,10 +66,36 @@ def snapshot_from_dataset(ds: UniversityDataset | None = None) -> UniversitySnap
     return UniversitySnapshot(
         units=[UnitFact(u.code, u.name, u.kind.value) for u in ds.org_units],
         positions=[
-            PositionFact(p.title, units[p.org_unit_id].kind.value) for p in positions.values()
+            PositionFact(
+                p.title,
+                units[p.org_unit_id].kind.value,
+                units[p.org_unit_id].code,
+                units[p.org_unit_id].name,
+            )
+            for p in positions.values()
         ],
-        systems=[SystemFact(s.name, units[s.owner_org_unit_id].name) for s in ds.systems],
+        systems=[
+            SystemFact(
+                s.name,
+                units[s.owner_org_unit_id].name,
+                units[s.owner_org_unit_id].code,
+                s.data_categories,
+            )
+            for s in ds.systems
+        ],
         pims=pims_facts(),
+        activities=[
+            ActivityFact(
+                a.name,
+                units[a.org_unit_id].code,
+                units[a.org_unit_id].name,
+                a.purpose,
+                a.legal_basis,
+                a.data_categories,
+                a.retention,
+            )
+            for a in ds.processing_activities
+        ],
     )
 
 
@@ -120,3 +149,6 @@ class InMemoryLearningRepository:
 
     async def add_attempt(self, attempt: ExerciseAttempt) -> None:
         self.attempts.append(attempt)
+
+    async def count_attempts(self, user_id: UUID, module_id: UUID) -> int:
+        return sum(1 for a in self.attempts if a.user_id == user_id and a.module_id == module_id)
