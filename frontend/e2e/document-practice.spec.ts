@@ -280,6 +280,25 @@ asyncio.run(main())
 		await expectAccessible(page);
 	});
 
+	test('R4 completa muestra los 10 módulos reales (checklist dinámico e informe) y pasa axe-core', async ({
+		page
+	}) => {
+		await loginDemo(page);
+		await page.goto('/routes/auditor');
+		await expect(page.getByText('Próximamente')).toHaveCount(0);
+
+		await page.getByRole('link', { name: /Listas de verificación/i }).click();
+		await expect(page.getByTestId('audit-scenario')).toBeVisible();
+		await expect(page.getByTestId('practice-side-by-side')).toBeVisible();
+		await expectAccessible(page);
+
+		await page.goto('/routes/auditor');
+		await page.getByRole('link', { name: /Informe y seguimiento/i }).click();
+		await expect(page.getByTestId('doc-scenario')).toBeVisible();
+		await expect(page.getByTestId('practice-side-by-side')).toBeVisible();
+		await expectAccessible(page);
+	});
+
 	test('document_form valida reglas cruzadas, muestra guía al 3er fallo, aprueba y pasa axe-core', async ({
 		page
 	}) => {

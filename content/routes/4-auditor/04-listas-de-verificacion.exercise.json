@@ -1,0 +1,8 @@
+{
+	"kind": "audit_checklist",
+	"pass_score": 70,
+	"generator": "audit_checklist_from_pims",
+	"params": {
+		"limit": 6
+	}
+}

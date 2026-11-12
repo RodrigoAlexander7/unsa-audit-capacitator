@@ -1,0 +1,172 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Configura el Programa Anual de Auditoría Interna 2026 de la UNSA garantizando cobertura del alcance, priorización por riesgos e independencia.",
+		"scenario": "El Jefe del OCI elabora el Programa Anual de Auditoría Interna del PIMS para 2026 (cobertura de ORA, BIBL, OTI, SGEN, ORH y OBU). Recuerda que las áreas OTI (documentos vencidos/borradores), OBU (datos de salud, riesgo 4) y ORA (notas, riesgo 4) son prioritarias, que el equipo auditor debe ser independiente del DPO/OTI y que el programa concluye antes de la Revisión por la Dirección.",
+		"document_title": "Programa Anual de Auditoría Interna PIMS — 2026 (UNSA)",
+		"sections": [
+			{
+				"id": "sec-gob",
+				"title": "1. Gobernanza y calendario previo a Dirección",
+				"fields": [
+					{
+						"id": "prog_code",
+						"label": "Código del programa anual",
+						"type": "text",
+						"required": true,
+						"placeholder": "PIMS-PROG-AUD-2026",
+						"validation": {
+							"pattern": "^PIMS-PROG-AUD-\\d{4}$",
+							"sample_solution": "PIMS-PROG-AUD-2026",
+							"feedback_error": "Usa el formato PIMS-PROG-AUD-AAAA."
+						}
+					},
+					{
+						"id": "program_manager",
+						"label": "Responsable imparcial de dirigir el programa anual de auditoría",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional (OCI)" },
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" }
+						],
+						"validation": {
+							"exact": "jefe-oci",
+							"feedback_error": "El OCI dirige el programa anual con independencia respecto a las áreas implementadoras (OTI/DPO)."
+						}
+					},
+					{
+						"id": "approved_by",
+						"label": "Autoridad que aprueba recursos y mandato del programa anual",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional (OCI)" },
+							{ "id": "jefe-ora", "label": "Jefe de Registros Académicos" }
+						],
+						"validation": {
+							"exact": "rector",
+							"feedback_error": "El Rector aprueba el mandato institucional y recursos del programa anual."
+						}
+					},
+					{
+						"id": "audits_finish_date",
+						"label": "Fecha límite de conclusión de todas las auditorías del programa",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-07-01",
+							"max_date": "2026-10-31",
+							"sample_solution": "2026-09-20",
+							"feedback_error": "Las auditorías deben finalizar en 2026 antes de la Revisión por la Dirección."
+						}
+					},
+					{
+						"id": "mgmt_review_date",
+						"label": "Fecha prevista de Revisión por la Dirección (9.3)",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-09-25",
+							"max_date": "2026-12-31",
+							"feedback_error": "Programa la Revisión por la Dirección posterior al cierre de auditorías."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-alcance",
+				"title": "2. Cobertura total, métodos y priorización por riesgo",
+				"fields": [
+					{
+						"id": "covered_units",
+						"label": "Unidades en alcance que deben quedar cubiertas dentro del programa anual",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "ORA", "label": "ORA — Oficina de Registros Académicos" },
+							{ "id": "BIBL", "label": "BIBL — Biblioteca Central" },
+							{ "id": "OTI", "label": "OTI — Oficina de Tecnologías de la Información" },
+							{ "id": "SGEN", "label": "SGEN — Secretaría General" },
+							{ "id": "ORH", "label": "ORH — Oficina de Recursos Humanos" },
+							{ "id": "OBU", "label": "OBU — Oficina de Bienestar Universitario" },
+							{ "id": "FIPS", "label": "FIPS — Facultad excluida en etapa actual" }
+						],
+						"validation": {
+							"exact_ids": ["ORA", "BIBL", "OTI", "SGEN", "ORH", "OBU"],
+							"feedback_error": "Debes programar las 6 oficinas incluidas en el alcance del PIMS UNSA, dejando fuera unidades excluidas."
+						}
+					},
+					{
+						"id": "audit_methods",
+						"label": "Combinación de métodos obligatoria en las auditorías del programa",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "doc", "label": "Revisión documental y de registros PIMS" },
+							{ "id": "entrevista", "label": "Entrevistas estructuradas al personal clave" },
+							{ "id": "muestreo", "label": "Muestreo y verificación directa en sistemas y bitácoras" },
+							{ "id": "encuesta-anon", "label": "Encuesta de opinión no verificada como única prueba" }
+						],
+						"validation": {
+							"exact_ids": ["doc", "entrevista", "muestreo"],
+							"feedback_error": "Combina revisión documental, entrevistas y muestreo técnico en sistemas."
+						}
+					},
+					{
+						"id": "priority_rationale",
+						"label": "Criterio de priorización temporal de oficinas y verificación de imparcialidad",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Explica qué áreas se auditan primero (riesgos nivel 4, salud, brechas documentales) y qué conflictos de interés se prohíben...",
+						"validation": {
+							"rubric": {
+								"min_words": 15,
+								"forbidden_any": [
+									{
+										"phrases": ["dpo audita oti", "oti audita sus documentos"],
+										"feedback": "Nunca asignes a OTI/DPO para auditar controles o documentos bajo su responsabilidad."
+									}
+								],
+								"criteria": [
+									{
+										"id": "crit-riesgo",
+										"label": "Prioriza unidades con riesgo crítico o documentos faltantes/borrador (`OBU`, `OTI`, `ORA`)",
+										"keywords_any": ["obu", "salud", "oti", "riesgo", "critico", "borrador", "prioriz"],
+										"feedback_missing": "Justifica priorizar oficinas de mayor riesgo (p. ej. OBU salud, ORA o OTI con brechas)."
+									},
+									{
+										"id": "crit-imparcialidad",
+										"label": "Garantiza segregación / no conflicto de interés en asignación de auditores",
+										"keywords_any": ["imparcial", "independ", "conflicto", "propio", "oci"],
+										"feedback_missing": "Indica cómo se asegura imparcialidad evitando auditar el propio trabajo."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-prog",
+				"kind": "disjoint",
+				"fields": ["approved_by", "program_manager"],
+				"label": "Aprobación directiva vs. ejecución OCI",
+				"feedback": "El aprobador institucional (Rector) y el responsable técnico del programa (Jefe del OCI) deben ser distintos."
+			},
+			{
+				"id": "rule-review-after-audits",
+				"kind": "date_order",
+				"fields": ["audits_finish_date", "mgmt_review_date"],
+				"params": { "min_days": 5, "max_days": 90 },
+				"label": "Auditorías concluidas antes de Revisión por la Dirección",
+				"feedback": "La Revisión por la Dirección debe programarse después de concluir las auditorías internas (máx. +90 días)."
+			}
+		]
+	}
+}
