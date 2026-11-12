@@ -59,3 +59,57 @@ export function detectAssistantContext(
 		]
 	};
 }
+
+export type CohortAliasItem = {
+	alias: string;
+	full_name: string;
+	email: string;
+	stalled: boolean;
+	overall_progress_pct: number;
+};
+
+export type CohortSummary = {
+	total_learners: number;
+	stalled_count: number;
+	aliases: CohortAliasItem[];
+};
+
+export type AdminAskResponse = {
+	message: AssistantMessage;
+	aliases: CohortAliasItem[];
+};
+
+export type ProposalStatus = 'draft' | 'accepted' | 'discarded';
+
+export type CurriculumProposal = {
+	id: string;
+	title: string;
+	target_route_code: string | null;
+	target_module_slug: string | null;
+	change_type: string;
+	proposed_change: string;
+	rationale: string;
+	evidence_metrics: Record<string, unknown>;
+	status: ProposalStatus;
+	review_note: string | null;
+	created_at: string;
+	reviewed_at: string | null;
+};
+
+export type GenerateProposalsResponse = {
+	summary: string;
+	proposals: CurriculumProposal[];
+};
+
+/** Resuelve localmente alias P-xx -> Nombre (P-xx) sin exponer PII al modelo. */
+export function resolveAliasesInText(text: string, aliases: CohortAliasItem[]): string {
+	if (!text || aliases.length === 0) return text;
+	const byAlias = new Map(aliases.map((item) => [item.alias, item]));
+	return text.replace(/\b(P-\d{2,3})\b(?!\))/g, (match, code: string, offset: number) => {
+		const entry = byAlias.get(code);
+		if (!entry) return match;
+		const before = text.slice(Math.max(0, offset - entry.full_name.length - 6), offset);
+		if (before.includes(entry.full_name)) return match;
+		return `**${entry.full_name}** (${code})`;
+	});
+}

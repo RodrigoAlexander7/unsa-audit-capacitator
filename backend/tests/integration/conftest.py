@@ -36,7 +36,7 @@ SUPERADMIN_EMAIL = "superadmin@test.example"
 SUPERADMIN_PASSWORD = "superadmin-test-pass"
 
 _TABLES = (
-    "assistant_messages, advisor_queries, assessments, pims_requirements, change_requests, document_versions, documents, "
+    "curriculum_proposals, assistant_messages, advisor_queries, assessments, pims_requirements, change_requests, document_versions, documents, "
     "exercise_attempts, module_progress, enrollments, modules, routes, "
     "users, data_owners, processing_activities, systems, people, positions, org_units"
 )

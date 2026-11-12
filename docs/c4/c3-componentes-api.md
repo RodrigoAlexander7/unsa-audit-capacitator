@@ -39,9 +39,11 @@ Motor de práctica documental (F8): `learning` amplía `domain` (`document_exerc
 
 Asistente flotante del estudiante (F12): módulo `assistant` con guardrails puros (`assistant/domain/guardrails.py`) contra inyección de prompts y solicitud de soluciones, proveedor `PlatformStudentContextProvider` sin acceso a `.exercise` ni a PII estudiantil, persistencia por usuario en `assistant_messages` (migración `0009`), adaptador `AgyStudentModelAdapter` sobre `AgyCliAdvisor` y endpoints `/assistant/{ask,history}`. En frontend, `+layout.svelte` monta globalmente `AssistantWidget.svelte` apoyado en proxy BFF `/assistant/*`.
 
+Asistente administrador y reestructuración (F13): `assistant` agrega modo exclusivo `SuperAdmin` (`/assistant/admin/{cohort,ask,history,proposals*}`), `SqlAlchemyAdminCohortProvider` con seudonimización determinista `P-01, P-02...` (nunca envía nombres ni correos a `agy`), resolución local de alias en `AssistantWidget.svelte` y generación de borradores revisables en `curriculum_proposals` (migración `0010`).
+
 Dependencias entre módulos (siempre por puertos, con adaptadores en la capa `infrastructure` del módulo que consume):
 - `learning` → `university`: `UniversityFacts` (organigrama, cargos, sistemas y actividades de tratamiento).
 - `learning` → `documents`: `LearningFacts` compone el snapshot con `GetPimsCompleteness` (estado real y evidencias esperadas del PIMS).
 - `assessment` → `documents`: `RequirementCatalog` (`PimsRequirementCatalog` sobre `ListPimsRequirements`) para etiquetar cláusulas.
 - `analytics` → `documents`: `PimsSummaryAdapter` (estado del PIMS y solicitudes abiertas).
-- `assistant` → `learning`, `documents`: `PlatformStudentContextProvider` consume `UniversityFacts`, `LearningRepository` y `DocumentRepository`.
+- `assistant` → `learning`, `documents`, `analytics`: `PlatformStudentContextProvider` y `SqlAlchemyAdminCohortProvider` consumen sus respectivos puertos de lectura sin exponer soluciones ni PII.

@@ -33,7 +33,8 @@ Todos los datos son ficticios. Arranque: `make dev` (Postgres + migraciones + se
 3. **Documentos versionados (2 min)** — *Documentos → ROF → Diferencias* (v1 → v3). *Proponer cambio* y, con el superadmin, aprobarlo o rechazarlo (si la base cambió → conflicto 409).
 4. **PIMS (1 min)** — *Documentos → Conjunto documental del PIMS (ISO/IEC 27701)*: 11 requisitos con estados vigente / borrador / vencido / sin responsable / faltante.
 5. **Evaluación controller / processor (1 min)** — *Evaluación*: 12 preguntas, resultados por competencia y por requisito del PIMS.
-6. **Superadmin y asesor IA (2 min)** — entra como superadmin → *Panel*: estadísticas por ruta, módulos más difíciles, estancados y evaluaciones. En *Asesor IA* pregunta «¿Cómo están los alumnos de sensibilización?»: la respuesta (≈ 10 s, vía `agy`) cita las cifras del cohorte y propone ajustes al plan de enseñanza. El *snapshot* que recibe el asesor es agregado y anónimo (ver `/admin/advisor/snapshot.json`).
+6. **Asistente flotante del estudiante (1 min)** — en cualquier página autenticada, abre el botón inferior derecho **«Asistente UNSA»**, consulta sobre ISO/IEC 27701 o la UNSA ficticia contextualizada al módulo actual; rechaza peticiones de respuestas exactas.
+7. **Superadmin, cohorte seudónimo y reestructuración (2 min)** — entra como superadmin → *Panel*: estadísticas por ruta, módulos difíciles y estancados. En el popup flotante cambia a la pestaña **«Administrador»** para consultar alumnos por alias (`P-xx`, resueltos localmente al nombre real sin enviar PII a `agy`), generar borradores de reestructuración con **«Proponer ajuste»** y aceptarlos o descartarlos. En *Asesor IA* (`/admin/advisor`) puedes descargar el snapshot agregado (`/admin/advisor/snapshot.json`).
 
 ## Reiniciar el cohorte
 

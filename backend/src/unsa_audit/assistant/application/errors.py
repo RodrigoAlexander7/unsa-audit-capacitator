@@ -15,3 +15,11 @@ class AssistantUnavailable(AssistantError):
 
 class AssistantTimeout(AssistantUnavailable):
     """El modelo IA excedio el tiempo limite."""
+
+
+class ProposalNotFound(AssistantError):
+    """No existe la propuesta de reestructuracion solicitada."""
+
+
+class InvalidProposalStatus(AssistantError):
+    """Estado de revision de propuesta no permitido."""

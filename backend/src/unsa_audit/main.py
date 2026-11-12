@@ -37,17 +37,33 @@ from unsa_audit.assessment.infrastructure.sqlalchemy_repository import (
     SqlAlchemyAssessmentRepository,
 )
 from unsa_audit.assessment.interface.router import router as assessment_router
+from unsa_audit.assistant.application.admin_use_cases import (
+    AskAdminAssistant,
+    ClearAdminHistory,
+    GenerateRestructuringProposals,
+    GetAdminCohortSummary,
+    ListAdminHistory,
+    ListCurriculumProposals,
+    ReviewCurriculumProposal,
+)
 from unsa_audit.assistant.application.ports import AssistantModelPort
 from unsa_audit.assistant.application.use_cases import (
     AskStudentAssistant,
     ClearStudentHistory,
     ListStudentHistory,
 )
+from unsa_audit.assistant.infrastructure.admin_cohort_provider import (
+    SqlAlchemyAdminCohortProvider,
+)
 from unsa_audit.assistant.infrastructure.agy_adapter import AgyStudentModelAdapter
 from unsa_audit.assistant.infrastructure.context_provider import PlatformStudentContextProvider
+from unsa_audit.assistant.infrastructure.proposal_repository import (
+    SqlAlchemyCurriculumProposalRepository,
+)
 from unsa_audit.assistant.infrastructure.sqlalchemy_repository import (
     SqlAlchemyAssistantHistoryRepository,
 )
+from unsa_audit.assistant.interface.admin_router import admin_router
 from unsa_audit.assistant.interface.router import router as assistant_router
 from unsa_audit.core.config import Settings, get_settings
 from unsa_audit.core.database import create_engine, create_session_factory
@@ -136,6 +152,16 @@ def create_app(
         if settings.student_assistant_prompt_path.exists()
         else ""
     )
+    admin_assistant_prompt = (
+        settings.admin_assistant_prompt_path.read_text(encoding="utf-8")
+        if settings.admin_assistant_prompt_path.exists()
+        else ""
+    )
+    admin_restructuring_prompt = (
+        settings.admin_restructuring_prompt_path.read_text(encoding="utf-8")
+        if settings.admin_restructuring_prompt_path.exists()
+        else ""
+    )
     agy_cli = AgyCliAdvisor(
         settings.agy_command,
         settings.agy_args,
@@ -146,6 +172,9 @@ def create_app(
     assistant_model = assistant or AgyStudentModelAdapter(agy_cli)
     assistant_history = SqlAlchemyAssistantHistoryRepository(session_factory)
     student_contexts = PlatformStudentContextProvider(learning_facts, learning, documents)
+    pims_summary_provider = PimsSummaryAdapter(pims_completeness, documents)
+    admin_cohort = SqlAlchemyAdminCohortProvider(session_factory, analytics, pims_summary_provider)
+    proposal_repo = SqlAlchemyCurriculumProposalRepository(session_factory)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -202,6 +231,17 @@ def create_app(
     )
     app.state.list_student_history = ListStudentHistory(assistant_history)
     app.state.clear_student_history = ClearStudentHistory(assistant_history)
+    app.state.get_admin_cohort_summary = GetAdminCohortSummary(admin_cohort)
+    app.state.ask_admin_assistant = AskAdminAssistant(
+        admin_cohort, assistant_model, assistant_history, admin_assistant_prompt
+    )
+    app.state.list_admin_history = ListAdminHistory(assistant_history)
+    app.state.clear_admin_history = ClearAdminHistory(assistant_history)
+    app.state.generate_restructuring_proposals = GenerateRestructuringProposals(
+        admin_cohort, assistant_model, proposal_repo, admin_restructuring_prompt
+    )
+    app.state.list_curriculum_proposals = ListCurriculumProposals(proposal_repo)
+    app.state.review_curriculum_proposal = ReviewCurriculumProposal(proposal_repo)
 
     app.include_router(health_router)
     app.include_router(identity_router)
@@ -212,6 +252,7 @@ def create_app(
     app.include_router(assessment_router)
     app.include_router(analytics_router)
     app.include_router(assistant_router)
+    app.include_router(admin_router)
     return app
 
 
