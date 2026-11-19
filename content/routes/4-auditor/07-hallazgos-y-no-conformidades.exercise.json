@@ -1,0 +1,88 @@
+{
+	"kind": "nonconformity_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Documenta el análisis completo de medidas correctivas para estas dos no conformidades detectadas durante la auditoría interna.",
+		"scenario": "Tras auditar el PIMS de la UNSA el 2026-08-20, el equipo auditor emite dos fichas de no conformidad que deben implementarse antes del 2026-09-20 y verificarse eficazmente después.",
+		"documents": [
+			{ "id": "pims-monitoreo", "label": "pims-monitoreo — Evidencia de monitoreo y medición (9.1)" },
+			{ "id": "pims-soa", "label": "pims-soa — Declaración de aplicabilidad (6.1.3 e)" },
+			{ "id": "pims-plan-tratamiento", "label": "pims-plan-tratamiento — Plan de tratamiento (6.1.3 f)" },
+			{ "id": "pims-no-conformidades", "label": "pims-no-conformidades — Registro de NC y acciones (10.2)" }
+		],
+		"positions": [
+			{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+			{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" },
+			{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" },
+			{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+		],
+		"cases": [
+			{
+				"id": "nc-aud-01",
+				"title": "NC-AUD-01 · Ausencia total de evidencia de monitoreo y medición (9.1)",
+				"detection_context": "Al auditar el requisito 9.1 en 2026-08-20 no existe ningún documento ni tablero periódico que mida el desempeño del PIMS antes de Revisión por Dirección.",
+				"detection_date": "2026-08-20",
+				"max_implementation_date": "2026-09-20",
+				"min_verification_lag_days": 15,
+				"correction_options": [
+					{ "id": "corr-levantar", "label": "Levantar una medición base inmediata de las solicitudes ARCO, riesgos cerrados y capacitaciones del último trimestre" },
+					{ "id": "corr-excusa", "label": "Declarar ante dirección que los indicadores no son necesarios en universidades" }
+				],
+				"root_cause_options": [
+					{ "id": "root-sin-dueno", "label": "No se aprobó nunca la ficha de indicadores del PIMS ni se asignó calendario periódico de recolección previa a dirección" },
+					{ "id": "root-sintoma", "label": "No estaba subido el PDF en la plataforma web" }
+				],
+				"action_options": [
+					{ "id": "act-tablero", "label": "Aprobar la ficha formal de monitoreo (`pims-monitoreo`) con responsables por métrica y alerta automática previa a Revisión por Dirección" },
+					{ "id": "act-una-vez", "label": "Hacer solo un reporte único este mes y archivar el tema" }
+				],
+				"verification_options": [
+					{ "id": "ver-cierre", "label": "Comprobar transcurrido un ciclo (>= 15 días) el registro histórico completo, firma de análisis DPO y entrada en agenda directiva" },
+					{ "id": "ver-inm", "label": "Aceptar una promesa verbal en la misma reunión de cierre" }
+				],
+				"expected_correction": "corr-levantar",
+				"expected_root_cause": "root-sin-dueno",
+				"expected_requires_action": true,
+				"expected_action": "act-tablero",
+				"expected_responsible": "dpo",
+				"expected_verification": "ver-cierre",
+				"expected_doc_change": true,
+				"expected_document": "pims-monitoreo",
+				"explanation": "Medir el trimestre actual contiene la falta; institucionalizar pims-monitoreo bajo el DPO elimina la causa raíz y crea el documento faltante."
+			},
+			{
+				"id": "nc-aud-02",
+				"title": "NC-AUD-02 · Declaración de aplicabilidad (SoA) en borrador sin firma ni cierre de residuales",
+				"detection_context": "El documento pims-soa figura como BORRADOR desde abril de 2026 con el capítulo de riesgos residuales pendiente y sin firma del Rector.",
+				"detection_date": "2026-08-20",
+				"max_implementation_date": "2026-09-20",
+				"min_verification_lag_days": 15,
+				"correction_options": [
+					{ "id": "corr-cerrar", "label": "Completar la revisión técnica pendiente de los 15 temas de control y someter la versión final a firma directiva" },
+					{ "id": "corr-mantener", "label": "Dejar la etiqueta BORRADOR cambiando únicamente el año a 2027" }
+				],
+				"root_cause_options": [
+					{ "id": "root-flujo", "label": "Falta un flujo formal de cierre entre resultados de tratamiento y aprobación ejecutiva antes del vencimiento de etapa" },
+					{ "id": "root-sintoma", "label": "Falta la firma en la última página" }
+				],
+				"action_options": [
+					{ "id": "act-flujo", "label": "Instaurar flujo obligatorio de cambio documental con plazo de aprobación directiva y enlace explícito con el Plan de tratamiento" },
+					{ "id": "act-solo-firma", "label": "Estampar una firma sin revisar coherencia con riesgos residuales" }
+				],
+				"verification_options": [
+					{ "id": "ver-soa", "label": "Verificar la SoA vigente aprobada en el repositorio, trazable al Plan de tratamiento vigente tras >= 15 días" },
+					{ "id": "ver-sin-prueba", "label": "Dar por cerrada el mismo día sin revisar publicación ni control de versiones" }
+				],
+				"expected_correction": "corr-cerrar",
+				"expected_root_cause": "root-flujo",
+				"expected_requires_action": true,
+				"expected_action": "act-flujo",
+				"expected_responsible": "jefe-oti",
+				"expected_verification": "ver-soa",
+				"expected_doc_change": true,
+				"expected_document": "pims-soa",
+				"explanation": "Someter el borrador completo corrige el hallazgo; formalizar el flujo bajo responsabilidad del Jefe de OTI (unidad dueña de pims-soa) y verificar la v2 vigente evita recurrencia."
+			}
+		]
+	}
+}

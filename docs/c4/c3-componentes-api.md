@@ -35,8 +35,15 @@ Analytics y asesor IA (F6): módulo `analytics` con lecturas **agregadas en SQL*
 
 Datos demo (F7): el módulo `seed` (composición, no es parte del dominio) añade `seed/demo.py`, que crea un cohorte de 12 participantes ficticios (`@demo.unsa.example`) **a través de los casos de uso reales** (registro, matrícula, intentos, evaluaciones) con un reloj inyectado y un solucionador de ejercicios (`seed/solutions.py`, también usado por los tests). Así las estadísticas del panel son coherentes con las reglas del sistema. Opt-in (`--demo`), idempotente; `--reset-demo` elimina solo cuentas `@demo`/`@e2e`.
 
+Motor de práctica documental (F8): `learning` amplía `domain` (`document_exercises.py`, `REVEAL_AFTER_ATTEMPTS = 3`, `Module.reference_title`/`reference_md`), `application` (`audit_checklist_from_pims`, `UniversitySnapshot` enriquecido con actividades/unidades/resumen PIMS, revelación progresiva de `solution_guide` al 3er fallo en `SubmitAttempt`), `infrastructure` (migración `0008_document_practice.py`, `reference_doc` y sidecars `*.reference.md` en `FileContentSource`, conteo SQL de intentos) y `interface` (`reference` en `ModuleResponse`, `attempt_number`/`solution_revealed`/`solution_guide` en `AttemptResponse`), junto con `seed/solutions.py` para los 6 nuevos tipos (`document_form`, `risk_table`, `treatment_table`, `audit_checklist`, `nonconformity_form`, `competence_matrix`).
+
+Asistente flotante del estudiante (F12): módulo `assistant` con guardrails puros (`assistant/domain/guardrails.py`) contra inyección de prompts y solicitud de soluciones, proveedor `PlatformStudentContextProvider` sin acceso a `.exercise` ni a PII estudiantil, persistencia por usuario en `assistant_messages` (migración `0009`), adaptador `AgyStudentModelAdapter` sobre `AgyCliAdvisor` y endpoints `/assistant/{ask,history}`. En frontend, `+layout.svelte` monta globalmente `AssistantWidget.svelte` apoyado en proxy BFF `/assistant/*`.
+
+Asistente administrador y reestructuración (F13): `assistant` agrega modo exclusivo `SuperAdmin` (`/assistant/admin/{cohort,ask,history,proposals*}`), `SqlAlchemyAdminCohortProvider` con seudonimización determinista `P-01, P-02...` (nunca envía nombres ni correos a `agy`), resolución local de alias en `AssistantWidget.svelte` y generación de borradores revisables en `curriculum_proposals` (migración `0010`).
+
 Dependencias entre módulos (siempre por puertos, con adaptadores en la capa `infrastructure` del módulo que consume):
-- `learning` → `university`: `UniversityFacts` (organigrama, cargos, sistemas).
-- `learning` → `documents`: `LearningFacts` compone el snapshot con `GetPimsCompleteness` (estado real del PIMS).
+- `learning` → `university`: `UniversityFacts` (organigrama, cargos, sistemas y actividades de tratamiento).
+- `learning` → `documents`: `LearningFacts` compone el snapshot con `GetPimsCompleteness` (estado real y evidencias esperadas del PIMS).
 - `assessment` → `documents`: `RequirementCatalog` (`PimsRequirementCatalog` sobre `ListPimsRequirements`) para etiquetar cláusulas.
 - `analytics` → `documents`: `PimsSummaryAdapter` (estado del PIMS y solicitudes abiertas).
+- `assistant` → `learning`, `documents`, `analytics`: `PlatformStudentContextProvider` y `SqlAlchemyAdminCohortProvider` consumen sus respectivos puertos de lectura sin exponer soluciones ni PII.

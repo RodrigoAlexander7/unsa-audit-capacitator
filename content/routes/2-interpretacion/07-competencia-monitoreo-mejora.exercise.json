@@ -1,0 +1,102 @@
+{
+	"kind": "competence_matrix",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Completa la matriz de competencia asignando competencia, capacitación, evidencia de eficacia y evaluador imparcial a cada cargo.",
+		"scenario": "Recursos Humanos (ORH) y el DPO corrigen las brechas observadas en pims-competencia tras detectar que firmar listas de asistencia no acredita eficacia ante un auditor externo.",
+		"competencies": [
+			{
+				"id": "comp-dpo",
+				"label": "Marco de privacidad ISO 27701, derechos de titulares, evaluación de impacto y gestión de brechas"
+			},
+			{
+				"id": "comp-salud",
+				"label": "Tratamiento reforzado de datos sensibles de salud, consentimiento explícito y contratos con laboratorios"
+			},
+			{
+				"id": "comp-sec",
+				"label": "Controles técnicos de seguridad, cifrado, control de accesos y respuesta a incidentes"
+			},
+			{
+				"id": "comp-aud",
+				"label": "Técnicas de auditoría basadas en evidencia, muestreo e imparcialidad (ISO 19011)"
+			},
+			{
+				"id": "comp-comercial",
+				"label": "Negociación comercial general sin relación con tratamiento de datos"
+			}
+		],
+		"trainings": [
+			{ "id": "trn-r2r3", "label": "Rutas 2 y 3 completas (Interpretación + Implementación PIMS)" },
+			{ "id": "trn-r1-salud", "label": "Ruta 1 + Taller especializado en datos sensibles de salud" },
+			{ "id": "trn-r3-tec", "label": "Ruta 3 + Simulacro técnico de respuesta a brechas" },
+			{ "id": "trn-r4", "label": "Ruta 4 completa (Auditor Interno PIMS)" },
+			{ "id": "trn-charla", "label": "Charla informativa general de 30 minutos" }
+		],
+		"evidences": [
+			{ "id": "ev-dpo-eval", "label": "Evaluación integral (>= 70 %) y dictamen resuelto sobre impacto y brechas" },
+			{ "id": "ev-salud-muestra", "label": "Prueba aprobada y verificación muestral de consentimientos firmados en OBU" },
+			{ "id": "ev-tec-simulacro", "label": "Informe técnico de simulacro de incidente y examen de controles aprobado" },
+			{ "id": "ev-aud-supervisada", "label": "Auditoría práctica supervisada con hallazgos sustentados en evidencia objetiva" },
+			{ "id": "ev-asistencia", "label": "Lista de asistencia firmada sin evaluación posterior" }
+		],
+		"evaluators": [
+			{ "id": "rector", "label": "Rector (Alta Dirección)" },
+			{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+			{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" },
+			{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" },
+			{ "id": "jefe-obu", "label": "Jefe de Bienestar Universitario" },
+			{ "id": "ciso", "label": "Responsable de Seguridad de la Información" }
+		],
+		"rows": [
+			{
+				"id": "row-dpo",
+				"position_title": "Oficial de Protección de Datos Personales",
+				"role_summary": "Vela por el cumplimiento integral, atiende solicitudes ARCO y coordina análisis de riesgos y brechas.",
+				"expected_competency": "comp-dpo",
+				"expected_training": "trn-r2r3",
+				"expected_evidence": "ev-dpo-eval",
+				"expected_evaluator": "rector",
+				"valid_evaluators": ["rector", "jefe-oti"],
+				"forbidden_evaluators": ["dpo"],
+				"explanation": "El DPO requiere dominio de R2+R3 probado con evaluación práctica y nunca puede autoevaluar su propia competencia."
+			},
+			{
+				"id": "row-obu",
+				"position_title": "Jefe de Bienestar Universitario",
+				"role_summary": "Administra historias médicas básicas y becas socioeconómicas con derivación a laboratorio externo.",
+				"expected_competency": "comp-salud",
+				"expected_training": "trn-r1-salud",
+				"expected_evidence": "ev-salud-muestra",
+				"expected_evaluator": "dpo",
+				"valid_evaluators": ["dpo", "rector"],
+				"forbidden_evaluators": ["jefe-obu"],
+				"explanation": "OBU trata datos sensibles: necesita manejo de consentimiento explícito validado con muestra y evaluado por el DPO."
+			},
+			{
+				"id": "row-ciso",
+				"position_title": "Responsable de Seguridad de la Información",
+				"role_summary": "Diseña controles técnicos (cifrado, MFA), contiene brechas y coordina medidas correctivas técnicas.",
+				"expected_competency": "comp-sec",
+				"expected_training": "trn-r3-tec",
+				"expected_evidence": "ev-tec-simulacro",
+				"expected_evaluator": "jefe-oti",
+				"valid_evaluators": ["jefe-oti", "dpo"],
+				"forbidden_evaluators": ["ciso"],
+				"explanation": "Requiere práctica técnica verificada mediante simulacro e instrucción R3, evaluada sin conflicto de interés."
+			},
+			{
+				"id": "row-aud",
+				"position_title": "Auditor Interno del OCI",
+				"role_summary": "Planifica y ejecuta auditorías internas del PIMS con independencia respecto a las áreas auditadas.",
+				"expected_competency": "comp-aud",
+				"expected_training": "trn-r4",
+				"expected_evidence": "ev-aud-supervisada",
+				"expected_evaluator": "jefe-oci",
+				"valid_evaluators": ["jefe-oci", "dpo"],
+				"forbidden_evaluators": ["ciso", "jefe-obu"],
+				"explanation": "La competencia auditora (R4) se acredita con práctica supervisada y evaluación del Jefe del OCI."
+			}
+		]
+	}
+}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import AssistantWidget from '../lib/assistant/AssistantWidget.svelte';
 	import favicon from '#lib/assets/favicon.svg';
 	import type { LayoutProps } from './$types';
 
@@ -46,6 +47,10 @@
 <main class="container">
 	{@render children()}
 </main>
+
+{#if data.user}
+	<AssistantWidget user={data.user} />
+{/if}
 
 <style>
 	.poc-banner {

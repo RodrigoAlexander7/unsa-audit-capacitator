@@ -1,0 +1,105 @@
+{
+	"kind": "branching",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Aplica los principios de ISO 19011 frente a cuatro dilemas reales de auditoría interna en la UNSA.",
+		"steps": [
+			{
+				"id": "s1",
+				"situation": "La coordinación propone designar al Oficial de Protección de Datos Personales (ubicado orgánicamente en la OTI y autor del borrador de la SoA) como auditor único de la Declaración de Aplicabilidad y del Programa de Seguridad. ¿Qué decides?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Rechazar la designación por conflicto de interés e imparcialidad: el OCI o un auditor externo a OTI debe auditar lo diseñado por OTI/DPO.",
+						"points": 2,
+						"feedback": "Correcto: auditar documentos y controles que uno mismo diseñó vulnera la independencia exigida por ISO 19011."
+					},
+					{
+						"id": "b",
+						"label": "Aceptarlo porque el DPO es quien más conoce el PIMS y terminará más rápido.",
+						"points": 0,
+						"feedback": "La pericia técnica jamás justifica sacrificar objetividad e independencia."
+					},
+					{
+						"id": "c",
+						"label": "Aceptar si el DPO promete ser muy exigente consigo mismo.",
+						"points": 0,
+						"feedback": "La independencia debe demostrarse estructuralmente, no mediante promesas subjetivas."
+					}
+				]
+			},
+			{
+				"id": "s2",
+				"situation": "Durante la revisión a ORH encuentras un documento vencido (`pims-no-conformidades`, última versión sept-2025). El encargado te ruega no registrarlo en el informe porque promete actualizarlo mañana por la tarde. ¿Qué exige la presentación ecuánime y basada en evidencia?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Registrar fielmente el desvío constatado hoy con fecha y versión observada, dejando constancia si luego presenta acción correctiva en seguimiento.",
+						"points": 2,
+						"feedback": "Exacto: el informe refleja la evidencia verificada durante la auditoría; omitir hallazgos viola la integridad."
+					},
+					{
+						"id": "b",
+						"label": "Omitirlo completamente del informe para mantener un clima amistoso con ORH.",
+						"points": 0,
+						"feedback": "Encubrir brechas impide corregir causas raíz antes de una auditoría externa o incidente."
+					},
+					{
+						"id": "c",
+						"label": "Escribir «todo vigente» dando por hecha una actualización que aún no ocurre.",
+						"points": 0,
+						"feedback": "Falsificar el estado constatado destruye la fiabilidad del PIMS."
+					}
+				]
+			},
+			{
+				"id": "s3",
+				"situation": "Auditas el Sistema de Bienestar y Salud (OBU). Para probar falta de consentimiento en becas médicas, un compañero auditor sugiere descargar y enviar por correo abierto 40 historias clínicas reales como anexo del informe de auditoría. ¿Cómo actúas?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Impedirlo por confidencialidad y minimización: verificar las muestras en sesión segura y citar solo códigos anonimizados e identificadores de evidencia.",
+						"points": 2,
+						"feedback": "Excelente: el debido cuidado y la confidencialidad prohíben extraer datos sensibles innecesarios fuera del entorno controlado."
+					},
+					{
+						"id": "b",
+						"label": "Adjuntar las historias completas al informe general enviado a todos los decanos.",
+						"points": 0,
+						"feedback": "Exponer historias médicas reales convertiría la propia auditoría en una brecha grave."
+					},
+					{
+						"id": "c",
+						"label": "No revisar ningún consentimiento para evitar ver datos médicos.",
+						"points": 0,
+						"feedback": "El auditor debe comprobar el cumplimiento in situ minimizando copias y exponiendo solo metadatos necesarios."
+					}
+				]
+			},
+			{
+				"id": "s4",
+				"situation": "El plan anual dispone solo de tres días de auditoría para toda la universidad. Un colega propone dedicar el mismo tiempo exacto a Biblioteca Digital (riesgo nivel 1) que a Bienestar/Salud (nivel 4) y Notas (nivel 4). ¿Qué principio aplicas?",
+				"options": [
+					{
+						"id": "a",
+						"label": "Enfoque basado en riesgos: asignar mayor profundidad y muestreo a los sistemas con riesgo nivel 3–4, datos sensibles o documentos vencidos/faltantes.",
+						"points": 2,
+						"feedback": "Correcto: ISO 19011 orienta el esfuerzo auditor hacia las áreas más críticas y con mayor historial de desvíos."
+					},
+					{
+						"id": "b",
+						"label": "Repartir por sorteo aleatorio las oficinas ignorando la matriz de riesgos.",
+						"points": 0,
+						"feedback": "Ignorar el nivel de riesgo desperdicia recursos en procesos de bajo impacto."
+					},
+					{
+						"id": "c",
+						"label": "Auditar únicamente Biblioteca porque es más rápido revisar préstamos.",
+						"points": 0,
+						"feedback": "Dejar fuera procesos críticos invalida la cobertura del programa."
+					}
+				]
+			}
+		]
+	}
+}

@@ -130,6 +130,11 @@ class ExercisePublic(BaseModel):
     spec: dict[str, Any]
 
 
+class ModuleReferenceResponse(BaseModel):
+    title: str
+    body_md: str
+
+
 class ModuleResponse(BaseModel):
     id: str
     route_code: str
@@ -139,6 +144,7 @@ class ModuleResponse(BaseModel):
     status: str
     best_score: int | None
     lesson_md: str
+    reference: ModuleReferenceResponse | None = None
     exercise: ExercisePublic | None
 
     @classmethod
@@ -151,6 +157,11 @@ class ModuleResponse(BaseModel):
                 pass_score=m.exercise.pass_score,
                 spec=v.public_exercise,
             )
+        reference = (
+            ModuleReferenceResponse(title=m.reference_title, body_md=m.reference_md)
+            if m.reference_title and m.reference_md
+            else None
+        )
         return cls(
             id=str(m.id),
             route_code=m.route_code,
@@ -160,6 +171,7 @@ class ModuleResponse(BaseModel):
             status=v.status.value,
             best_score=v.best_score,
             lesson_md=m.lesson_md,
+            reference=reference,
             exercise=exercise,
         )
 
@@ -174,6 +186,12 @@ class ItemFeedbackResponse(BaseModel):
     feedback: str
 
 
+class SolutionGuideItemResponse(BaseModel):
+    id: str
+    label: str
+    expected_summary: str
+
+
 class AttemptResponse(BaseModel):
     score: int
     passed: bool
@@ -181,9 +199,22 @@ class AttemptResponse(BaseModel):
     items: list[ItemFeedbackResponse]
     module_completed: bool
     route_completed: bool
+    attempt_number: int = 1
+    solution_revealed: bool = False
+    solution_guide: list[SolutionGuideItemResponse] | None = None
 
     @classmethod
     def from_domain(cls, r: AttemptResult) -> "AttemptResponse":
+        guide = (
+            [
+                SolutionGuideItemResponse(
+                    id=g.id, label=g.label, expected_summary=g.expected_summary
+                )
+                for g in r.solution_guide
+            ]
+            if r.solution_revealed
+            else None
+        )
         return cls(
             score=r.score,
             passed=r.passed,
@@ -192,6 +223,9 @@ class AttemptResponse(BaseModel):
                    for i in r.items],
             module_completed=r.module_completed,
             route_completed=r.route_completed,
+            attempt_number=r.attempt_number,
+            solution_revealed=r.solution_revealed,
+            solution_guide=guide,
         )  # fmt: skip
 
 

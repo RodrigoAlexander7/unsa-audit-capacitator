@@ -1,0 +1,262 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Completa y valida la ficha de ampliación (etapa 2) del Alcance del PIMS de la UNSA.",
+		"scenario": "La UNSA amplía su Alcance (etapa 2) para incorporar la Oficina de Bienestar Universitario (OBU) y las escuelas clínicas de la Facultad de Ciencias de la Salud (FCSA), soportadas por el Sistema de Bienestar y Salud e infraestructura de la OTI. Los análisis clínicos se derivan a un laboratorio médico externo bajo contrato. Las facultades FIPS, FCNF y FCHS siguen excluidas en esta etapa, y el Sistema de Planillas y RR. HH. continúa bajo ámbito exclusivo de la Oficina de Recursos Humanos (ORH), fuera de esta ampliación.",
+		"document_title": "Ficha de Alcance del PIMS — Etapa 2 (UNSA)",
+		"sections": [
+			{
+				"id": "sec-control",
+				"title": "1. Control documental y aprobación",
+				"description": "Define código, custodia operativa, autoridad aprobadora y ciclo máximo anual de revisión.",
+				"fields": [
+					{
+						"id": "doc_code",
+						"label": "Código del documento",
+						"type": "text",
+						"required": true,
+						"placeholder": "PIMS-ALC-002",
+						"help": "Formato institucional PIMS-ALC-NNN.",
+						"validation": {
+							"pattern": "^PIMS-ALC-\\d{3}$",
+							"sample_solution": "PIMS-ALC-002",
+							"feedback_error": "Usa el formato institucional PIMS-ALC-NNN (tres dígitos)."
+						}
+					},
+					{
+						"id": "owner_position",
+						"label": "Cargo responsable del mantenimiento",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" },
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "jefe-obu", "label": "Jefe de Bienestar Universitario" }
+						],
+						"validation": {
+							"accepted": ["dpo", "jefe-oti"],
+							"feedback_error": "El mantenimiento técnico-normativo del alcance corresponde al Oficial de Protección de Datos o al Jefe de la OTI."
+						}
+					},
+					{
+						"id": "approved_by",
+						"label": "Autoridad que aprueba el alcance",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "rector", "label": "Rector" },
+							{ "id": "dpo", "label": "Oficial de Protección de Datos Personales" },
+							{ "id": "jefe-oti", "label": "Jefe de la Oficina de Tecnologías de la Información" },
+							{ "id": "sec-general", "label": "Secretario General" }
+						],
+						"validation": {
+							"exact": "rector",
+							"feedback_error": "El alcance del PIMS vincula a toda la universidad y debe aprobarlo la Alta Dirección (Rector)."
+						}
+					},
+					{
+						"id": "approval_date",
+						"label": "Fecha de aprobación",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-01-01",
+							"max_date": "2026-12-31",
+							"sample_solution": "2026-04-01",
+							"feedback_error": "Ingresa una fecha de aprobación válida dentro del ciclo 2026."
+						}
+					},
+					{
+						"id": "review_date",
+						"label": "Fecha de próxima revisión",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-01-02",
+							"max_date": "2027-12-31",
+							"feedback_error": "Define la próxima revisión dentro del año siguiente a la aprobación."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-perimetro",
+				"title": "2. Unidades, sistemas y rol en el perímetro",
+				"description": "Cada sistema incluido debe corresponder a una unidad orgánica en alcance o de soporte TI.",
+				"fields": [
+					{
+						"id": "included_units",
+						"label": "Unidades incluidas en esta ampliación",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "OBU", "label": "OBU — Oficina de Bienestar Universitario" },
+							{ "id": "FCSA", "label": "FCSA — Facultad de Ciencias de la Salud" },
+							{ "id": "OTI", "label": "OTI — Oficina de Tecnologías de la Información (soporte)" },
+							{ "id": "FIPS", "label": "FIPS — Facultad de Ingeniería de Producción y Servicios" },
+							{ "id": "FCNF", "label": "FCNF — Facultad de Ciencias Naturales y Formales" },
+							{ "id": "FCHS", "label": "FCHS — Facultad de Ciencias Histórico Sociales" },
+							{ "id": "ORH", "label": "ORH — Oficina de Recursos Humanos" }
+						],
+						"validation": {
+							"required_ids": ["OBU", "FCSA", "OTI"],
+							"forbidden_ids": ["FIPS", "FCNF", "FCHS", "ORH"],
+							"feedback_error": "Incluye OBU, FCSA y OTI (soporte); no incorpores facultades ni unidades fuera de esta etapa."
+						}
+					},
+					{
+						"id": "included_systems",
+						"label": "Sistemas de información incluidos",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "bienestar", "label": "Sistema de Bienestar y Salud (OBU)" },
+							{ "id": "planillas", "label": "Sistema de Planillas y RR. HH. (ORH)" },
+							{ "id": "biblioteca", "label": "Biblioteca Digital (BIBL)" },
+							{ "id": "movil-inexistente", "label": "App Clínica Privada Externa (fuera de inventario)" }
+						],
+						"validation": {
+							"exact_ids": ["bienestar"],
+							"feedback_error": "Solo el Sistema de Bienestar y Salud corresponde a esta ampliación."
+						}
+					},
+					{
+						"id": "unsa_role",
+						"label": "Rol principal de la UNSA en estos tratamientos",
+						"type": "select",
+						"required": true,
+						"options": [
+							{ "id": "responsable", "label": "Responsable del tratamiento (Controller)" },
+							{ "id": "encargado", "label": "Encargado del tratamiento (Processor)" },
+							{ "id": "ninguno", "label": "Ninguno: responsabilidad exclusiva del proveedor externo" }
+						],
+						"validation": {
+							"exact": "responsable",
+							"feedback_error": "La UNSA decide finalidad y medios sobre los datos de bienestar y prácticas clínicas."
+						}
+					},
+					{
+						"id": "external_processor",
+						"label": "Encargado externo vinculado en la frontera del alcance",
+						"type": "select",
+						"required": true,
+						"options": [
+							{ "id": "lab-externo", "label": "Laboratorio médico externo bajo contrato de encargo" },
+							{ "id": "ninguno", "label": "Ninguno (no existe envío externo)" },
+							{ "id": "fcsa-decanato", "label": "Decanato de la FCSA (órgano interno de la UNSA)" }
+						],
+						"validation": {
+							"exact": "lab-externo",
+							"feedback_error": "El laboratorio médico externo trata análisis por cuenta de la UNSA y debe figurar como encargado."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-criterios",
+				"title": "3. Exclusiones justificadas y criterios de eficacia",
+				"fields": [
+					{
+						"id": "exclusions_justification",
+						"label": "Justificación de exclusiones y control de fronteras",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Explica qué facultades/sistemas quedan fuera por implantación gradual, tratamientos anonimizados y qué contrato controla el envío al laboratorio externo...",
+						"validation": {
+							"rubric": {
+								"min_words": 15,
+								"forbidden_any": [
+									{
+										"phrases": ["sin exclusiones", "no hay exclusiones"],
+										"feedback": "Falso ante auditoría: existen facultades y sistemas fuera de esta etapa que deben explicitarse."
+									},
+									{
+										"phrases": ["por costo", "muy caro", "ahorrar presupuesto"],
+										"feedback": "No es defendible justificar exclusiones omitiendo riesgos activos solo por costo."
+									}
+								],
+								"criteria": [
+									{
+										"id": "crit-excluidas",
+										"label": "Identifica unidades o datos excluidos (facultades o anonimizados)",
+										"keywords_any": ["facultad", "fips", "fcnf", "fchs", "planillas", "anonimizad", "gradual", "etapa"],
+										"feedback_missing": "Indica qué facultades o tratamientos permanecen fuera por implantación gradual o anonimización."
+									},
+									{
+										"id": "crit-frontera",
+										"label": "Explica transferencias o contrato de encargo con el laboratorio",
+										"keywords_any": ["laboratorio", "contrato", "encargo", "frontera", "transferencia", "interfaz"],
+										"feedback_missing": "Explica el control contractual o de interfaz con el laboratorio externo en la frontera."
+									}
+								]
+							}
+						}
+					},
+					{
+						"id": "effectiveness_criteria",
+						"label": "Criterios de eficacia del documento de alcance",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Define cómo medirá la UNSA si el alcance sigue siendo claro y completo...",
+						"validation": {
+							"rubric": {
+								"min_words": 10,
+								"criteria": [
+									{
+										"id": "crit-medicion",
+										"label": "Menciona indicador o medición concreta",
+										"keywords_any": ["incidente", "numero", "porcentaje", "hallazgo", "indicador", "tasa", "cero"],
+										"feedback_missing": "Define al menos un indicador observable (incidentes, hallazgos o tratamientos fuera de inventario)."
+									},
+									{
+										"id": "crit-alcance-vinc",
+										"label": "Relaciona la medición con brechas de delimitación o tratamientos fuera del alcance",
+										"keywords_any": ["alcance", "fuera", "frontera", "inventario", "tratamiento", "delimitacion"],
+										"feedback_missing": "Relaciona el indicador con la detección de tratamientos fuera de alcance o fronteras ambiguas."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-approval",
+				"kind": "disjoint",
+				"fields": ["approved_by", "owner_position"],
+				"label": "Segregación entre aprobación y custodia",
+				"feedback": "Quien aprueba el alcance (Rector) no debe coincidir con quien mantiene el documento."
+			},
+			{
+				"id": "rule-date-order",
+				"kind": "date_order",
+				"fields": ["approval_date", "review_date"],
+				"params": { "min_days": 1, "max_days": 365 },
+				"label": "Revisión al menos anual",
+				"feedback": "La próxima revisión debe ser posterior a la aprobación y no exceder 365 días."
+			},
+			{
+				"id": "rule-unit-sys",
+				"kind": "unit_system_coherence",
+				"fields": ["included_units", "included_systems"],
+				"params": {
+					"system_to_unit": {
+						"bienestar": "OBU",
+						"planillas": "ORH",
+						"biblioteca": "BIBL"
+					},
+					"required_unit_systems": {
+						"OBU": ["bienestar"]
+					},
+					"support_units": ["OTI", "FCSA"]
+				},
+				"label": "Coherencia entre unidades y sistemas",
+				"feedback": "Todos los sistemas elegidos deben pertenecer a las unidades incluidas en esta etapa."
+			}
+		]
+	}
+}

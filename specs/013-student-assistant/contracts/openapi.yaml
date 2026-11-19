@@ -1,0 +1,140 @@
+openapi: 3.1.0
+info:
+  title: UNSA Audit Capacitator — Asistente del estudiante (013)
+  version: 0.1.0
+paths:
+  /assistant/ask:
+    post:
+      summary: Enviar consulta pedagógica al asistente del estudiante
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssistantAskRequest'
+      responses:
+        '200':
+          description: Respuesta o rechazo pedagógico registrado en el historial propio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssistantMessageResponse'
+        '401':
+          description: No autenticado
+        '422':
+          description: Pregunta vacía, demasiado larga o UUID inválido
+        '502':
+          description: Modelo IA no disponible o tiempo agotado (error registrado en historial)
+  /assistant/history:
+    get:
+      summary: Listar el historial propio de consultas del usuario autenticado
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 30
+      responses:
+        '200':
+          description: Mensajes del usuario actual (más reciente primero)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssistantMessageResponse'
+        '401':
+          description: No autenticado
+    delete:
+      summary: Eliminar todo el historial propio del usuario autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Cantidad de mensajes eliminados del usuario actual
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClearHistoryResponse'
+        '401':
+          description: No autenticado
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AssistantAskRequest:
+      type: object
+      required:
+        - question
+      properties:
+        question:
+          type: string
+          minLength: 1
+          maxLength: 800
+        module_id:
+          type: string
+          format: uuid
+          nullable: true
+        route_path:
+          type: string
+          maxLength: 200
+          nullable: true
+    AssistantMessageResponse:
+      type: object
+      required:
+        - id
+        - question
+        - status
+        - answer
+        - error
+        - module_id
+        - route_path
+        - context_hash
+        - duration_ms
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        question:
+          type: string
+        status:
+          type: string
+          enum: [ok, refused, error]
+        answer:
+          type: string
+          nullable: true
+        error:
+          type: string
+          nullable: true
+        module_id:
+          type: string
+          format: uuid
+          nullable: true
+        route_path:
+          type: string
+          nullable: true
+        context_hash:
+          type: string
+        duration_ms:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+    ClearHistoryResponse:
+      type: object
+      required:
+        - deleted
+      properties:
+        deleted:
+          type: integer

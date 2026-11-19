@@ -5,6 +5,7 @@ from typing import Any
 from uuid import UUID
 
 DEFAULT_PASS_SCORE = 70
+REVEAL_AFTER_ATTEMPTS = 3
 
 
 class ExerciseKind(StrEnum):
@@ -14,6 +15,12 @@ class ExerciseKind(StrEnum):
     QUIZ = "quiz"
     BRANCHING = "branching"
     SOA_FORM = "soa_form"
+    DOCUMENT_FORM = "document_form"
+    RISK_TABLE = "risk_table"
+    TREATMENT_TABLE = "treatment_table"
+    AUDIT_CHECKLIST = "audit_checklist"
+    NONCONFORMITY_FORM = "nonconformity_form"
+    COMPETENCE_MATRIX = "competence_matrix"
 
 
 class EnrollmentStatus(StrEnum):
@@ -69,6 +76,8 @@ class Module:
     exercise: ExerciseDef | None
     # Modulo previsto pero aun sin desarrollar: se lista, no es accesible ni obligatorio.
     planned: bool = False
+    reference_title: str | None = None
+    reference_md: str | None = None
 
 
 @dataclass(frozen=True)

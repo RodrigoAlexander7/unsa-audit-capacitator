@@ -1,0 +1,163 @@
+{
+	"kind": "document_form",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Prepara el Plan Individual de Auditoría Interna para la Oficina de Bienestar Universitario (OBU).",
+		"scenario": "Según el programa anual 2026, ejecutarás la auditoría presencial a OBU (Sistema de Bienestar y Salud, historias médicas y becas socioeconómicas con derivación a laboratorio externo). Debes elegir auditor líder imparcial, dueño auditado, insumos obligatorios, criterios y agenda real de campo.",
+		"document_title": "Plan Individual de Auditoría — OBU (UNSA)",
+		"sections": [
+			{
+				"id": "sec-equipo",
+				"title": "1. Equipo auditor, auditado y fechas",
+				"fields": [
+					{
+						"id": "plan_code",
+						"label": "Código del plan de auditoría",
+						"type": "text",
+						"required": true,
+						"placeholder": "AUD-PLAN-OBU-2026",
+						"validation": {
+							"pattern": "^AUD-PLAN-OBU-\\d{4}$",
+							"sample_solution": "AUD-PLAN-OBU-2026",
+							"feedback_error": "Usa el formato AUD-PLAN-OBU-AAAA."
+						}
+					},
+					{
+						"id": "lead_auditor",
+						"label": "Auditor líder designado (sin conflicto de interés)",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "jefe-oci", "label": "Auditor Líder del OCI (independiente de OBU y OTI)" },
+							{ "id": "jefe-obu", "label": "Jefe de Bienestar Universitario" },
+							{ "id": "dpo", "label": "Oficial de Protección de Datos (adscrito a OTI)" }
+						],
+						"validation": {
+							"exact": "jefe-oci",
+							"feedback_error": "El Jefe de OBU es el auditado y el DPO pertenece a OTI (operador del sistema): corresponde al OCI."
+						}
+					},
+					{
+						"id": "auditee_owner",
+						"label": "Responsable del área auditada (contraparte principal)",
+						"type": "position",
+						"required": true,
+						"options": [
+							{ "id": "jefe-obu", "label": "Jefe de Bienestar Universitario" },
+							{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" },
+							{ "id": "dir-biblioteca", "label": "Director de la Biblioteca Central" }
+						],
+						"validation": {
+							"exact": "jefe-obu",
+							"feedback_error": "La contraparte funcional auditada de Bienestar y Salud es el Jefe de la OBU."
+						}
+					},
+					{
+						"id": "plan_issue_date",
+						"label": "Fecha de envío previo del plan al auditado",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-06-01",
+							"max_date": "2026-08-31",
+							"sample_solution": "2026-07-01",
+							"feedback_error": "Envía el plan con antelación suficiente en 2026."
+						}
+					},
+					{
+						"id": "fieldwork_date",
+						"label": "Fecha de ejecución en campo (OBU)",
+						"type": "date",
+						"required": true,
+						"validation": {
+							"min_date": "2026-07-05",
+							"max_date": "2026-09-30",
+							"feedback_error": "La jornada de campo debe efectuarse después de remitir el plan."
+						}
+					}
+				]
+			},
+			{
+				"id": "sec-criterios",
+				"title": "2. Criterios, insumos previos y agenda operativa",
+				"fields": [
+					{
+						"id": "mandatory_inputs",
+						"label": "Insumos obligatorios previos a revisar antes de la apertura",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "in-riesgos", "label": "Resultados de evaluación y tratamiento de riesgos de OBU" },
+							{ "id": "in-previos", "label": "Informes y no conformidades previas (incluyendo brechas abiertas)" },
+							{ "id": "in-checklist", "label": "Lista de apoyo adaptada por cláusula y sistema" },
+							{ "id": "in-rumores", "label": "Comentarios informales de pasillo no documentados" }
+						],
+						"validation": {
+							"exact_ids": ["in-riesgos", "in-previos", "in-checklist"],
+							"feedback_error": "Prepara la auditoría con riesgos, informes previos y lista de apoyo verificable."
+						}
+					},
+					{
+						"id": "audit_criteria",
+						"label": "Criterios normativos e internos contra los cuales se evalúa OBU",
+						"type": "multiselect",
+						"required": true,
+						"options": [
+							{ "id": "cr-normas", "label": "Requisitos del PIMS (ISO/IEC 27701 y 27001)" },
+							{ "id": "cr-politica", "label": "Política de privacidad y Alcance vigentes de la UNSA" },
+							{ "id": "cr-contratos", "label": "Contratos y anexos de encargo con laboratorio médico externo" },
+							{ "id": "cr-gusto", "label": "Preferencias estéticas personales del auditor de turno" }
+						],
+						"validation": {
+							"exact_ids": ["cr-normas", "cr-politica", "cr-contratos"],
+							"feedback_error": "Audita siempre contra normas, documentos internos vigentes y cláusulas contractuales."
+						}
+					},
+					{
+						"id": "agenda_and_sampling",
+						"label": "Estructura de agenda y foco de muestreo en campo para OBU",
+						"type": "textarea",
+						"required": true,
+						"placeholder": "Indica apertura, entrevistas con personal clínico/becas, muestreo de consentimientos y cifrado, y reunión de cierre...",
+						"validation": {
+							"rubric": {
+								"min_words": 15,
+								"criteria": [
+									{
+										"id": "crit-agenda",
+										"label": "Incluye reuniones de apertura y cierre",
+										"keywords_any": ["apertura", "cierre", "reunion"],
+										"feedback_missing": "Incluye explícitamente la reunión de apertura y la reunión de cierre."
+									},
+									{
+										"id": "crit-muestreo",
+										"label": "Prioriza muestreo de consentimientos de salud o contrato con laboratorio",
+										"keywords_any": ["consentimiento", "salud", "laboratorio", "muestra", "cifrado", "sistema"],
+										"feedback_missing": "Especifica el muestreo clave de OBU: consentimientos, datos de salud o contrato del laboratorio."
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		],
+		"cross_rules": [
+			{
+				"id": "rule-disjoint-plan",
+				"kind": "disjoint",
+				"fields": ["lead_auditor", "auditee_owner"],
+				"label": "Segregación auditor vs. auditado",
+				"feedback": "El auditor líder no puede ser el mismo responsable de la unidad auditada (OBU)."
+			},
+			{
+				"id": "rule-plan-advance",
+				"kind": "date_order",
+				"fields": ["plan_issue_date", "fieldwork_date"],
+				"params": { "min_days": 5, "max_days": 45 },
+				"label": "Antelación del plan al auditado",
+				"feedback": "Comunica el plan de auditoría al menos 5 días antes del trabajo de campo."
+			}
+		]
+	}
+}

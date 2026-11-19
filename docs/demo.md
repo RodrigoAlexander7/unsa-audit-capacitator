@@ -1,6 +1,6 @@
 # Guía de demo (≈ 10 minutos)
 
-Todos los datos son ficticios. Arranque: `./dev.sh` (Postgres + migraciones + seed con cohorte demo + API + web) y abre <http://localhost:5173>.
+Todos los datos son ficticios. Arranque: `make dev` (Postgres + migraciones + seed con cohorte demo + API + web) y abre <http://localhost:5173>.
 
 ## Cuentas
 
@@ -28,12 +28,13 @@ Todos los datos son ficticios. Arranque: `./dev.sh` (Postgres + migraciones + se
 
 ## Recorrido sugerido
 
-1. **Participante (2 min)** — entra como `ana.quispe@demo.unsa.example`. En *Mis rutas* ve 3 rutas aprobadas y las horas acreditadas. Abre *R2 → Del requisito al documento* y *R3 → Declaración de aplicabilidad* (ejercicios prácticos con retroalimentación por ítem).
+1. **Participante (2 min)** — entra como `ana.quispe@demo.unsa.example`. En *Mis rutas* ve 3 rutas aprobadas (52 h acreditadas) y la Ruta 4 (*Auditor interno*, 32 h) disponible con sus 10 módulos activos. Abre *R2 → Contexto y alcance*, *R3 → Plan de tratamiento* o *R4 → Listas de verificación* / *Informe y seguimiento* para ver el panel lado a lado y la corrección determinista.
 2. **Ejercicio práctico (2 min)** — como `miguel.zuniga`, abre un módulo de R1 pendiente (p. ej. *Riesgos cotidianos*), responde mal a propósito y lee la retroalimentación; el módulo final queda bloqueado hasta aprobar los demás.
 3. **Documentos versionados (2 min)** — *Documentos → ROF → Diferencias* (v1 → v3). *Proponer cambio* y, con el superadmin, aprobarlo o rechazarlo (si la base cambió → conflicto 409).
 4. **PIMS (1 min)** — *Documentos → Conjunto documental del PIMS (ISO/IEC 27701)*: 11 requisitos con estados vigente / borrador / vencido / sin responsable / faltante.
 5. **Evaluación controller / processor (1 min)** — *Evaluación*: 12 preguntas, resultados por competencia y por requisito del PIMS.
-6. **Superadmin y asesor IA (2 min)** — entra como superadmin → *Panel*: estadísticas por ruta, módulos más difíciles, estancados y evaluaciones. En *Asesor IA* pregunta «¿Cómo están los alumnos de sensibilización?»: la respuesta (≈ 10 s, vía `agy`) cita las cifras del cohorte y propone ajustes al plan de enseñanza. El *snapshot* que recibe el asesor es agregado y anónimo (ver `/admin/advisor/snapshot.json`).
+6. **Asistente flotante del estudiante (1 min)** — en cualquier página autenticada, abre el botón inferior derecho **«Asistente UNSA»**, consulta sobre ISO/IEC 27701 o la UNSA ficticia contextualizada al módulo actual; rechaza peticiones de respuestas exactas.
+7. **Superadmin, cohorte seudónimo y reestructuración (2 min)** — entra como superadmin → *Panel*: estadísticas por ruta, módulos difíciles y estancados. En el popup flotante cambia a la pestaña **«Administrador»** para consultar alumnos por alias (`P-xx`, resueltos localmente al nombre real sin enviar PII a `agy`), generar borradores de reestructuración con **«Proponer ajuste»** y aceptarlos o descartarlos. En *Asesor IA* (`/admin/advisor`) puedes descargar el snapshot agregado (`/admin/advisor/snapshot.json`).
 
 ## Reiniciar el cohorte
 

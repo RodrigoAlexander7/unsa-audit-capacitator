@@ -30,6 +30,8 @@ class LearningFacts:
                     version=summary.current_number if summary else None,
                     review_date=summary.document.review_date if summary else None,
                     owner_unit_name=summary.owner_unit_name if summary else None,
+                    expected_evidence=item.requirement.requirement.expected_evidence,
+                    summary=item.requirement.requirement.summary,
                 )
             )
         return replace(base, pims=facts)

@@ -1,0 +1,129 @@
+{
+	"kind": "quiz",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Evaluación integradora de la Ruta 4 — Auditor interno del PIMS de la UNSA (ISO 19011 + ISO/IEC 27701).",
+		"questions": [
+			{
+				"id": "q1",
+				"prompt": "La Dirección propone que el Jefe de OTI audite internamente la Declaración de Aplicabilidad (`pims-soa`) y el Programa de Seguridad (`pims-programa-seguridad`) porque conoce toda la infraestructura. ¿Qué principio de ISO 19011 lo impide?",
+				"options": [
+					{ "id": "a", "label": "Independencia e imparcialidad: ningún auditor puede auditar su propia gestión o documentos." },
+					{ "id": "b", "label": "Velocidad de entrega del informe." },
+					{ "id": "c", "label": "El principio de gratuidad de software." },
+					{ "id": "d", "label": "La rotación de claves biométricas." }
+				],
+				"correct": "a",
+				"explanation": "La imparcialidad exige separar al equipo auditor (p. ej. OCI) de quienes diseñan o ejecutan los controles auditados."
+			},
+			{
+				"id": "q2",
+				"prompt": "En el Programa Anual de Auditoría Interna de la UNSA, solo hay holgura para auditar dos oficinas este mes antes de ampliar al resto. ¿Cómo priorizas conforme a riesgo?",
+				"options": [
+					{ "id": "a", "label": "Por orden alfabético empezando por Biblioteca Digital." },
+					{ "id": "b", "label": "Priorizando OBU (datos de salud, riesgo 4) y OTI/ORA (brechas documentales o notas, riesgo 4)." },
+					{ "id": "c", "label": "Auditando solo oficinas cercanas al comedor universitario." },
+					{ "id": "d", "label": "Dejando fuera OBU hasta el próximo lustro." }
+				],
+				"correct": "b",
+				"explanation": "ISO 19011 exige enfoque basado en riesgos: priorizar criticidad de datos, nivel 3–4 y documentos vencidos/faltantes."
+			},
+			{
+				"id": "q3",
+				"prompt": "¿Por qué el Programa Anual de Auditoría Interna debe concluir ANTES de la Revisión por la Dirección?",
+				"options": [
+					{ "id": "a", "label": "Porque los resultados de auditoría interna son una entrada obligatoria para las decisiones directivas." },
+					{ "id": "b", "label": "Para celebrar primero las vacaciones universitarias." },
+					{ "id": "c", "label": "No hace falta; el Rector puede revisar sin datos ni auditorías." },
+					{ "id": "d", "label": "Porque las minutas de dirección reemplazan a las listas de apoyo." }
+				],
+				"correct": "a",
+				"explanation": "La Revisión por la Dirección analiza el estado real del PIMS incorporando el informe de auditoría interna."
+			},
+			{
+				"id": "q4",
+				"prompt": "Durante la verificación documental encuentras `pims-plan-tratamiento` vigente y fechado, pero con el responsable marcado «por definir». ¿Cómo se clasifica?",
+				"options": [
+					{ "id": "a", "label": "Conforme sin notas adicionales." },
+					{ "id": "b", "label": "Observación: documento vigente pero con debilidad formal de titularidad que debe subsanarse." },
+					{ "id": "c", "label": "Cancelación automática del sistema universitario." },
+					{ "id": "d", "label": "No aplica por ser tecnología en la nube." }
+				],
+				"correct": "b",
+				"explanation": "Según los criterios UNSA, un documento vigente sin responsable asignado constituye Observación."
+			},
+			{
+				"id": "q5",
+				"prompt": "Al auditar el cumplimiento de bajas de cuentas en OTI, el jefe te ofrece tres expedientes impresos que ya separó ayer «para ahorrarte tiempo». ¿Cuál es la práctica correcta?",
+				"options": [
+					{ "id": "a", "label": "Aceptarlos únicamente y omitir el sistema de TI." },
+					{ "id": "b", "label": "Seleccionar tú mismo una muestra aleatoria desde registros recientes de ceses en ORH y cotejarla en las cuentas activas de OTI." },
+					{ "id": "c", "label": "Pedirle que él elija otros cinco aún más antiguos." },
+					{ "id": "d", "label": "Evitar revisar ceses por respeto." }
+				],
+				"correct": "b",
+				"explanation": "El auditor selecciona su propia muestra independiente y triangula fuentes (ORH ↔ OTI)."
+			},
+			{
+				"id": "q6",
+				"prompt": "Al auditar el requisito `9.1` (`pims-monitoreo`), constatas que el documento no existe en BD. ¿Qué veredicto procede en la lista de verificación?",
+				"options": [
+					{ "id": "a", "label": "Conforme, si el DPO promete medir el próximo mes." },
+					{ "id": "b", "label": "No conformidad, por ausencia objetiva de un requisito documental y evidencia viva." },
+					{ "id": "c", "label": "Observación menor que no requiere acción." },
+					{ "id": "d", "label": "Exclusión automática de la SoA." }
+				],
+				"correct": "b",
+				"explanation": "Falta completa (`missing`), borrador sin aprobar (`draft`) o revisión vencida (`expired`) generan No Conformidad."
+			},
+			{
+				"id": "q7",
+				"prompt": "Al redactar un hallazgo en el Informe de Auditoría Interna, ¿cuál formulación cumple el estándar de objetividad?",
+				"options": [
+					{ "id": "a", "label": "«El personal de OTI trabaja desordenadamente y descuida los respaldos»." },
+					{ "id": "b", "label": "«Frente al Programa de Seguridad (sección pruebas trimestrales), en el muestreo del 2026-08-21 no se hallaron actas de restauración de los dos últimos trimestres»." },
+					{ "id": "c", "label": "«Creemos que seguramente todo está respaldado aunque no lo vimos»." },
+					{ "id": "d", "label": "«Hubo dos incidentes, o quizá cuatro»." }
+				],
+				"correct": "b",
+				"explanation": "Todo hallazgo auditable combina criterio claro, evidencia objetiva constatada (fecha/muestra) y desvío concreto."
+			},
+			{
+				"id": "q8",
+				"prompt": "El Informe de Auditoría enumera 2 No Conformidades detalladas (`NC-AUD-01` y `NC-AUD-02`) y 1 Observación sobre un plan vigente. ¿Qué valor debe figurar en «Total de no conformidades» y qué fecha debe llevar?",
+				"options": [
+					{ "id": "a", "label": "Total = 3 (sumando la observación) y fecha anterior al fin de las entrevistas." },
+					{ "id": "b", "label": "Total = 2 (igual al número exacto de fichas NC detalladas, sin sumar observaciones) y fecha posterior al cierre de campo." },
+					{ "id": "c", "label": "Total = 1, dejando la segunda NC solo de palabra." },
+					{ "id": "d", "label": "No hace falta contar ni referenciar fichas." }
+				],
+				"correct": "b",
+				"explanation": "Debe existir exactitud numérica entre el total de NC y las filas detalladas, nunca mezclando observaciones ni fechando antes de concluir."
+			},
+			{
+				"id": "q9",
+				"prompt": "Para cerrar `NC-03` («solicitud ARCO atendida fuera de plazo por ausencia de seguimiento»), el área respondió por fin al titular afectado ese mismo día. ¿Por qué no puede verificarse eficacia de la acción correctiva esa tarde?",
+				"options": [
+					{ "id": "a", "label": "Porque responder al titular fue solo la corrección inmediata; falta implantar seguimiento permanente y comprobar su eficacia tras un lapso real de operación." },
+					{ "id": "b", "label": "Porque nunca deben responderse reclamos ARCO." },
+					{ "id": "c", "label": "Porque las acciones correctivas solo las aprueba el laboratorio médico." },
+					{ "id": "d", "label": "Porque en auditoría solo cuentan papeles sin fecha." }
+				],
+				"correct": "a",
+				"explanation": "La corrección resuelve el caso puntual; la verificación de eficacia comprueba tiempo después que la causa raíz fue eliminada."
+			},
+			{
+				"id": "q10",
+				"prompt": "Un candidato a Auditor Técnico del equipo OCI muestra únicamente su autodeclaración firmada asegurando que «domina bitácoras y cifrado». ¿Qué falta para calificar su competencia según ISO 19011?",
+				"options": [
+					{ "id": "a", "label": "Nada: la autodeclaración es evidencia suficiente." },
+					{ "id": "b", "label": "Formación verificada (Ruta 4 / técnica), evidencia objetiva de práctica supervisada y evaluación por un evaluador independiente." },
+					{ "id": "c", "label": "Cambiar su título a Secretario General." },
+					{ "id": "d", "label": "Asistir 10 minutos a la reunión de apertura." }
+				],
+				"correct": "b",
+				"explanation": "Ningún auditor certifica su propia competencia; se requieren evidencias objetivas evaluadas con independencia."
+			}
+		]
+	}
+}

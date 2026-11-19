@@ -1,0 +1,83 @@
+{
+	"kind": "competence_matrix",
+	"pass_score": 70,
+	"spec": {
+		"prompt": "Define competencia, formación, evidencia de desempeño y evaluador imparcial para tres perfiles del equipo auditor interno de la UNSA.",
+		"scenario": "El Jefe del OCI y ORH califican el equipo auditor que auditará el ciclo 2026 de la UNSA conforme a ISO 19011.",
+		"competencies": [
+			{
+				"id": "comp-lider",
+				"label": "Conducción de equipo auditor, programación anual basada en riesgos, manejo de apertura/cierre y control de imparcialidad (ISO 19011)"
+			},
+			{
+				"id": "comp-tec",
+				"label": "Auditoría técnica de controles de seguridad, cifrado, MFA, control de cambios y bitácoras en sistemas universitarios"
+			},
+			{
+				"id": "comp-priv",
+				"label": "Auditoría específica de privacidad: bases jurídicas, datos sensibles, encargos (controller/processor) y derechos ARCO"
+			},
+			{
+				"id": "comp-contable",
+				"label": "Arqueo financiero de caja chica sin relación con seguridad ni privacidad"
+			}
+		],
+		"trainings": [
+			{ "id": "trn-r4-lider", "label": "Rutas 1–4 completas + taller de dirección de equipos auditores ISO 19011" },
+			{ "id": "trn-r4-tec", "label": "Ruta 4 + laboratorio práctico de verificación de bitácoras y controles TIC" },
+			{ "id": "trn-r4-priv", "label": "Rutas 2 y 4 + taller de auditoría de flujos controller/processor y datos de salud" },
+			{ "id": "trn-folleto", "label": "Lectura rápida de un tríptico de bienvenida de 10 minutos" }
+		],
+		"evidences": [
+			{ "id": "ev-lider", "label": "Dirección supervisada de una auditoría completa con programa, informe consistente y cierre validado" },
+			{ "id": "ev-tec", "label": "Informe técnico de muestreo real en bitácoras/respaldos aprobado por evaluador independiente" },
+			{ "id": "ev-priv", "label": "Dictamen práctico de verificación de contratos de encargo y consentimientos en muestra controlada" },
+			{ "id": "ev-autodecl", "label": "Autodeclaración firmada por el propio candidato sin supervisión" }
+		],
+		"evaluators": [
+			{ "id": "jefe-oci", "label": "Jefe del Órgano de Control Institucional" },
+			{ "id": "par-externo", "label": "Auditor Líder externo independiente contratado" },
+			{ "id": "auditor-lider", "label": "Auditor Líder designado (equipo OCI)" },
+			{ "id": "auditor-tec", "label": "Candidato a Auditor Técnico" },
+			{ "id": "auditor-priv", "label": "Candidato a Auditor Especialista en Privacidad" }
+		],
+		"rows": [
+			{
+				"id": "row-lider",
+				"position_title": "Auditor Líder de Equipo PIMS",
+				"role_summary": "Coordina el programa/plan, dirige apertura y cierre y firma la consistencia del informe final.",
+				"expected_competency": "comp-lider",
+				"expected_training": "trn-r4-lider",
+				"expected_evidence": "ev-lider",
+				"expected_evaluator": "par-externo",
+				"valid_evaluators": ["par-externo", "jefe-oci"],
+				"forbidden_evaluators": ["auditor-lider"],
+				"explanation": "El Auditor Líder requiere formación R1–4, conducción supervisada demostrada y evaluación independiente (no autoevaluarse)."
+			},
+			{
+				"id": "row-tec",
+				"position_title": "Auditor Técnico de Sistemas (ajeno a OTI)",
+				"role_summary": "Ejecuta pruebas técnicas sobre bitácoras, cifrado, MFA y restauración de respaldos.",
+				"expected_competency": "comp-tec",
+				"expected_training": "trn-r4-tec",
+				"expected_evidence": "ev-tec",
+				"expected_evaluator": "auditor-lider",
+				"valid_evaluators": ["auditor-lider", "jefe-oci", "par-externo"],
+				"forbidden_evaluators": ["auditor-tec"],
+				"explanation": "Exige competencia técnica demostrada mediante informe real de muestreo aprobado por el Auditor Líder/OCI."
+			},
+			{
+				"id": "row-priv",
+				"position_title": "Auditor Especialista en Privacidad (ajeno a DPO/OBU)",
+				"role_summary": "Audita consentimiento expreso, minimización, contratos con encargados y plazos ARCO.",
+				"expected_competency": "comp-priv",
+				"expected_training": "trn-r4-priv",
+				"expected_evidence": "ev-priv",
+				"expected_evaluator": "jefe-oci",
+				"valid_evaluators": ["jefe-oci", "auditor-lider"],
+				"forbidden_evaluators": ["auditor-priv"],
+				"explanation": "Combina dominio normativo R2+R4 con dictamen supervisado evaluado por el OCI o Auditor Líder."
+			}
+		]
+	}
+}

@@ -26,6 +26,7 @@ from unsa_audit.learning.domain.route import (
 
 _NS = uuid5(NAMESPACE_URL, "https://unsa-audit-poc.example/content")
 _MODULE_FILE = re.compile(r"^(?P<order>\d{2})-(?P<slug>[a-z0-9-]+)\.md$")
+_VERSION_FILE = re.compile(r"^v(?P<number>\d+)\.md$")
 _FRONTMATTER = re.compile(r"\A---\n(?P<meta>.*?)\n---\n(?P<body>.*)\Z", re.DOTALL)
 
 
@@ -69,7 +70,44 @@ def _load_exercise(path: Path) -> ExerciseDef:
     )
 
 
-def _load_module(route_code: str, md_path: Path) -> Module:
+def _load_reference(
+    content_dir: Path, md_path: Path, ref_doc: str | None
+) -> tuple[str | None, str | None]:
+    if ref_doc:
+        doc_dir = content_dir / "institutional" / ref_doc
+        doc_yaml = doc_dir / "document.yaml"
+        if not doc_dir.is_dir() or not doc_yaml.exists():
+            raise ContentError(f"{md_path}: `reference_doc` inexistente ({ref_doc})")
+        doc_meta = _read_yaml(doc_yaml)
+        versions = {
+            int(m["number"]): p for p in doc_dir.glob("v*.md") if (m := _VERSION_FILE.match(p.name))
+        }
+        if not versions:
+            raise ContentError(f"{md_path}: `reference_doc` sin versiones ({ref_doc})")
+        latest = versions[max(versions)]
+        parsed = _FRONTMATTER.match(latest.read_text(encoding="utf-8"))
+        body = (parsed["body"] if parsed else latest.read_text(encoding="utf-8")).strip()
+        return str(doc_meta.get("title", ref_doc)), body
+
+    sidecar = md_path.with_name(f"{md_path.stem}.reference.md")
+    if not sidecar.exists():
+        return None, None
+    raw = sidecar.read_text(encoding="utf-8")
+    parsed = _FRONTMATTER.match(raw)
+    if parsed:
+        meta = yaml.safe_load(parsed["meta"]) or {}
+        body = parsed["body"].strip()
+        title = str(meta.get("title") or "Ejemplo resuelto (UNSA)")
+    else:
+        body = raw.strip()
+        first_h = next((ln[2:].strip() for ln in body.splitlines() if ln.startswith("# ")), "")
+        title = first_h or "Ejemplo resuelto (UNSA)"
+    if not body:
+        raise ContentError(f"{sidecar}: ejemplo de referencia vacio")
+    return title, body
+
+
+def _load_module(content_dir: Path, route_code: str, md_path: Path) -> Module:
     match = _MODULE_FILE.match(md_path.name)
     if match is None:
         raise ContentError(f"{md_path}: el nombre debe ser NN-slug.md")
@@ -87,6 +125,8 @@ def _load_module(route_code: str, md_path: Path) -> Module:
         raise ContentError(
             f"{md_path}: un modulo `planned` no puede ser obligatorio ni tener ejercicio"
         )
+    ref_doc = meta.get("reference_doc")
+    ref_title, ref_md = _load_reference(content_dir, md_path, str(ref_doc) if ref_doc else None)
     return Module(
         id=module_id(route_code, slug),
         route_code=route_code,
@@ -99,11 +139,14 @@ def _load_module(route_code: str, md_path: Path) -> Module:
         lesson_md=parsed["body"].strip(),
         exercise=exercise,
         planned=planned,
+        reference_title=ref_title,
+        reference_md=ref_md,
     )
 
 
 class FileContentSource:
     def __init__(self, content_dir: Path) -> None:
+        self._content_dir = content_dir
         self._routes_dir = content_dir / "routes"
 
     def load(self) -> tuple[list[Route], list[Module]]:
@@ -123,7 +166,10 @@ class FileContentSource:
             except KeyError as exc:
                 raise ContentError(f"{route_dir}/route.yaml: falta {exc}") from exc
             routes.append(route)
-            modules += [_load_module(route.code, p) for p in sorted(route_dir.glob("*.md"))]
+            mod_files = [
+                p for p in sorted(route_dir.glob("*.md")) if not p.name.endswith(".reference.md")
+            ]
+            modules += [_load_module(self._content_dir, route.code, p) for p in mod_files]
 
         codes = {r.code for r in routes}
         for route in routes:

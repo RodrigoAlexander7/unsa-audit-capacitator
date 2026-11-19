@@ -1,4 +1,25 @@
-import type { Answer, Exercise, SoaDecision } from './types';
+import type {
+	Answer,
+	AuditChecklistAnswer,
+	CompetenceMatrixAnswer,
+	DocumentFormAnswer,
+	Exercise,
+	NonconformityFormAnswer,
+	RiskTableAnswer,
+	SoaDecision,
+	TreatmentTableAnswer
+} from './types';
+
+/** Nivel de riesgo en escala UNSA (C + P en [0..4]) frente al umbral de aceptacion. */
+export function computeRiskStatus(
+	consequence: number | null,
+	probability: number | null,
+	threshold: number
+): { level: number; acceptable: boolean } | null {
+	if (consequence === null || probability === null) return null;
+	const level = consequence + probability;
+	return { level, acceptable: level < threshold };
+}
 
 /** Respuesta inicial de cada tipo de ejercicio (el orden mostrado es el orden barajado del API). */
 export function initialAnswer(exercise: Exercise): Answer {
@@ -15,6 +36,80 @@ export function initialAnswer(exercise: Exercise): Answer {
 			return { answers: {} };
 		case 'branching':
 			return { choices: {} };
+		case 'document_form': {
+			const fields: Record<string, string | string[]> = {};
+			for (const sec of exercise.spec.sections) {
+				for (const field of sec.fields) {
+					fields[field.id] = field.type === 'multiselect' ? [] : '';
+				}
+			}
+			return { fields };
+		}
+		case 'risk_table': {
+			const rows: RiskTableAnswer['rows'] = {};
+			for (const row of exercise.spec.rows) {
+				rows[row.id] = {
+					consequence: null,
+					probability: null,
+					...(row.threat_options ? { threat: '' } : {}),
+					...(row.vulnerability_options ? { vulnerability: '' } : {}),
+					...(row.risk_owner_options ? { risk_owner: '' } : {})
+				};
+			}
+			return { rows };
+		}
+		case 'treatment_table': {
+			const rows: TreatmentTableAnswer['rows'] = {};
+			for (const row of exercise.spec.rows) {
+				rows[row.id] = {
+					option: '',
+					control_id: '',
+					owner: '',
+					deadline: '',
+					residual_consequence: null,
+					residual_probability: null
+				};
+			}
+			return { rows };
+		}
+		case 'audit_checklist': {
+			const items: AuditChecklistAnswer['items'] = {};
+			for (const item of exercise.spec.items) {
+				items[item.id] = { question_id: '', evidence_id: '', verdict: '' };
+			}
+			return { items };
+		}
+		case 'nonconformity_form': {
+			const cases: NonconformityFormAnswer['cases'] = {};
+			for (const c of exercise.spec.cases) {
+				cases[c.id] = {
+					correction: '',
+					root_cause: '',
+					requires_action: null,
+					action: '',
+					responsible: '',
+					implementation_date: '',
+					verification_date: '',
+					verification: '',
+					doc_change: null,
+					affected_document: ''
+				};
+			}
+			return { cases };
+		}
+		case 'competence_matrix': {
+			const rows: CompetenceMatrixAnswer['rows'] = {};
+			const withEval = Boolean(exercise.spec.evaluators);
+			for (const row of exercise.spec.rows) {
+				rows[row.id] = {
+					competency_id: '',
+					training_id: '',
+					evidence_id: '',
+					...(withEval ? { evaluator_id: '' } : {})
+				};
+			}
+			return { rows };
+		}
 	}
 }
 
@@ -63,6 +158,81 @@ export function completion(exercise: Exercise, answer: Answer): { done: number; 
 				done: count((answer as { choices: Record<string, string> }).choices),
 				total: exercise.spec.steps.length
 			};
+		case 'document_form': {
+			const fields = (answer as DocumentFormAnswer).fields;
+			const requiredFields = exercise.spec.sections
+				.flatMap((s) => s.fields)
+				.filter((f) => f.required);
+			const done = requiredFields.filter((f) => {
+				const v = fields[f.id];
+				return f.type === 'multiselect'
+					? Array.isArray(v) && v.length > 0
+					: typeof v === 'string' && v.trim() !== '';
+			}).length;
+			return { done, total: requiredFields.length };
+		}
+		case 'risk_table': {
+			const rows = (answer as RiskTableAnswer).rows;
+			const done = exercise.spec.rows.filter((r) => {
+				const a = rows[r.id];
+				if (!a || a.consequence === null || a.probability === null) return false;
+				if (r.threat_options && !a.threat) return false;
+				if (r.vulnerability_options && !a.vulnerability) return false;
+				if (r.risk_owner_options && !a.risk_owner) return false;
+				return true;
+			}).length;
+			return { done, total: exercise.spec.rows.length };
+		}
+		case 'treatment_table': {
+			const rows = (answer as TreatmentTableAnswer).rows;
+			const done = exercise.spec.rows.filter((r) => {
+				const a = rows[r.id];
+				if (!a || !a.option || !a.owner || !a.deadline) return false;
+				if (a.option === 'controls' && !a.control_id) return false;
+				return a.residual_consequence !== null && a.residual_probability !== null;
+			}).length;
+			return { done, total: exercise.spec.rows.length };
+		}
+		case 'audit_checklist': {
+			const items = (answer as AuditChecklistAnswer).items;
+			const done = exercise.spec.items.filter((it) => {
+				const a = items[it.id];
+				return Boolean(a && a.question_id && a.evidence_id && a.verdict);
+			}).length;
+			return { done, total: exercise.spec.items.length };
+		}
+		case 'nonconformity_form': {
+			const cases = (answer as NonconformityFormAnswer).cases;
+			const done = exercise.spec.cases.filter((c) => {
+				const a = cases[c.id];
+				if (!a) return false;
+				if (
+					!a.correction ||
+					!a.root_cause ||
+					a.requires_action === null ||
+					!a.action ||
+					!a.responsible ||
+					!a.implementation_date ||
+					!a.verification_date ||
+					!a.verification ||
+					a.doc_change === null
+				) {
+					return false;
+				}
+				return !a.doc_change || Boolean(a.affected_document);
+			}).length;
+			return { done, total: exercise.spec.cases.length };
+		}
+		case 'competence_matrix': {
+			const rows = (answer as CompetenceMatrixAnswer).rows;
+			const hasEval = Boolean(exercise.spec.evaluators);
+			const done = exercise.spec.rows.filter((r) => {
+				const a = rows[r.id];
+				if (!a || !a.competency_id || !a.training_id || !a.evidence_id) return false;
+				return !hasEval || Boolean(a.evaluator_id);
+			}).length;
+			return { done, total: exercise.spec.rows.length };
+		}
 	}
 }
 

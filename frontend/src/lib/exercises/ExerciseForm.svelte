@@ -1,12 +1,30 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { untrack } from 'svelte';
+	import './doc.css';
+	import AuditChecklist from './AuditChecklist.svelte';
+	import CompetenceMatrix from './CompetenceMatrix.svelte';
+	import DocumentForm from './DocumentForm.svelte';
 	import Matching from './Matching.svelte';
+	import NonconformityForm from './NonconformityForm.svelte';
 	import Ordering from './Ordering.svelte';
 	import RadioGroup from './RadioGroup.svelte';
+	import RiskTable from './RiskTable.svelte';
 	import SoaForm from './SoaForm.svelte';
+	import TreatmentTable from './TreatmentTable.svelte';
 	import { canSubmit, completion, initialAnswer } from './logic';
-	import type { Answer, AttemptResult, Exercise, SoaDecision } from './types';
+	import type {
+		Answer,
+		AttemptResult,
+		AuditChecklistAnswer,
+		CompetenceMatrixAnswer,
+		DocumentFormAnswer,
+		Exercise,
+		NonconformityFormAnswer,
+		RiskTableAnswer,
+		SoaDecision,
+		TreatmentTableAnswer
+	} from './types';
 
 	let {
 		exercise,
@@ -85,6 +103,42 @@
 				feedback={feedbackById[step.id]}
 			/>
 		{/each}
+	{:else if exercise.kind === 'document_form'}
+		<DocumentForm
+			spec={exercise.spec}
+			answer={answer as DocumentFormAnswer}
+			feedback={result?.items ?? []}
+		/>
+	{:else if exercise.kind === 'risk_table'}
+		<RiskTable
+			spec={exercise.spec}
+			answer={answer as RiskTableAnswer}
+			feedback={result?.items ?? []}
+		/>
+	{:else if exercise.kind === 'treatment_table'}
+		<TreatmentTable
+			spec={exercise.spec}
+			answer={answer as TreatmentTableAnswer}
+			feedback={result?.items ?? []}
+		/>
+	{:else if exercise.kind === 'audit_checklist'}
+		<AuditChecklist
+			spec={exercise.spec}
+			answer={answer as AuditChecklistAnswer}
+			feedback={result?.items ?? []}
+		/>
+	{:else if exercise.kind === 'nonconformity_form'}
+		<NonconformityForm
+			spec={exercise.spec}
+			answer={answer as NonconformityFormAnswer}
+			feedback={result?.items ?? []}
+		/>
+	{:else if exercise.kind === 'competence_matrix'}
+		<CompetenceMatrix
+			spec={exercise.spec}
+			answer={answer as CompetenceMatrixAnswer}
+			feedback={result?.items ?? []}
+		/>
 	{/if}
 
 	<input type="hidden" name="answer" value={JSON.stringify(answer)} />
@@ -101,8 +155,23 @@
 		>
 			<strong>Puntaje: {result.score} %</strong>
 			— {result.passed ? 'Aprobado' : `No aprobado (mínimo ${result.pass_score} %)`}.
+			{#if result.attempt_number}(Intento {result.attempt_number}){/if}
 			{#if !result.passed}Revisa la retroalimentación y vuelve a intentarlo.{/if}
 		</div>
+
+		{#if !result.passed && result.solution_revealed && result.solution_guide?.length}
+			<section class="doc-guide" aria-labelledby="guide-title" data-testid="solution-guide">
+				<h3 id="guide-title">Guía de solución (intentos de práctica agotados)</h3>
+				<p class="doc-help">
+					Aplica estos criterios en los ítems pendientes y vuelve a enviar para aprobar el módulo.
+				</p>
+				<ul>
+					{#each result.solution_guide as guide (guide.id)}
+						<li><strong>{guide.label}:</strong> {guide.expected_summary}</li>
+					{/each}
+				</ul>
+			</section>
+		{/if}
 	{/if}
 
 	<div class="actions">
